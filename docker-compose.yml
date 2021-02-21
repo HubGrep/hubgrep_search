@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+
+  postgres:
+    image: postgres:13
+    env_file: .env
+
+  service:
+    build: .
+    volumes:
+    - ./:/var/task
+
+    restart: ${RESTART}
+
+    # uplink port to host
+    ports:
+      - 8080:8080
+
+    env_file: .env
+
+    command: >
+          bash -ic " \
+            pip install -r requirements.txt
+            flask run --host 0.0.0.0 --port 8080
+            "
+    tty: true
+
+volumes:
+  pgdata:
