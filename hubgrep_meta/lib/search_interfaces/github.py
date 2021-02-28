@@ -50,12 +50,17 @@ class GitHubSearchResult(SearchResult):
     def __init__(self, search_result_item):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
-        repo_description = search_result_item["description"] or "?"
+        repo_description = search_result_item["description"] or ""
         last_commit = iso8601.parse_date(search_result_item["updated_at"])
         created_at = iso8601.parse_date(search_result_item["created_at"])
         language = search_result_item["language"]
         license_dict = search_result_item.get("license")
         license = license_dict.get("name", None) if license_dict else None
+
+        stars = search_result_item["stargazers_count"]
+        forks = search_result_item["forks_count"]
+        is_fork = search_result_item["fork"]
+        is_archived = None
 
         html_url = search_result_item["html_url"]
 
@@ -68,6 +73,10 @@ class GitHubSearchResult(SearchResult):
             created_at=created_at,
             language=language,
             license=license,
+            forks=forks,
+            stars=stars,
+            is_fork=is_fork,
+            is_archived=is_archived
         )
 
 
