@@ -1,0 +1,32 @@
+{% macro card(SearchResult) %}
+    <div class="item">
+        <a href="{{ SearchResult.html_url }}">
+            <h2 class="item-signature">
+                <span class="item-signature-name">{{ SearchResult.owner_name }} /</span>
+                <span class="item-signature-owner">{{ SearchResult.repo_name }}</span>
+            </h2>
+            <span>{{ SearchResult.html_url }}</span>
+        </a>
+        <p class="item-desc">{{ SearchResult.repo_description }}</p>
+        <p class="item-date">
+            <span class="item-date-created">
+                <span>created: </span>
+                <span>{{ SearchResult.created_at }}</span>
+            </span>
+            <span class="item-date-modified">
+                <span>- updated: </span>
+                <span>{{ SearchResult.last_commit }}</span>
+            </span>
+        </p>
+        <p class="item-misc">
+            <span class="item-misc-lang">
+                <span></span>
+                <span>{{ SearchResult.language }}</span>
+            </span>
+            <span class="item-misc-licence">
+                <span>- license: </span>
+                <span>{{ SearchResult.license }}</span>
+            </span>
+        </p>
+    </div>
+{% endmacro %}

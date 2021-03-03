@@ -24,8 +24,10 @@ class SearchResult:
         self.repo_description = repo_description
         self.html_url = html_url
         self.owner_name = owner_name
-        self.last_commit = last_commit
-        self.created_at = created_at
+        self.last_commit_raw = last_commit
+        self.last_commit = humanize.naturaldate(last_commit)
+        self.created_at_raw = created_at
+        self.created_at = humanize.naturaldate(created_at)
         self.language = language
         self.license = license
 
@@ -34,6 +36,7 @@ class SearchResult:
     def _append_to_print(self, key, value):
         self.text += click.style(key, bold=True)
         self.text += f'{value}\n'
+
 
     def get_cli_formatted(self):
         self.last_commit = self.last_commit.replace(tzinfo=None)

@@ -1,6 +1,6 @@
 from iso8601 import iso8601
 
-from hubgrep_meta.lib.search_interfaces._search_interface import (
+from hubgrep.lib.search_interfaces._search_interface import (
     SearchInterface,
     SearchResult,
 )

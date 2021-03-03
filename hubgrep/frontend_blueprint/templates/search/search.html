@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{% endblock %}
+
+{% block content %}
+    <div class="title">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="search">
+        <div class="search-form">
+            <form>
+                <form action="{{ search_url }}" method="get">
+                    <label for="searchbar" aria-label="search"></label>
+                    <input type="text" id="searchbar" name="s">
+                </form>
+            </form>
+        </div>
+    </div>
+
+    <div class="result">
+        <div class="result-message"></div>
+        <div class="result-items">
+            {% import "search/result_card.html" as result_card %}
+            {% for search_result in search_results %}
+                {{ result_card.card(search_result) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

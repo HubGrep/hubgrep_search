@@ -1,14 +1,14 @@
 import os
-from hubgrep_meta.lib.search_interfaces.gitea import GiteaSearch
-from hubgrep_meta.lib.search_interfaces.github import GitHubSearch
-from hubgrep_meta.lib.search_interfaces.gitlab import GitLabSearch
+from hubgrep.lib.search_interfaces.gitea import GiteaSearch
+from hubgrep.lib.search_interfaces.github import GitHubSearch
+from hubgrep.lib.search_interfaces.gitlab import GitLabSearch
 
 # todo: these should live in a database
 search_interfaces_by_name = {
     "github.com": GitHubSearch(),
-    "gitlab.org": GitLabSearch(
-        "https://gitlab.com", api_token=os.environ["GITLAB_API_TOKEN"]
-    ),  # new, empty user, read-only api
+    #"gitlab.org": GitLabSearch(
+    #    "https://gitlab.com", api_token=os.environ["GITLAB_API_TOKEN"]
+    #),  # new, empty user, read-only api
     "codeberg.org": GiteaSearch("https://codeberg.org"),
     "git.spip.net": GiteaSearch("https://git.spip.net"),
     "gitea.com": GiteaSearch("https://gitea.com"),

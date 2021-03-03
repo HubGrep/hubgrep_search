@@ -1,7 +1,7 @@
 from concurrent import futures
 from typing import List
 
-from hubgrep_meta.lib.search_interfaces._search_interface import (
+from hubgrep.lib.search_interfaces._search_interface import (
     SearchInterface,
     SearchResult,
 )
