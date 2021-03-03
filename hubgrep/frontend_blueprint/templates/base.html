@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
-    <!--link rel="stylesheet" href="../../static/base.css"-->
     {% block styles %}{% endblock %}
 </head>
 <body>
-{% block content %}{% endblock %}
+<section>
+    {% block content %}{% endblock %}
+</section>
 </body>
 </html>

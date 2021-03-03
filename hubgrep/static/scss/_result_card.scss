@@ -1,7 +1,63 @@
-.item-signature-name {
-    font-weight: normal;
-}
+.item {
+  $lh: 1.4rem;
 
-.item-signature-owner {
-    font-weight: bold;
+  max-width: 35rem;
+
+  margin: 1.75rem 0;
+  line-height: $lh;
+
+
+  h2 {
+    font-size: size(header);
+  }
+
+  h2, p {
+    margin: 0;
+  }
+
+  .label {
+    color: color(fontFade);
+  }
+
+  // --- link/title
+  &-signature {
+    display: block;
+
+    &-name {
+      font-weight: normal;
+    }
+
+    &-owner {
+      font-weight: bold;
+    }
+
+    &-url {
+      font-size: size(detail);
+    }
+  }
+
+  // --- info
+  &-detail {
+    font-size: size(detail);
+
+    &-desc {
+      @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: white);
+    }
+
+    &-date {
+      &-modified {
+        .label {
+          margin-left: 1rem;
+        }
+      }
+    }
+
+    &-misc {
+      &-license {
+        .label {
+          margin-left: 1rem;
+        }
+      }
+    }
+  }
 }

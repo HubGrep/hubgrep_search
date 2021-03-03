@@ -7,18 +7,22 @@
 {% endblock %}
 
 {% block content %}
-    <div class="title">
-        <h1>{{ title }}</h1>
-    </div>
+    <div class="main">
+        <div class="main-title">
+            <h1>{{ title }}</h1>
+        </div>
 
-    <div class="search">
-        <div class="search-form">
-            <form>
-                <form action="{{ search_url }}" method="get">
-                    <label for="searchbar" aria-label="search"></label>
-                    <input type="text" id="searchbar" name="s">
+        <div class="main-search">
+            <div class="main-search-form">
+                <form>
+                    <form action="{{ search_url }}" method="get">
+                        <div class="input-bar">
+                            <label for="searchbar" aria-label="search"></label>
+                            <input type="text" id="searchbar" name="s">
+                        </div>
+                    </form>
                 </form>
-            </form>
+            </div>
         </div>
     </div>
 
