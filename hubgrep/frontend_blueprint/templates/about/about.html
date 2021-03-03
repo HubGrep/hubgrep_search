@@ -1,3 +1,11 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    {% assets "scss_about" %}
+        <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+    {% endassets %}
+{% endblock %}
+
 {% block content %}
     TODO =(
 {% endblock %}
