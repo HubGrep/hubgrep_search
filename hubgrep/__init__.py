@@ -66,7 +66,7 @@ def create_app():
 
 
 def build_assets(assets):
-    scss_about = Bundle('scss/about.scss', filters='pyscss', depends='**/*.scss', output='about.css')
-    scss_search = Bundle('scss/search.scss', filters='pyscss', depends='**/*.scss', output='search.css')
+    scss_about = Bundle('scss/about.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='about.css')
+    scss_search = Bundle('scss/search.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='search.css')
     assets.register('scss_about', scss_about)
     assets.register('scss_search', scss_search)
