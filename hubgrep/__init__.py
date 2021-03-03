@@ -31,6 +31,8 @@ def create_app():
                 static_url_path="/static",
                 static_folder="static")
     assets = Environment(app)
+    scss_search = Bundle('scss/search.scss', filters='pyscss', output='scss_search')
+    assets.register('scss_search', scss_search)
 
     @app.after_request
     def add_gnu_tp_header(response):
