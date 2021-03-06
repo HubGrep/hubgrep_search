@@ -1,4 +1,5 @@
 import os
+from hubgrep.config.Locale import Locale
 from hubgrep.lib.search_interfaces.gitea import GiteaSearch
 from hubgrep.lib.search_interfaces.github import GitHubSearch
 from hubgrep.lib.search_interfaces.gitlab import GitLabSearch
@@ -26,7 +27,7 @@ search_interfaces_by_name = {
 }
 
 
-class Config:
+class Config(Locale):
     DEBUG = False
     TESTING = False
     LOGLEVEL = "debug"
