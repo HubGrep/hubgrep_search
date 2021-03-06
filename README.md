@@ -1,12 +1,9 @@
-# HubGrep Metasearch
+# HubGrep
 
-WIP
-
-
-backend for various crawlers
+Search for code repositories over many code-hosting services at once, without non-repo clutter.
 
 
-## dev setup
+## Setup
 
 create a config by copying `.env.dist` to `.env`, and add the missing values.
 
@@ -22,10 +19,15 @@ and maybe you want to have a container to run cli commands:
 in the container you have to run the db migrations
 
 
+## Usage - localdev
 
-## running a search
+#### Web-fronend:
 
-right now only via cli:
+    docker-compose up
+
+Navigate to `0.0.0.0:8080` in your browser to search.
+
+#### CLI:
 
 ```
 docker-compose run --rm service /bin/bash
@@ -33,3 +35,13 @@ flask cli search <TERMS>
 ```
 
 
+## Testing
+
+Using pytest and pytest-coverage, run:
+
+    pytest --cov=hubgrep .
+    
+    
+## Deploy
+
+TODO
