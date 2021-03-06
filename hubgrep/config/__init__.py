@@ -6,7 +6,6 @@ from hubgrep.lib.search_interfaces.gitlab import GitLabSearch
 # todo: these should live in a database
 search_interfaces_by_name = {
     "github.com": GitHubSearch(),
-=======
     #"gitlab.org": GitLabSearch(
     #    "https://gitlab.com", api_token=os.environ["GITLAB_API_TOKEN"]
     #),  # new, empty user, read-only api

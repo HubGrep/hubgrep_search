@@ -60,8 +60,8 @@ class SearchResult:
 
 
     def get_cli_formatted(self):
-        self.last_commit = self.last_commit.replace(tzinfo=None)
-        self.created_at = self.created_at.replace(tzinfo=None)
+        self.last_commit = self.last_commit_raw.replace(tzinfo=None)
+        self.created_at = self.created_at_raw.replace(tzinfo=None)
         last_commit = humanize.naturaltime(self.last_commit)
         created_at = humanize.naturaltime(self.created_at)
 

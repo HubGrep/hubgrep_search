@@ -23,7 +23,7 @@ def final_sort(keywords, results):
     return sorted(results, key=_key, reverse=False)
 
 
-def normalize(results):
+def _normalize(results):
     """
     normalize fork count of the results of a service
 
@@ -42,9 +42,7 @@ def normalize(results):
             result.forks_normalized = 0
 
 
-def fetch_concurrently(
-    keywords, search_interfaces: List[SearchInterface], forks=True, archived=True
-):
+def fetch_concurrently(keywords, search_interfaces: List[SearchInterface]):
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
@@ -58,14 +56,17 @@ def fetch_concurrently(
             success, base_url, _results = future.result(timeout=50)
             if success:
                 if _results:
-                    normalize(_results)
-                    if not archived:
-                        _results = [r for r in _results if r.is_archived is not False]
-                    if not forks:
-                        _results = [r for r in _results if r.is_fork is not False]
+                    _normalize(_results)
                     results += _results
             else:
                 errors.append((base_url, _results))
 
         results = final_sort(keywords, results)
         return results, errors
+
+def filter_results(results: List, include_archived=True, include_fork=True):
+    if not include_archived:
+        results = [r for r in results if r.is_archived is not True]
+    if not include_fork:
+        results = [r for r in results if r.is_fork is not True]
+    return results
