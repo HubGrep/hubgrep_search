@@ -1,7 +1,7 @@
 import click
 from flask import Blueprint, render_template
 from flask import current_app as app, request
-from hubgrep_meta.lib.fetch_results import fetch_concurrently
+from hubgrep.lib.fetch_results import fetch_concurrently
 
 cli_bp = Blueprint("cli", __name__)
 

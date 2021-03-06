@@ -1,0 +1,35 @@
+@function color($key) {
+    @if map-has-key($colors, $key) {
+        @return map-get($colors, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $colors.";
+    @return null;
+}
+
+@function font($key) {
+    @if map-has-key($fonts, $key) {
+        @return map-get($fonts, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $fonts.";
+    @return null;
+}
+
+@function size($key) {
+    @if map-has-key($fontSizes, $key) {
+        @return map-get($fontSizes, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $fontSizes.";
+    @return null;
+}
+
+@function icon($key) {
+    @if map-has-key($icons, $key) {
+        @return map-get($icons, $key);
+    }
+
+    @warn "Unknown `#{$key}` in $icons.";
+    @return null;
+}

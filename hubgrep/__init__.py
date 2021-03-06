@@ -1,10 +1,11 @@
 import logging
 import os
 from flask import Flask
+from flask_assets import Environment, Bundle
 #from flask_migrate import Migrate
 #from flask_sqlalchemy import SQLAlchemy
 
-from hubgrep_meta.lib.init_logging import init_logging
+from hubgrep.lib.init_logging import init_logging
 
 #from flask_security import (
     #Security,
@@ -26,7 +27,11 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__,
+                static_url_path="/static",
+                static_folder="static")
+    assets = Environment(app)
+    build_assets(assets)
 
     @app.after_request
     def add_gnu_tp_header(response):
@@ -36,9 +41,9 @@ def create_app():
 
     app_env = os.environ.get("APP_ENV", "development")
     config_mapping = {
-        "development": "hubgrep_meta.config.DevelopmentConfig",
-        "production": "hubgrep_meta.config.ProductionConfig",
-        "testing": "hubgrep_meta.config.testingConfig",
+        "development": "hubgrep.config.DevelopmentConfig",
+        "production": "hubgrep.config.ProductionConfig",
+        "testing": "hubgrep.config.testingConfig",
     }
 
     app.config.from_object(config_mapping[app_env])
@@ -51,10 +56,17 @@ def create_app():
     #user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     #security = Security(app, user_datastore)
 
-    from hubgrep_meta.frontend_blueprint import frontend
-    from hubgrep_meta.cli_blueprint import cli_bp
+    from hubgrep.frontend_blueprint import frontend
+    from hubgrep.cli_blueprint import cli_bp
 
     app.register_blueprint(frontend)
     app.register_blueprint(cli_bp)
 
     return app
+
+
+def build_assets(assets):
+    scss_about = Bundle('scss/about.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='about.css')
+    scss_search = Bundle('scss/search.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='search.css')
+    assets.register('scss_about', scss_about)
+    assets.register('scss_search', scss_search)

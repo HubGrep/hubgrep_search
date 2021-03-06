@@ -1,0 +1,24 @@
+$breakpoints: (
+        mobile: 480px,
+);
+
+$fonts: (
+        base: (arial, sans-serif),
+);
+
+$fontSizes: (
+        header: 1.25rem,
+        body: 1rem,
+        footer: 1rem,
+        detail: 0.875rem,
+);
+
+$colors: (
+        white: #FFFFFF,
+        font: #4d5156,
+        fontFade: #7d7d7d,
+        boxShadow: rgba(0, 0, 0, 0.17),
+        grey: #ccc,
+        link: #1a0dab,
+        linkVisited: #551a8b,
+);
