@@ -1,5 +1,4 @@
 import os
-from hubgrep.config.Locale import Locale
 from hubgrep.lib.search_interfaces.gitea import GiteaSearch
 from hubgrep.lib.search_interfaces.github import GitHubSearch
 from hubgrep.lib.search_interfaces.gitlab import GitLabSearch
@@ -27,12 +26,19 @@ search_interfaces_by_name = {
 }
 
 
-class Config(Locale):
+class Config():
     DEBUG = False
     TESTING = False
     LOGLEVEL = "debug"
 
     SEARCH_INTERFACES_BY_NAME = search_interfaces_by_name
+
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
+    LANGUAGES = {
+        'en': 'English',
+        'de': 'Deutsch'
+    }
 
 
 class ProductionConfig(Config):
