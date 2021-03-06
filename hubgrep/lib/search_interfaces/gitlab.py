@@ -34,8 +34,13 @@ class GitLabSearchResult(SearchResult):
         repo_description = search_result_item.get("description", "?") or "?"
         last_commit = iso8601.parse_date(search_result_item["last_activity_at"])
         created_at = iso8601.parse_date(search_result_item["created_at"])
-        language = "?"
-        license = "?"
+        language = ""
+        license = ""
+
+        stars = search_result_item["star_count"]
+        forks = search_result_item["forks_count"]
+        is_fork = None
+        is_archived = None
 
         html_url = search_result_item["http_url_to_repo"]
 
@@ -48,6 +53,10 @@ class GitLabSearchResult(SearchResult):
             created_at=created_at,
             language=language,
             license=license,
+            forks=forks,
+            stars=stars,
+            is_fork=is_fork,
+            is_archived=is_archived
         )
 
 
