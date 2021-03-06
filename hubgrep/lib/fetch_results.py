@@ -20,7 +20,7 @@ def final_sort(keywords, results):
         result.score = ratio
         return ratio
 
-    return sorted(results, key=_key, reverse=False)
+    return sorted(results, key=_key, reverse=True)
 
 
 def _normalize(results):

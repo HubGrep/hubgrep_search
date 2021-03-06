@@ -25,7 +25,7 @@ def search(terms, no_forks, no_archived):
 
 
     results = filter_results(results, include_archived=include_archived, include_fork=include_fork)
-
+    results.reverse()
     for result in results:
 
         text = result.get_cli_formatted()
