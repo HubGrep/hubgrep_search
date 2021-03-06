@@ -32,3 +32,7 @@ def search(terms, no_forks, no_archived):
         print(text)
     print(f'({len(results)} results)')
     pass
+
+@cli_bp.cli.command()
+def version():
+    print(f'HubGrep {cli_bp.config.VERSION}')
