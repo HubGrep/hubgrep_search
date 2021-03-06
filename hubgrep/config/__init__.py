@@ -30,6 +30,7 @@ class Config:
     DEBUG = False
     TESTING = False
     LOGLEVEL = "debug"
+    VERSION = "0.0.0"
 
     SEARCH_INTERFACES_BY_NAME = search_interfaces_by_name
 
