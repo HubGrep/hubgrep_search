@@ -19,22 +19,22 @@ msgstr ""
 "Generated-By: Babel 2.9.0\n"
 
 #: hubgrep/frontend_blueprint/templates/search/result_card.html:16
-msgid "lang:"
+msgid "language"
 msgstr "Sprache"
 
 #: hubgrep/frontend_blueprint/templates/search/result_card.html:20
-msgid "license:"
+msgid "license"
 msgstr "Lizenz"
 
 #: hubgrep/frontend_blueprint/templates/search/result_card.html:26
-msgid "created:"
+msgid "created"
 msgstr "erstellt"
 
 #: hubgrep/frontend_blueprint/templates/search/result_card.html:30
-msgid "updated:"
+msgid "updated"
 msgstr "Aktualisiert"
 
 #: hubgrep/frontend_blueprint/templates/search/result_card.html:36
 msgid "score"
-msgstr "Ergebnis"
+msgstr "relevanz"
 
