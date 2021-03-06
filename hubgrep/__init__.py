@@ -1,6 +1,7 @@
 import logging
 import os
-from flask import Flask
+from flask import Flask, request
+from flask_babel import Babel
 from flask_assets import Environment, Bundle
 #from flask_migrate import Migrate
 #from flask_sqlalchemy import SQLAlchemy
@@ -47,6 +48,7 @@ def create_app():
     }
 
     app.config.from_object(config_mapping[app_env])
+    babel = Babel(app)
 
     init_logging(loglevel=app.config["LOGLEVEL"])
 
@@ -62,8 +64,12 @@ def create_app():
     app.register_blueprint(frontend)
     app.register_blueprint(cli_bp)
 
-    return app
+    @babel.localeselector
+    def get_locale():
+        lang = request.accept_languages.best_match(app.config["LANGUAGES"].keys())
+        return lang
 
+    return app
 
 def _build_assets(assets: Environment):
     scss_about = Bundle('scss/about.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='about.css')

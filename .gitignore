@@ -9,3 +9,4 @@ htmlcov/
 .env
 .webassets-cache/
 hubgrep/static/*.css
+messages.pot
