@@ -18,7 +18,7 @@
                     <form action="{{ search_url }}" method="get">
                         <div class="input-bar">
                             <label for="searchbar" aria-label="search"></label>
-                            <input type="text" id="searchbar" name="s">
+                            <input type="text" id="searchbar" name="s" value="{{ search_phrase or '' }}">
                         </div>
                     </form>
                 </form>
