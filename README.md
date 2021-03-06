@@ -55,7 +55,7 @@ First extract:
 
     pybabel extract -F babel.cfg -o messages.pot hubgrep
 
-Then, after MANUALLY filling in translation texts in this file, either update existing or init:
+Then, after MANUALLY filling in translation texts in this file (empty "msgstr" fields), either update existing or init:
 
     pybabel init -l [YOUR_LANG] -i messages.pot -d hubgrep/translations
     -
