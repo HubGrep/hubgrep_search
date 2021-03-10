@@ -12,6 +12,10 @@ class TestRoutes(unittest.TestCase):
         res = self._test_client.get('/')
         assert res.status_code == 200
 
+    def test_localization(self):
+        res = self._test_client.get('/', headers=[("Accept-Language", "de")])
+        assert '<html lang="de">' in str(res.data)
+
     def test_about(self):
         res = self._test_client.get('/about')
         assert res.status_code == 200

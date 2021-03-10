@@ -69,6 +69,8 @@ def create_app():
         lang = request.accept_languages.best_match(app.config["LANGUAGES"].keys())
         return lang
 
+    app.jinja_env.globals['get_locale'] = get_locale
+
     return app
 
 def _build_assets(assets: Environment):
