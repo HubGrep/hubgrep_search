@@ -13,7 +13,7 @@ def index():
     search_results = []
     if search_phrase is not False:
         terms = search_phrase.split()
-        search_interfaces = app.config["SEARCH_INTERFACES_BY_NAME"].values()
+        search_interfaces = app.config["SEARCH_INTERFACES"].values()
         search_results, external_errors = fetch_concurrently(terms, search_interfaces)
 
     return render_template("search/search.html", title=title, search_results=search_results, search_url=request.url, search_phrase=search_phrase)

@@ -115,8 +115,8 @@ class GiteaSearchResult(SearchResult):
 class GiteaSearch(SearchInterface):
     name = "Gitea"
 
-    def __init__(self, base_url):
-        super().__init__(base_url=base_url, search_path="api/v1/repos/search")
+    def __init__(self, base_url, requests_session=None):
+        super().__init__(base_url=base_url, search_path="api/v1/repos/search", requests_session=requests_session)
 
     def search(self, keywords: list = [], tags: dict = {}):
         params = dict(q="+".join(keywords), **tags)

@@ -13,7 +13,7 @@ cli_bp = Blueprint("cli", __name__)
 @click.option("--no-archived", is_flag=True, default=False)
 def search(terms, no_forks, no_archived):
 
-    search_interfaces = app.config["SEARCH_INTERFACES_BY_NAME"].values()
+    search_interfaces = app.config["SEARCH_INTERFACES"].values()
     include_fork = not no_forks
     include_archived = not no_archived
 
