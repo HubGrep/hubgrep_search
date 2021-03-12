@@ -1,7 +1,7 @@
 from iso8601 import iso8601
 
-from hubgrep.lib.search_interfaces._search_interface import (
-    SearchInterface,
+from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
+    HostingServiceInterface,
     SearchResult,
 )
 
@@ -108,15 +108,19 @@ class GiteaSearchResult(SearchResult):
             forks=forks,
             stars=stars,
             is_fork=is_fork,
-            is_archived=is_archived
+            is_archived=is_archived,
         )
 
 
-class GiteaSearch(SearchInterface):
+class GiteaSearch(HostingServiceInterface):
     name = "Gitea"
 
     def __init__(self, base_url, requests_session=None):
-        super().__init__(base_url=base_url, search_path="api/v1/repos/search", requests_session=requests_session)
+        super().__init__(
+            base_url=base_url,
+            search_path="api/v1/repos/search",
+            requests_session=requests_session,
+        )
 
     def search(self, keywords: list = [], tags: dict = {}):
         params = dict(q="+".join(keywords), **tags)

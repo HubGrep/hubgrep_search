@@ -1,7 +1,7 @@
 from iso8601 import iso8601
 
-from hubgrep.lib.search_interfaces._search_interface import (
-    SearchInterface,
+from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
+    HostingServiceInterface,
     SearchResult,
 )
 
@@ -56,15 +56,19 @@ class GitLabSearchResult(SearchResult):
             forks=forks,
             stars=stars,
             is_fork=is_fork,
-            is_archived=is_archived
+            is_archived=is_archived,
         )
 
 
-class GitLabSearch(SearchInterface):
+class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
     def __init__(self, base_url, api_token, requests_session=None):
-        super().__init__(base_url=base_url, search_path="/api/v4/search", requests_session=requests_session)
+        super().__init__(
+            base_url=base_url,
+            search_path="/api/v4/search",
+            requests_session=requests_session,
+        )
         self.api_token = api_token
 
     def search(self, keywords: list = [], tags: dict = {}):

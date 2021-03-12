@@ -1,10 +1,9 @@
 from iso8601 import iso8601
 
-from hubgrep.lib.search_interfaces._search_interface import (
+from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
+    HostingServiceInterface,
     SearchResult,
-    SearchInterface,
 )
-
 
 # https://developer.github.com/v3/search/
 
@@ -76,18 +75,20 @@ class GitHubSearchResult(SearchResult):
             forks=forks,
             stars=stars,
             is_fork=is_fork,
-            is_archived=is_archived
+            is_archived=is_archived,
         )
 
 
-class GitHubSearch(SearchInterface):
+class GitHubSearch(HostingServiceInterface):
     name = "GitHub"
 
     # https://developer.github.com/v3/search/#search-repositories
 
     def __init__(self, base_url, requests_session=None):
         super().__init__(
-            base_url=base_url, search_path="search/repositories", requests_session=requests_session
+            base_url=base_url,
+            search_path="search/repositories",
+            requests_session=requests_session,
         )
 
     def search(self, keywords: list = [], tags: dict = {}):

@@ -2,8 +2,8 @@ import difflib
 from concurrent import futures
 from typing import List
 
-from hubgrep.lib.search_interfaces._search_interface import (
-    SearchInterface,
+from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
+    HostingServiceInterface,
     SearchResult,
 )
 
@@ -42,12 +42,12 @@ def _normalize(results):
             result.forks_normalized = 0
 
 
-def fetch_concurrently(keywords, search_interfaces: List[SearchInterface]):
+def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingServiceInterface]):
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
-        for name, search_interface in search_interfaces.items():
-            future = executor.submit(search_interface.search, keywords)
+        for name, hosting_service_interface in hosting_service_interfaces.items():
+            future = executor.submit(hosting_service_interface.search, keywords)
             to_do.append(future)
 
         results = []
