@@ -9,10 +9,14 @@ import requests
 class SearchInterface:
     name = ""
 
-    def __init__(self, base_url, search_path):
+    def __init__(self, base_url, search_path, requests_session=None):
         self.base_url = base_url
-        self.requests = requests.session()
         self.request_url = urljoin(self.base_url, search_path)
+
+        if requests_session:
+            self.requests = requests_session
+        else:
+            self.requests = requests.session()
 
     def search(self, keywords: list, tags: dict):
         raise NotImplementedError
