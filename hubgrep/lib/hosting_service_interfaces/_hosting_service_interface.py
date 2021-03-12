@@ -6,22 +6,6 @@ import humanize
 import requests
 
 
-class SearchInterface:
-    name = ""
-
-    def __init__(self, base_url, search_path, requests_session=None):
-        self.base_url = base_url
-        self.request_url = urljoin(self.base_url, search_path)
-
-        if requests_session:
-            self.requests = requests_session
-        else:
-            self.requests = requests.session()
-
-    def search(self, keywords: list, tags: dict):
-        raise NotImplementedError
-
-
 class SearchResult:
     def __init__(
         self,
@@ -62,7 +46,6 @@ class SearchResult:
         self.text += click.style(key, bold=True)
         self.text += f"{value}\n"
 
-
     def get_cli_formatted(self):
         self.last_commit = self.last_commit_raw.replace(tzinfo=None)
         self.created_at = self.created_at_raw.replace(tzinfo=None)
@@ -81,3 +64,19 @@ class SearchResult:
         self._append_to_print("  Score: ", self.score)
 
         return self.text
+
+
+class HostingServiceInterface:
+    name = ""
+
+    def __init__(self, base_url, search_path, requests_session=None):
+        self.base_url = base_url
+        self.request_url = urljoin(self.base_url, search_path)
+
+        if requests_session:
+            self.requests = requests_session
+        else:
+            self.requests = requests.session()
+
+    def search(self, keywords: list, tags: dict):
+        raise NotImplementedError

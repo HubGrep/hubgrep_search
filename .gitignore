@@ -10,3 +10,4 @@ htmlcov/
 .webassets-cache/
 hubgrep/static/*.css
 messages.pot
+hosters.json

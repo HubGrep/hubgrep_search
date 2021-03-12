@@ -1,8 +1,4 @@
 import os
-from hubgrep.lib.search_interfaces import search_interfaces_by_name
-
-
-
 
 class Config:
     DEBUG = False
