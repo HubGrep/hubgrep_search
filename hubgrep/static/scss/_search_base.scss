@@ -10,6 +10,12 @@
     flex-direction: column;
     align-items: center;
 
+    &-title {
+      a:hover {
+        text-decoration: none;
+      }
+    }
+
     &-form { // form-wrapper
       width: 100%;
 

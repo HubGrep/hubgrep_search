@@ -12,7 +12,7 @@
     {% endif %}
 {% endblock %}
 
-{% import "nav.html" as nav %}
+{% import "components/nav.html" as nav %}
 {% set nav_items = [["/about", "About"], ["/imprint", "Imprint"]] %}
 
 {% block header %}
@@ -51,7 +51,7 @@
 
         <div class="search-result">
             <div class="search-result-messages">
-                {% import "status_message.html" as status %}
+                {% import "components/status_message.html" as status %}
                 {% for error in external_errors %}
                     {{ status.message("warn", error, "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
                 {% endfor %}
