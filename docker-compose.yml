@@ -6,6 +6,9 @@ services:
     image: postgres:13
     env_file: .env
 
+  redis:
+    image: redis
+
   service:
     build: .
     volumes:

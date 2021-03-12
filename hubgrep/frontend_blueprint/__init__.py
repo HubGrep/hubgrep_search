@@ -4,6 +4,7 @@ from flask import request
 from hubgrep.constants import title
 
 from hubgrep.lib.fetch_results import fetch_concurrently
+from hubgrep.lib.search_interfaces import get_search_interfaces
 
 frontend = Blueprint("frontend", __name__, template_folder="templates")
 
@@ -17,7 +18,7 @@ def index():
     external_errors = []
     if search_phrase is not False:
         terms = search_phrase.split()
-        search_interfaces = app.config["SEARCH_INTERFACES_BY_NAME"].values()
+        search_interfaces = get_search_interfaces(cache=app.config['ENABLE_CACHE'])
         search_results, external_errors = fetch_concurrently(terms, search_interfaces)
         search_feedback = "{} out of {} total matching repositories.".format(repos_per_page, len(search_results))
 

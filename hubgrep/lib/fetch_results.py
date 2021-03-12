@@ -46,7 +46,7 @@ def fetch_concurrently(keywords, search_interfaces: List[SearchInterface]):
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
-        for search_interface in search_interfaces:
+        for name, search_interface in search_interfaces.items():
             future = executor.submit(search_interface.search, keywords)
             to_do.append(future)
 

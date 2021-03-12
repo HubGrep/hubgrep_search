@@ -85,9 +85,9 @@ class GitHubSearch(SearchInterface):
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self):
+    def __init__(self, base_url, requests_session=None):
         super().__init__(
-            base_url="https://api.github.com/", search_path="search/repositories"
+            base_url=base_url, search_path="search/repositories", requests_session=requests_session
         )
 
     def search(self, keywords: list = [], tags: dict = {}):

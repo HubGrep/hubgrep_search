@@ -3,6 +3,8 @@ import os
 from flask import Flask, request
 from flask_babel import Babel
 from flask_assets import Environment, Bundle
+from flask_redis import FlaskRedis
+
 #from flask_migrate import Migrate
 #from flask_sqlalchemy import SQLAlchemy
 
@@ -18,6 +20,9 @@ from hubgrep.lib.init_logging import init_logging
 #db = SQLAlchemy()
 
 #migrate = Migrate()
+
+redis_client = FlaskRedis()
+
 logger = logging.getLogger(__name__)
 
 
@@ -49,6 +54,7 @@ def create_app():
 
     app.config.from_object(config_mapping[app_env])
     babel = Babel(app)
+    redis_client.init_app(app)
 
     init_logging(loglevel=app.config["LOGLEVEL"])
 
@@ -68,6 +74,8 @@ def create_app():
     def get_locale():
         lang = request.accept_languages.best_match(app.config["LANGUAGES"].keys())
         return lang
+
+    app.jinja_env.globals['get_locale'] = get_locale
 
     return app
 

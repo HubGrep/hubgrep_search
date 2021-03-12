@@ -63,8 +63,8 @@ class GitLabSearchResult(SearchResult):
 class GitLabSearch(SearchInterface):
     name = "GitLab"
 
-    def __init__(self, base_url, api_token):
-        super().__init__(base_url=base_url, search_path="/api/v4/search")
+    def __init__(self, base_url, api_token, requests_session=None):
+        super().__init__(base_url=base_url, search_path="/api/v4/search", requests_session=requests_session)
         self.api_token = api_token
 
     def search(self, keywords: list = [], tags: dict = {}):
