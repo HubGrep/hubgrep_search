@@ -1,32 +1,30 @@
 @import "./shared_bundle";
+@import "search_base";
 @import "./components/result_card";
+@import "./components/status_message";
 
-.main {
-  margin: 0 auto;
-  width: 100%;
-  max-width: 37.5rem;
+header {
+  display: none;
+}
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+footer {
+  justify-content: flex-end;
+}
 
-  &-search {
-    width: 100%;
+.search {
 
-    .input-bar {
-      border: 1px solid #dfe1e5;
-      border-radius: 24px;
-      padding: 0.45rem 1rem 0.35rem;
+  @media (min-width: 720px) {
+    &-main {
+      flex-direction: row;
+      margin: 0;
+
+      &-title {
+        min-width: 8.75rem;
+      }
     }
 
-    #searchbar {
-      font-size: size(body);
-      width: 100%;
-      border: none;
-
-      &:focus {
-        outline: none 0;
-      }
+    &-result {
+      padding-left: 10rem;
     }
   }
 }

@@ -1,0 +1,3 @@
+{% macro message(status, msgStr, prefix="", affix="") %}
+    <div class="status-message status-{{ status }}">{{ prefix }}{{ msgStr }}{{ affix }}</div>
+{% endmacro %}

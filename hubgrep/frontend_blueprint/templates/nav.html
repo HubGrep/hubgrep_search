@@ -1,0 +1,9 @@
+{% macro links(items=[], class_name="site-nav") %}
+    <nav class="nav {{ class_name }}">
+        {% for item in items %}
+            {% set url = item[0] %}
+            {% set label = item[1] %}
+            <a class="nav-item negate" href="{{ url }}">{{ gettext(label) | safe }}</a>
+        {% endfor %}
+    </nav>
+{% endmacro %}

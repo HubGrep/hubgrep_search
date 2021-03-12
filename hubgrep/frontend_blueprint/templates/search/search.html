@@ -1,38 +1,68 @@
 {% extends 'base.html' %}
 
 {% block styles %}
-    {% assets "scss_search" %}
-        <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-    {% endassets %}
+    {% if request.args.get('s') %}
+        {% assets "scss_search" %}
+            <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+        {% endassets %}
+    {% else %}
+        {% assets "scss_search_empty" %}
+            <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+        {% endassets %}
+    {% endif %}
+{% endblock %}
+
+{% import "nav.html" as nav %}
+{% set nav_items = [["/about", "About"], ["/imprint", "Imprint"]] %}
+
+{% block header %}
+    {% if not request.args.get('s') %}
+        {{ nav.links(nav_items) }}
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% if request.args.get('s') %}
+        {{ nav.links(nav_items) }}
+    {% endif %}
 {% endblock %}
 
 {% block content %}
-    <div class="main">
-        <div class="main-title">
-            <h1>{{ title }}</h1>
-        </div>
+    <div class="search">
+        <div class="search-main">
+            <div class="search-main-title">
+                <a class="negate" href="/">
+                    <h1>{{ title }}</h1>
+                </a>
+            </div>
 
-        <div class="main-search">
-            <div class="main-search-form">
+            <div class="search-main-form">
                 <form>
                     <form action="{{ search_url }}" method="get">
                         <div class="input-bar">
                             <label for="searchbar" aria-label="search"></label>
-                            <input type="text" id="searchbar" name="s" value="{{ search_phrase or '' }}">
+                            <input type="text" id="searchbar" name="s" value="{{ search_phrase or '' }}"
+                                   required="required">
                         </div>
                     </form>
                 </form>
             </div>
         </div>
-    </div>
 
-    <div class="result">
-        <div class="result-message"></div>
-        <div class="result-items">
-            {% import "search/result_card.html" as result_card %}
-            {% for search_result in search_results %}
-                {{ result_card.card(search_result) }}
-            {% endfor %}
+        <div class="search-result">
+            <div class="search-result-messages">
+                {% import "status_message.html" as status %}
+                {% for error in external_errors %}
+                    {{ status.message("warn", error, "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
+                {% endfor %}
+                {{ status.message("info", search_feedback) }}
+            </div>
+            <div class="search-result-items">
+                {% import "search/result_card.html" as result_card %}
+                {% for search_result in search_results %}
+                    {{ result_card.card(search_result) }}
+                {% endfor %}
+            </div>
         </div>
     </div>
 {% endblock %}

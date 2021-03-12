@@ -72,7 +72,13 @@ def create_app():
     return app
 
 def _build_assets(assets: Environment):
+    # TODO we dont want to do this with watchers for prod, only for localdev
     scss_about = Bundle('scss/about.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='about.css')
+    scss_imprint = Bundle('scss/imprint.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='imprint.css')
     scss_search = Bundle('scss/search.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='search.css')
+    scss_search_empty = Bundle('scss/search_empty.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'],
+                         output='search_empty.css')
     assets.register('scss_about', scss_about)
+    assets.register('scss_imprint', scss_imprint)
     assets.register('scss_search', scss_search)
+    assets.register('scss_search_empty', scss_search_empty)

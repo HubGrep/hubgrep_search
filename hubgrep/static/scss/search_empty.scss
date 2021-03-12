@@ -1,0 +1,28 @@
+@import "./shared_bundle";
+@import "search_base";
+@import "./components/status_message";
+
+body > section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.nav {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.search {
+
+  &-main {
+
+    &-form { // form-wrapper
+      // TODO landing page look
+    }
+  }
+}
