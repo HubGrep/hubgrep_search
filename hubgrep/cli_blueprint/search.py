@@ -13,7 +13,7 @@ from hubgrep.cli_blueprint import cli_bp
 @click.option("--no-archived", is_flag=True, default=False)
 def search(terms, no_forks, no_archived):
 
-    search_interfaces = get_search_interfaces(cache=True)
+    search_interfaces = get_search_interfaces(cache=app.config['ENABLE_CACHE'])
     include_fork = not no_forks
     include_archived = not no_archived
 

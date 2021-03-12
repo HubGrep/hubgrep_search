@@ -1,6 +1,7 @@
 import json
 from requests_cache.core import CachedSession
 from requests_cache.backends.redis import RedisCache
+from flask import current_app as app
 
 
 from hubgrep.lib.search_interfaces.github import GitHubSearch
@@ -27,7 +28,7 @@ def get_search_interfaces(cache=False):
         
         if cache:
             cache_backend = RedisCache(connection=redis_client)
-            cached_session = CachedSession(expire_after=3600, backend=cache_backend)
+            cached_session = CachedSession(expire_after=app.config['CACHE_TIME'], backend=cache_backend)
             args = {**config["args"], 'requests_session': cached_session}
         else:
             args = config['args']
