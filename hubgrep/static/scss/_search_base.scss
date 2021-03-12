@@ -1,0 +1,39 @@
+.search {
+
+  &-main {
+    margin: 0 auto;
+    width: 100%;
+    min-width: 25rem;
+    max-width: 37.5rem;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &-form { // form-wrapper
+      width: 100%;
+
+      .input-bar {
+        border: 1px solid #dfe1e5;
+        border-radius: 24px;
+        padding: 0.45rem 1rem 0.35rem;
+      }
+
+      #searchbar {
+        font-size: size(body);
+        width: 100%;
+        border: none;
+
+        &:focus {
+          outline: none 0;
+        }
+      }
+    }
+  }
+
+  &-result {
+    &-messages:first-child {
+      margin-top: 1rem;
+    }
+  }
+}

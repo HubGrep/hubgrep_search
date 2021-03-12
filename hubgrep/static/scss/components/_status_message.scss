@@ -1,0 +1,9 @@
+.status-message {
+  font-size: size(detail);
+
+  color: color("font");
+
+  &.status-warn {
+    color: color("warning");
+  }
+}

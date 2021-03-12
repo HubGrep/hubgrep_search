@@ -9,6 +9,7 @@
 
   h2 {
     font-size: size(header);
+    display: inline-block;
   }
 
   h2, p {
@@ -22,6 +23,15 @@
   // --- link/title
   &-signature {
     display: block;
+    pointer-events: none;
+
+    h2:hover {
+      text-decoration: underline;
+    }
+
+    h2, &-url {
+      pointer-events: all;
+    }
 
     &-name {
       font-weight: normal;
@@ -33,6 +43,10 @@
 
     &-url {
       font-size: size(detail);
+
+      &:hover {
+      text-decoration: underline;
+    }
     }
   }
 

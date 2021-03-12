@@ -53,7 +53,7 @@ def fetch_concurrently(keywords, search_interfaces: List[SearchInterface]):
         results = []
         errors = []
         for future in futures.as_completed(to_do):
-            success, base_url, _results = future.result(timeout=50)
+            success, base_url, _results = future.result(timeout=5)  # TODO tweak this for better UX as it blocks pageload on broken external services
             if success:
                 if _results:
                     _normalize(_results)
