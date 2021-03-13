@@ -9,6 +9,11 @@ services:
   redis:
     image: redis
 
+  maildev:
+    image: maildev/maildev
+    ports:
+      - 8081:80
+
   service:
     build: .
     volumes:

@@ -7,6 +7,7 @@ from flask_redis import FlaskRedis
 
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from flask_mail import Mail
 
 from hubgrep.lib.init_logging import init_logging
 
@@ -23,6 +24,7 @@ security = Security()
 migrate = Migrate()
 
 redis_client = FlaskRedis()
+mail = Mail()
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +63,7 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db=db)
-
+    mail.init_app(app)
 
     # import after db is created
     from hubgrep.models import User, Role
