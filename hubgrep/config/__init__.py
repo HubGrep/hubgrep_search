@@ -14,6 +14,9 @@ class Config:
     CACHE_TIME = 3600
     REDIS_URL = "redis://redis:6379/0"
 
+    SQLALCHEMY_DATABASE_URI= os.environ['SQLALCHEMY_DATABASE_URI']
+    SECURITY_PASSWORD_SALT=os.environ['SECURITY_PASSWORD_SALT']
+
 
 class ProductionConfig(Config):
     pass

@@ -5,21 +5,22 @@ from flask_babel import Babel
 from flask_assets import Environment, Bundle
 from flask_redis import FlaskRedis
 
-#from flask_migrate import Migrate
-#from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
 
 from hubgrep.lib.init_logging import init_logging
 
-#from flask_security import (
-    #Security,
-    #SQLAlchemyUserDatastore,
-    #auth_required,
-    #hash_password,
-#)
+from flask_security import (
+    Security,
+    SQLAlchemyUserDatastore,
+    auth_required,
+    hash_password,
+)
 
-#db = SQLAlchemy()
+db = SQLAlchemy()
+security = Security()
 
-#migrate = Migrate()
+migrate = Migrate()
 
 redis_client = FlaskRedis()
 
@@ -58,11 +59,15 @@ def create_app():
 
     init_logging(loglevel=app.config["LOGLEVEL"])
 
-    #db.init_app(app)
-    #migrate.init_app(app, db=db)
+    db.init_app(app)
+    migrate.init_app(app, db=db)
 
-    #user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    #security = Security(app, user_datastore)
+
+    # import after db is created
+    from hubgrep.models import User, Role
+
+    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+    security.init_app(app, user_datastore)
 
     from hubgrep.frontend_blueprint import frontend
     from hubgrep.cli_blueprint import cli_bp
