@@ -2,6 +2,29 @@ import os
 
 
 class Config:
+    # user defined config
+    ENABLE_CACHE = os.environ.get("HUBGREP_ENABLE_CACHE", True)
+    CACHE_TIME = os.environ.get("HUBGREP_CACHE_TIME", 3600)
+    REDIS_URL = os.environ["HUBGREP_REDIS_URL"]
+
+    MAIL_DEBUG = os.environ.get('HUBGREP_MAIL_DEBUG', False)
+    
+    MAIL_SERVER = os.environ['HUBGREP_MAIL_SERVER']
+    MAIL_PORT = os.environ['HUBGREP_MAIL_PORT']
+    MAIL_USE_TLS = os.environ.get('HUBGREP_MAIL_USE_TLS', False)
+    MAIL_USE_SSL = os.environ.get('HUBGREP_MAIL_USE_SSL', False)
+    MAIL_USERNAME = os.environ.get('HUBGREP_MAIL_USERNAME', False)
+    MAIL_PASSWORD = os.environ.get('HUBGREP_MAIL_PASSWORD', None)
+    MAIL_DEFAULT_SENDER = os.environ.get('HUBGREP_MAIL_DEFAULT_SENDER', None)
+    MAIL_MAX_EMAILS = os.environ.get('HUBGREP_MAIL_MAX_EMAILS', None)
+
+
+    SQLALCHEMY_DATABASE_URI = os.environ["HUBGREP_SQLALCHEMY_DATABASE_URI"]
+    SECURITY_PASSWORD_SALT = os.environ["HUBGREP_SECURITY_PASSWORD_SALT"]
+    SECRET_KEY = os.environ["HUBGREP_SECRET_KEY"]
+
+
+    # hardcoded config
     DEBUG = False
     TESTING = False
     LOGLEVEL = "debug"
@@ -10,10 +33,6 @@ class Config:
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
     LANGUAGES = {"en": "English", "de": "Deutsch"}
-
-    ENABLE_CACHE = True
-    CACHE_TIME = 3600
-    REDIS_URL = os.environ["REDIS_URL"]
 
     # https://flask-security-too.readthedocs.io/en/stable/configuration.html
     SECURITY_LOGIN_URL = "/login"
@@ -37,21 +56,6 @@ class Config:
     SECURITY_FORGOT_PASSWORD_TEMPLATE = "security/forgot_password.html"
 
 
-    MAIL_DEBUG = os.environ.get('MAIL_DEBUG', False)
-    
-    MAIL_SERVER = os.environ['MAIL_SERVER']
-    MAIL_PORT = os.environ['MAIL_PORT']
-    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', False)
-    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', False)
-    MAIL_USERNAME = os.environ.get('MAIL_USERNAME', False)
-    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD', None)
-    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER', None)
-    MAIL_MAX_EMAILS = os.environ.get('MAIL_MAX_EMAILS', None)
-
-
-    SQLALCHEMY_DATABASE_URI = os.environ["SQLALCHEMY_DATABASE_URI"]
-    SECURITY_PASSWORD_SALT = os.environ["SECURITY_PASSWORD_SALT"]
-    SECRET_KEY = os.environ["SECRET_KEY"]
 
 
 class ProductionConfig(Config):
@@ -65,3 +69,4 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     TESTING = True
     DEBUG = True
+    SECURITY_SEND_REGISTER_EMAIL = False
