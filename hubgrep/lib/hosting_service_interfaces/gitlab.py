@@ -84,6 +84,5 @@ class GitLabSearch(HostingServiceInterface):
             return False, self.base_url, e
 
         result = response.json()
-        print("----RESULTS!?", result)
         results = [GitLabSearchResult(item) for item in result]
         return True, self.base_url, results

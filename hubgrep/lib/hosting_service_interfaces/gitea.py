@@ -1,9 +1,13 @@
+import logging
 from iso8601 import iso8601
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 # https://try.gitea.io/api/swagger#/repository/hubgrep_meta.lib
@@ -91,11 +95,11 @@ class GiteaSearchResult(SearchResult):
 
         stars = search_result_item["stars_count"]
         forks = search_result_item["forks_count"]
-        is_fork = search_result_item["fork"]
-        is_archived = search_result_item["archived"]
+        is_fork = search_result_item.get("fork", None)
+        is_archived = search_result_item.get("archived", None)
 
         html_url = search_result_item["html_url"]
-
+      
         super().__init__(
             repo_name=repo_name,
             repo_description=repo_description,

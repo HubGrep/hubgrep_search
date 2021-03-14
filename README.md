@@ -27,7 +27,7 @@ in the container you have to run the db migrations
 
 create the admin user
 
-    
+    flask cli init
 
 
 ## Usage - localdev
