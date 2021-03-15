@@ -1,0 +1,30 @@
+.pagination {
+  margin: 2rem 0;
+
+  &-control {
+
+  }
+
+  .prev, .next {
+    width: 6em;
+    display: inline-block;
+  }
+
+  .next {
+    text-align: end;
+  }
+
+  .current-page {
+    text-decoration: underline;
+    pointer-events: none;
+  }
+
+  .current-page, .divider {
+    color: color(font);
+
+    &:hover, &:active, &:focus {
+      color: color(font);
+      text-decoration: none;
+    }
+  }
+}
