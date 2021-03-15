@@ -18,6 +18,17 @@ and maybe you want to have a container to run cli commands:
 
 in the container you have to run the db migrations
 
+    # create migration files, 
+    # only if you changed something in the models
+    #flask db migrate  
+
+    # upgrade your datbase
+    flask db upgrade
+
+create the admin user
+
+    flask cli init
+
 
 ## Usage - localdev
 

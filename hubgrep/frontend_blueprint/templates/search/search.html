@@ -13,9 +13,19 @@
 {% endblock %}
 
 {% import "components/nav.html" as nav %}
-{% set nav_items = [["/about", "About"], ["/imprint", "Imprint"]] %}
+{% set nav_items = [[url_for('frontend.about'), "About"], [url_for('frontend.imprint'), "Imprint"]] %}
+{% if current_user.is_authenticated %}
+{% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
+{% else %}
+{% set _ = nav_items.append([url_for('security.login'), "login"]) %}
+{% set _ = nav_items.append([url_for('security.register'), "register"]) %}
+{% endif %}
 
 {% block header %}
+    {% if current_user.is_authenticated %}
+    logged in as {{ current_user.email }}
+    {% else %}
+    {% endif %}
     {% if not request.args.get('s') %}
         {{ nav.links(nav_items) }}
     {% endif %}

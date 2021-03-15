@@ -14,11 +14,11 @@ def add_hosters(path):
     for name, config in hosters.items():
         redis_client.set(f'hosting_service:{name}', json.dumps(config))
 
-
 @cli_bp.cli.command()
 def list_hosters():
     for key in redis_client.keys('hosting_service:*'):
         print(redis_client.get(key))
+
 @cli_bp.cli.command()
 def flush_hosters():
     for key in redis_client.keys('hosting_service:*'):
