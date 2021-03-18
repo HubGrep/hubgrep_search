@@ -73,6 +73,10 @@
                     {{ result_card.card(search_result) }}
                 {% endfor %}
             </div>
+            <div class="search-result-pagination">
+                {% import "components/pagination.html" as pagination %}
+                {{ pagination.controls(pagination_links) }}
+            </div>
         </div>
     </div>
 {% endblock %}

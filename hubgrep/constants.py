@@ -1,5 +1,11 @@
-# frontend
-title = "HubGrep"
-repo_created = "created"
-repo_modified = "modified"
+# pagination
+PARAM_OFFSET = "offset"
+PARAM_PER_PAGE = "per_page"
+CLASS_CURRENT_PAGE = "current-page"
+CLASS_PREV = "prev"
+CLASS_NEXT = "next"
 
+# frontend
+SITE_TITLE = "HubGrep"
+REPO_CREATED = "created"
+REPO_MODIFIED = "modified"

@@ -8,7 +8,7 @@ class Config:
     REDIS_URL = os.environ["HUBGREP_REDIS_URL"]
 
     MAIL_DEBUG = os.environ.get('HUBGREP_MAIL_DEBUG', False)
-    
+
     MAIL_SERVER = os.environ['HUBGREP_MAIL_SERVER']
     MAIL_PORT = os.environ['HUBGREP_MAIL_PORT']
     MAIL_USE_TLS = os.environ.get('HUBGREP_MAIL_USE_TLS', False)
@@ -56,6 +56,7 @@ class Config:
     SECURITY_FORGOT_PASSWORD_TEMPLATE = "security/forgot_password.html"
 
 
+    PAGINATION_PER_PAGE_DEFAULT = 10
 
 
 class ProductionConfig(Config):
