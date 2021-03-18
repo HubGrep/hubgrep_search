@@ -9,17 +9,16 @@ PageLink = namedtuple("PageLink", "url label class_name")
 divider_link = PageLink("", "..", "divider")
 
 
-def get_page_link(url: str, offset: int, per_page: int, label: str, class_name: str = "") -> PageLink:
+def _get_page_link(u: ParseResult, params: dict, offset: int, per_page: int, label: str, class_name: str = "") -> PageLink:
     """ Construct a PageLink (namedtuple) for use in templating.
 
-    :param url: current url to modify and/or add query params on regarding pagination
+    :param u: parsed "urllib" tuple which pagination params will be modified on
+    :param params: parsed query parameters from "u"
     :param offset: starting offset for the new page in terms of items shown
     :param per_page: amount of items to display on the new page
     :param label: display label for the PageLink
     :param class_name: optional css class
     """
-    u = urlparse(url)
-    params = parse_qs(u.query)
     params[PARAM_OFFSET] = [str(offset)]
     params[PARAM_PER_PAGE] = [str(per_page)]
     res = ParseResult(scheme=u.scheme, netloc=u.hostname, path=u.path, params=u.params,
@@ -41,24 +40,27 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
     :param link_max: upper cap for amount of enumerated page-links (but not a cap for the returned list)
     :param detach_min: no link dividers for total links under this value
     :param has_next_prev: include extra links for adjacent pages (not counted toward link_max)
-    :param side_link_portions: decimal between 0 - 0.5 assigned to both static ends of pagination link-sections
+    :param side_link_portions: decimal between 0 - 0.5 assigned to each static end of pagination link-sections
     """
+    u = urlparse(url)
+    params = parse_qs(u.query)
+
     links = []
-    page_current = math.floor(offset / per_page)
-    page_total = math.floor(results_total / per_page) + 1
+    page_current = offset // per_page
+    page_total = results_total // per_page + 1
     link_total = page_total if page_total < link_max else link_max
     allow_detach = detach_min <= page_total
 
     # --- append "previous" link
     if has_next_prev and page_current > 0:
-        links.append(get_page_link(url, offset - per_page, per_page, gettext("Previous"), CLASS_PREV))
+        links.append(_get_page_link(u, params, offset - per_page, per_page, gettext("Previous"), CLASS_PREV))
     else:
         links.append(PageLink("", "", CLASS_PREV))
 
     # --- append & calculate enumerated links
     side_cnt = math.ceil(link_total * side_link_portions)
     mid_max = link_total - side_cnt * 2
-    mid_side_cnt = math.floor(mid_max / 2) + 1
+    mid_side_cnt = mid_max // 2 + 1
     mid_left_start = page_current - mid_side_cnt
     mid_right_end = page_current + mid_side_cnt
     is_left_detached, is_right_detached = False, False
@@ -96,12 +98,12 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
         if page_number >= page_total:
             break  # or else we render links for pages we don't have
 
-        links.append(get_page_link(url, page_number * per_page, per_page,
-                                   label=str(page_number + 1), class_name=class_name))
+        links.append(_get_page_link(u, params, page_number * per_page, per_page,
+                                    label=str(page_number + 1), class_name=class_name))
 
     # --- append "next" link
     if has_next_prev and page_current + 1 != page_total and page_total > 1:
-        links.append(get_page_link(url, offset + per_page, per_page, gettext("Next"), CLASS_NEXT))
+        links.append(_get_page_link(u, params, offset + per_page, per_page, gettext("Next"), CLASS_NEXT))
     else:
         links.append(PageLink("", "", CLASS_NEXT))
 
