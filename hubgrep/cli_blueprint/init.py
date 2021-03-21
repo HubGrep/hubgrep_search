@@ -25,23 +25,6 @@ def create_admin(admin_email, admin_password):
     return admin
 
 
-def add_hosting_service(user: User, type: str, base_url: str, config: dict):
-    logger.info(f"creating {type} - {base_url}")
-    hosting_service = HostingService.query.filter_by(
-        user_id=user.id, type=type, base_url=base_url
-    ).first()
-    if hosting_service:
-        logger.info(f"found {type} - {base_url}")
-        return hosting_service
-
-    hosting_service = HostingService()
-    hosting_service.user = user
-    hosting_service.type = type
-    hosting_service.base_url = base_url
-    hosting_service.config = json.dumps(config)
-    return hosting_service
-
-
 @cli_bp.cli.command()
 def init():
     admin_email = os.environ["HUBGREP_ADMIN_EMAIL"]
@@ -55,11 +38,3 @@ def init():
 
     db.session.commit()
 
-    hosting_services = [
-        dict(type="github", base_url="https://api.github.com/", config=dict())
-    ]
-
-    for hosting_service in hosting_services:
-        s = add_hosting_service(admin, **hosting_service)
-        db.session.add(s)
-    db.session.commit()
