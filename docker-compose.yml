@@ -5,6 +5,8 @@ services:
   postgres:
     image: postgres:13
     env_file: .env
+    environment:
+      POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
 
   redis:
     image: redis

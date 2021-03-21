@@ -29,7 +29,10 @@ class HostingService(db.Model):
     user = db.relationship('User',
         backref=db.backref('hosting_service', lazy=True))
 
-    type = db.Column(db.String(80), unique=True, nullable=False)
+    type = db.Column(db.String(80), nullable=False)
+
+    # main instance website
+    frontpage_url = db.Column(db.String(500))
 
     # should this be unique, or can we use it to store multiple 
     # api keys for a backend?

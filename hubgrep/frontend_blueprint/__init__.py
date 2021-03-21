@@ -5,6 +5,7 @@ from hubgrep.constants import title
 
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
+from hubgrep.models import HostingService
 
 frontend = Blueprint("frontend", __name__, template_folder="templates")
 
@@ -33,7 +34,8 @@ def index():
 
 @frontend.route("/about")
 def about():
-    return render_template("about/about.html", title=title)
+    hosting_instances= HostingService.query.all()
+    return render_template("about/about.html", title=title, hosting_instances=hosting_instances)
 
 @frontend.route("/imprint")
 def imprint():
