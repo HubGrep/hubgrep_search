@@ -1,0 +1,8 @@
+{% macro controls(page_links) %}
+    <div class="pagination">
+        {% for link in page_links %}
+            <a class="pagination-control {{ link.class_name }}"
+               {% if link.url|length > 0 %}href="{{ link.url }}"{% endif %}>{{ link.label }}</a>
+        {% endfor %}
+    </div>
+{% endmacro %}
