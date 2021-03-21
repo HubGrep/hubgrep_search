@@ -2,13 +2,26 @@
 
 {% block content %}
 
-{{ current_user.email }}
+# {{ current_user.email }}
 
+{% if is_admin %}
 
 {% for instance in hosting_services %}   
     <div class="item">
-        {{ instance.frontpage_url }} - <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
+        {{ instance.user.email }} // {{ instance.frontpage_url }} - 
+        <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
     </div>
 {% endfor %}
+
+{% else %}
+
+{% for instance in hosting_services %}   
+    <div class="item">
+        {{ instance.frontpage_url }} - 
+        <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
+    </div>
+{% endfor %}
+
+{% endif %}
 
 {% endblock %}
