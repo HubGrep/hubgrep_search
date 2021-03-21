@@ -27,7 +27,7 @@ class HostingService(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
         nullable=False)
     user = db.relationship('User',
-        backref=db.backref('hosting_service', lazy=True))
+        backref=db.backref('hosting_services', lazy=True))
 
     type = db.Column(db.String(80), nullable=False)
 

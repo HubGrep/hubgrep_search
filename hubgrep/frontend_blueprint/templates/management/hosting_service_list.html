@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{{ current_user.email }}
+
+
+{% for instance in hosting_services %}   
+    <div class="item">
+        {{ instance.frontpage_url }} - <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
+    </div>
+{% endfor %}
+
+{% endblock %}
