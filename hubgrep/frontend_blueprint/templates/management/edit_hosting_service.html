@@ -4,7 +4,9 @@
 
 # {{ current_user.email }}
 
-<form method="POST" action="/">
+{{ errors }}
+
+<form method="POST" action="">
     {{ form.csrf_token }}
     {{ form.type.label }} {{ form.type() }}
     {{ form.frontpage_url.label }} {{ form.frontpage_url() }}
