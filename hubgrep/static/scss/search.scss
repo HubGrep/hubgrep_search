@@ -19,6 +19,38 @@ footer {
       flex-direction: row;
       margin: 0;
 
+      &-logo {
+      position: relative;
+
+      .body {
+        position: absolute;
+        margin-top: 3rem;
+        width: 92px; //132px;
+        height: 284px; //407px;
+        background-size: 92px 284px;
+        background: url('images/frog_small.png') no-repeat center;
+      }
+
+      .eye {
+        z-index: -1;
+        position: absolute;
+        right: 27px;
+        top: 17px;
+
+        width: 43px;
+        height: 41px;
+        background-size: cover;
+        background: url('images/frog_big_eye.png') no-repeat center;
+        background-color: color(frogEye);
+      }
+
+      &:hover {
+        .eye {
+          animation: .35s eye-spin infinite linear;
+        }
+      }
+    }
+
       &-title {
         min-width: 8.75rem;
 
