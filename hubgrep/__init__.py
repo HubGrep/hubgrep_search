@@ -36,9 +36,7 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 def create_app():
-    app = Flask(__name__,
-                static_url_path="/static",
-                static_folder="static")
+    app = Flask(__name__, static_url_path="/static", static_folder="static")
     assets = Environment(app)
     _build_assets(assets)
 
@@ -82,18 +80,45 @@ def create_app():
         lang = request.accept_languages.best_match(app.config["LANGUAGES"].keys())
         return lang
 
-    app.jinja_env.globals['get_locale'] = get_locale
+    app.jinja_env.globals["get_locale"] = get_locale
 
     return app
 
+
 def _build_assets(assets: Environment):
     # TODO we dont want to do this with watchers for prod, only for localdev
-    scss_about = Bundle('scss/about.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='about.css')
-    scss_imprint = Bundle('scss/imprint.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='imprint.css')
-    scss_search = Bundle('scss/search.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'], output='search.css')
-    scss_search_empty = Bundle('scss/search_empty.scss', filters='pyscss', depends=['**/*.scss', '**/**/*.scss'],
-                         output='search_empty.css')
-    assets.register('scss_about', scss_about)
-    assets.register('scss_imprint', scss_imprint)
-    assets.register('scss_search', scss_search)
-    assets.register('scss_search_empty', scss_search_empty)
+    scss_about = Bundle(
+        "scss/about.scss",
+        filters="pyscss",
+        depends=["**/*.scss", "**/**/*.scss"],
+        output="about.css",
+    )
+    scss_imprint = Bundle(
+        "scss/imprint.scss",
+        filters="pyscss",
+        depends=["**/*.scss", "**/**/*.scss"],
+        output="imprint.css",
+    )
+    scss_search = Bundle(
+        "scss/search.scss",
+        filters="pyscss",
+        depends=["**/*.scss", "**/**/*.scss"],
+        output="search.css",
+    )
+    scss_search_empty = Bundle(
+        "scss/search_empty.scss",
+        filters="pyscss",
+        depends=["**/*.scss", "**/**/*.scss"],
+        output="search_empty.css",
+    )
+    hosting_service_management = Bundle(
+        "scss/hosting_service_management.scss",
+        filters="pyscss",
+        depends=["**/*.scss", "**/**/*.scss"],
+        output="hosting_service_management.css",
+    )
+    assets.register("scss_about", scss_about)
+    assets.register("scss_imprint", scss_imprint)
+    assets.register("scss_search", scss_search)
+    assets.register("scss_search_empty", scss_search_empty)
+    assets.register("scss_hosting_service_management", hosting_service_management)

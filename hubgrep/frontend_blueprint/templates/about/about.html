@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% import "components/hosting_service_list.html" as hosting_service_list %}
 
 {% block styles %}
     {% assets "scss_about" %}
@@ -10,5 +11,11 @@
     <div style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center">
         <img src="https://media.giphy.com/media/eWFkhT47cWjO8/giphy.gif">
         <div class="about">TODO text about this site, whats the point of it all? write something cute =)</div>
+
+        <h2># searching through the following hosters</h2>
+        {{ hosting_service_list.hosting_services(hosting_instances) }}
+        <h3>(<a href="{{ url_for('security.login') }}">...add your own!</a>)</h3>
     </div>
+
+
 {% endblock %}
