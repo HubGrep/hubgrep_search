@@ -5,6 +5,7 @@ import click
 import humanize
 import requests
 
+from flask import current_app
 
 class SearchResult:
     def __init__(
