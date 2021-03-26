@@ -9,10 +9,9 @@
 <form method="POST" action="">
     {{ form.csrf_token }}
     {{ form.type.label }} {{ form.type() }}
-    {{ form.frontpage_url.label }} {{ form.frontpage_url() }}
-    {{ form.base_url.label }} {{ form.base_url() }}
+    {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
+    {{ form.api_url.label }} {{ form.api_url() }}
     {{ form.config.label }} {{ form.config() }}
-
     <input type="submit" value="Go">
 </form>
 

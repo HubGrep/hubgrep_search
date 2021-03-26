@@ -28,6 +28,6 @@ class HostingServiceForm(FlaskForm):
             ("github", "GitHub"),
         ],
     )
-    frontpage_url = StringField("Frontpage Url", [URL()], widget=URLInput())
-    base_url = StringField("Api Url", [URL()], widget=URLInput())
+    landingpage_url = StringField("Landingpage Url", [URL()], widget=URLInput())
+    api_url = StringField("Api Url", [URL()], widget=URLInput())
     config = TextField("Config", [validate_config])

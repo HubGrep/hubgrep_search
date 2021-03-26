@@ -14,17 +14,21 @@ from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingService
 @frontend.route("/manage")
 @login_required
 def manage_instances():
-    # todo: show instance health
+    hosting_service_instances_by_user = {}
     if current_user.has_role("admin"):
-        hosting_service_instances = HostingService.query.all()
+        for instance in HostingService.query.all():
+            email = instance.user.email
+            if not hosting_service_instances_by_user.get(email):
+                hosting_service_instances_by_user[email] = []
+            hosting_service_instances_by_user[email].append(instance)
         is_admin = True
     else:
-        hosting_service_instances = current_user.hosting_services
+        hosting_service_instances_by_user[current_user.email] = current_user.hosting_services
         is_admin = False
 
     return render_template(
         "management/hosting_service_list.html",
-        hosting_services=hosting_service_instances,
+        hosting_services=hosting_service_instances_by_user,
         is_admin=is_admin,
     )
 
@@ -40,7 +44,6 @@ def manage_instance(hosting_service_id):
 
     form = HostingServiceForm()
     if form.validate_on_submit():
-        print("validating")
         h.base_url = form.base_url.data
         h.type = form.base_url.data
         h.frontpage_url = form.frontpage_url.data
@@ -49,11 +52,11 @@ def manage_instance(hosting_service_id):
         db.session.add(h)
         db.session.commit()
 
-    form.base_url.data = h.base_url
     form.type.data = h.type
-    form.frontpage_url.data = h.frontpage_url
-    form.base_url.data = h.base_url
+    form.landingpage_url.data = h.landingpage_url
+    form.api_url.data = h.api_url
     form.config.data = h.config
-    flash(form.errors, "error")
+    if form.errors:
+        flash(form.errors, "error")
   
     return render_template("management/edit_hosting_service.html", form=form)

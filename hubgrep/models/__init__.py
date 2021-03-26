@@ -32,11 +32,11 @@ class HostingService(db.Model):
     type = db.Column(db.String(80), nullable=False)
 
     # main instance website
-    frontpage_url = db.Column(db.String(500))
+    landingpage_url = db.Column(db.String(500))
 
     # should this be unique, or can we use it to store multiple 
     # api keys for a backend?
-    base_url = db.Column(db.String(500), unique=True, nullable=False)
+    api_url = db.Column(db.String(500), unique=True, nullable=False)
 
     # could be json, but thats only supported for postgres
     config = db.Column(db.Text)
