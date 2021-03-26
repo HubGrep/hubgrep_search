@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextField
+from wtforms import StringField, SelectField, TextField, TextAreaField
 from wtforms.widgets.html5 import URLInput
 from wtforms.validators import DataRequired, ValidationError , URL
 
@@ -30,4 +30,4 @@ class HostingServiceForm(FlaskForm):
     )
     landingpage_url = StringField("Landingpage Url", [URL()], widget=URLInput())
     api_url = StringField("Api Url", [URL()], widget=URLInput())
-    config = TextField("Config", [validate_config])
+    config = TextAreaField("Config", [validate_config])

@@ -44,9 +44,9 @@ def manage_instance(hosting_service_id):
 
     form = HostingServiceForm()
     if form.validate_on_submit():
-        h.base_url = form.base_url.data
-        h.type = form.base_url.data
-        h.frontpage_url = form.frontpage_url.data
+        h.api_url = form.api_url.data
+        h.type = form.type.data
+        h.landingpage_url = form.landingpage_url.data
         h.type = form.type.data
         h.config = form.config.data
         db.session.add(h)

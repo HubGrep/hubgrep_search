@@ -1,18 +1,31 @@
 {% extends 'base.html' %}
 
+{% block styles %}
+{% assets "scss_hosting_service_management" %}
+<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
+{% endassets %}
+{% endblock %}
 {% block content %}
 
-# {{ current_user.email }}
+{% if current_user.has_role('admin') %}
+<h3>{{ current_user.email }} (admin)</h3>
+{% endif %}
+<h2>edit {{ form.landingpage_url.data }}</h2>
 
-{{ errors }}
-
-<form method="POST" action="">
+<form method="POST" action="" class="hosting-service-form">
     {{ form.csrf_token }}
-    {{ form.type.label }} {{ form.type() }}
-    {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
-    {{ form.api_url.label }} {{ form.api_url() }}
-    {{ form.config.label }} {{ form.config() }}
+    <div class="hosting-service-form-line">
+        {{ form.type.label }} {{ form.type() }}
+    </div>
+    <div class="hosting-service-form-line">
+        {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
+    </div>
+    <div class="hosting-service-form-line">
+        {{ form.api_url.label }} {{ form.api_url() }}
+    </div>
+    <div class="hosting-service-form-line">
+        {{ form.config.label }} {{ form.config(rows=4, cols=30) }}
+    </div>
     <input type="submit" value="Go">
 </form>
-
 {% endblock %}
