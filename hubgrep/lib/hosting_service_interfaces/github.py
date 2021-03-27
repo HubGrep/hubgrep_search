@@ -50,8 +50,8 @@ class GitHubSearchResult(SearchResult):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
         repo_description = search_result_item["description"] or ""
-        last_commit = iso8601.parse_date(search_result_item["updated_at"])
-        created_at = iso8601.parse_date(search_result_item["created_at"])
+        last_commit_dt = iso8601.parse_date(search_result_item["updated_at"])
+        created_at_dt = iso8601.parse_date(search_result_item["created_at"])
         language = search_result_item["language"]
         license_dict = search_result_item.get("license")
         license = license_dict.get("name", None) if license_dict else None
@@ -68,8 +68,8 @@ class GitHubSearchResult(SearchResult):
             repo_description=repo_description,
             html_url=html_url,
             owner_name=owner_name,
-            last_commit=last_commit,
-            created_at=created_at,
+            last_commit_dt=last_commit_dt,
+            created_at_dt=created_at_dt,
             language=language,
             license=license,
             forks=forks,
@@ -84,9 +84,9 @@ class GitHubSearch(HostingServiceInterface):
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self, base_url, requests_session=None):
+    def __init__(self, api_url, requests_session=None):
         super().__init__(
-            base_url=base_url,
+            api_url=api_url,
             search_path="search/repositories",
             requests_session=requests_session,
         )
@@ -95,14 +95,12 @@ class GitHubSearch(HostingServiceInterface):
         params = dict(q="+".join(keywords), **tags)
         try:
             response = self.requests.get(self.request_url, params=params)
+            if not response.ok:
+                return False, self.api_url, response.text
+            result = response.json()
+            results = [GitHubSearchResult(item) for item in result["items"]]
 
         except Exception as e:
-            return False, self.base_url, e
+            return False, self.api_url, e
 
-        if not response.ok:
-            return False, self.base_url, response.text
-
-        result = response.json()
-
-        results = [GitHubSearchResult(item) for item in result["items"]]
-        return True, self.base_url, results
+        return True, self.api_url, results

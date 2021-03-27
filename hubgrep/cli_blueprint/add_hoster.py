@@ -27,6 +27,8 @@ def add_hoster(type, api_url, landingpage_url, config):
     h.landingpage_url = landingpage_url
     h.config = config
 
+    print(f"adding {h.api_url}")
+
     db.session.add(h)
     db.session.commit()
 

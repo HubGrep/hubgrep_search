@@ -1,4 +1,5 @@
 import logging
+from typing import List, Union
 from iso8601 import iso8601
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
@@ -84,11 +85,12 @@ class GiteaSearchResult(SearchResult):
     """
 
     def __init__(self, search_result_item):
+        logger.error(search_result_item)
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
         repo_description = search_result_item["description"] or ""
-        last_commit = iso8601.parse_date(search_result_item["updated_at"])
-        created_at = iso8601.parse_date(search_result_item["created_at"])
+        last_commit_dt = iso8601.parse_date(search_result_item["updated_at"])
+        created_at_dt = iso8601.parse_date(search_result_item["created_at"])
         language = ""
         license_dict = search_result_item.get("license")
         license = license_dict.get("name", None) if license_dict else None
@@ -99,14 +101,14 @@ class GiteaSearchResult(SearchResult):
         is_archived = search_result_item.get("archived", None)
 
         html_url = search_result_item["html_url"]
-      
+
         super().__init__(
             repo_name=repo_name,
             repo_description=repo_description,
             html_url=html_url,
             owner_name=owner_name,
-            last_commit=last_commit,
-            created_at=created_at,
+            last_commit_dt=last_commit_dt,
+            created_at_dt=created_at_dt,
             language=language,
             license=license,
             forks=forks,
@@ -119,23 +121,25 @@ class GiteaSearchResult(SearchResult):
 class GiteaSearch(HostingServiceInterface):
     name = "Gitea"
 
-    def __init__(self, base_url, requests_session=None):
+    def __init__(self, api_url, requests_session=None):
         super().__init__(
-            base_url=base_url,
-            search_path="api/v1/repos/search",
+            api_url=api_url,
+            search_path="repos/search",
             requests_session=requests_session,
         )
 
-    def search(self, keywords: list = [], tags: dict = {}):
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> (bool, List[GiteaSearchResult], Union[Exception, List[GiteaSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
             response = self.requests.get(self.request_url, params=params)
+            if not response.ok:
+                return False, self.api_url, response.text
+            result = response.json()
+            results = [GiteaSearchResult(item) for item in result["data"]]
         except Exception as e:
-            return False, self.base_url, e
-        try:
-            response.raise_for_status()
-        except Exception as e:
-            return False, self.base_url, e
-        result = response.json()
-        results = [GiteaSearchResult(item) for item in result["data"]]
-        return True, self.base_url, results
+            logger.error(result)
+            logger.error(e, exc_info=True)
+            return False, self.api_url, e
+        return True, self.api_url, results

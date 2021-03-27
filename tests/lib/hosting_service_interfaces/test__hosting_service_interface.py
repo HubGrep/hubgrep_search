@@ -1,6 +1,3 @@
-import unittest
-
-from unittest import mock
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import HostingServiceInterface
 
