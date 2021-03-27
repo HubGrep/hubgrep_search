@@ -1,6 +1,5 @@
 @import "./shared_bundle";
 @import "search_base";
-@import "./components/status_message";
 
 body > section {
   display: flex;
@@ -47,7 +46,7 @@ body > section {
 
       &:hover {
         .eye {
-          animation: .35s eye-spin infinite linear;
+          animation: .35s eye-spin infinite normal linear;
         }
       }
     }
@@ -89,7 +88,7 @@ body > section {
     background-color: rgb(0, 255, 255);
   }
   50% {
-    transform: translate(-1px, 0) rotate(180deg);
+    transform: rotate(180deg);
     background-color: rgb(0, 127, 255);
   }
   58% {

@@ -16,5 +16,5 @@ def filter_results(results: List, include_archived=True, include_fork=True):
     if not include_fork:
         results = [r for r in results if r.is_fork is not True]
     results = _filter_by_service(results)
-    results = _filter_by_date(results)
+    results = _filter_by_date(results, 0, 0)
     return results

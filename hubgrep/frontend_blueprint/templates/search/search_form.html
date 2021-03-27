@@ -1,11 +1,40 @@
-{% macro create_form(search_url, search_phrase) %}
-    <form>
-        <form action="{{ search_url }}" method="get">
-            <div class="input-bar">
-                <label for="searchbar" aria-label="search"></label>
-                <input type="text" id="searchbar" name="s" value="{{ search_phrase }}"
-                       required="required">
+{% macro create_form(search_url, form) %}
+
+<form>
+    <form action="{{ search_url }}" method="get">
+        <div class="input-bar">
+            <label for="searchbar" aria-label="search"></label>
+            <input type="text" id="searchbar" name="s" value="{{ form.search_phrase }}"
+                   required="required">
+        </div>
+
+        {% import "components/collapsible.html" as collapsible %}
+        {% set collapsible_content -%}
+        <div class="services">
+            {% for service in form.services %}
+                <div class="hosting-service">
+                    <input type="checkbox" id="{{ service.id }}" name="{{ service.id }}"
+                           {% if service.is_checked %}checked{% endif %}>
+                    <label for="{{ service.id }}">{{ service.label }} ({{ service.type }})</label>
+                </div>
+            {% endfor %}
+
+        </div>
+
+        <div class="misc">
+            <div class="forks">
+                <input type="checkbox" id="forks" name="f"
+                       {% if form.allow_forks %}checked{% endif %}>
+                <label for="forks">{{ gettext("forks") | safe }}</label>
             </div>
-        </form>
+            <div class="archived">
+                <input type="checkbox" id="archived" name="a"
+                       {% if form.allow_archived %}checked{% endif %}>
+                <label for="archived">{{ gettext("archived") | safe }}</label>
+            </div>
+        </div>
+        {%- endset %} {# collapsible_content end #}
+        {{ collapsible.build(collapsible_content, label=gettext("options") | safe, is_absolute=True) }}
     </form>
+</form>
 {% endmacro %}

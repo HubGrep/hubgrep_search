@@ -1,16 +1,34 @@
-from flask import Blueprint, render_template
+from collections import namedtuple
+from flask import render_template
 from flask import current_app as app
 from flask import request
 
-from flask_security import login_required
 from hubgrep.constants import SITE_TITLE, PARAM_OFFSET, PARAM_PER_PAGE
 from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.fetch_results import fetch_concurrently
+from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
 from hubgrep.models import HostingService
 
-
 from hubgrep.frontend_blueprint import frontend
+
+checkbox = namedtuple("checkbox", "id label is_checked")
+search_form = namedtuple("form", "search_phrase services allow_forks allow_archived")
+
+
+def _get_search_form(search_phrase):
+    service_checkboxes = []
+    allow_forks = request.args.get("f", False) == "on"
+    allow_archived = request.args.get("a", False) == "on"
+    print("EH", request.args.get("a", False), request.args.get("f", False))
+    for service in HostingService.query.all():
+        # all active at landing page, otherwise checking for form state
+        is_checked = search_phrase is False or request.args.get("s{}".format(service.id), False) == "on"
+        print("ACTIVE", service.id, is_checked)
+        service_checkboxes.append(checkbox(id="s{}".format(service.id), label=service.landingpage_url, is_checked=is_checked))  # TODO add label to service name instead of landingpage_url
+
+    return search_form(search_phrase, service_checkboxes, allow_forks, allow_archived)
+
 
 @frontend.route("/")
 def index():
@@ -25,6 +43,7 @@ def index():
         terms = search_phrase.split()
         search_interfaces = get_hosting_service_interfaces(cache=app.config['ENABLE_CACHE'])
         results, external_errors = fetch_concurrently(terms, search_interfaces)
+        results = filter_results(results)
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
         search_feedback = "page {} of {} total matching repositories.".format(
@@ -36,5 +55,6 @@ def index():
                            search_url=request.url,
                            search_phrase=search_phrase,
                            search_feedback=search_feedback,
+                           form=_get_search_form(search_phrase),
                            pagination_links=pagination_links,  # [PageLink] namedtuples
                            external_errors=external_errors)  # TODO these errors should be formatted to text that is useful for a enduser

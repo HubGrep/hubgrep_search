@@ -1,0 +1,17 @@
+{% macro build(content, class, label, is_inline=False, is_absolute=False) %}
+    <div class="collapsible {{ class }}
+            {% if is_inline == true %}{{ "inline" }}{% endif %}
+            {% if is_absolute == true %}{{ "absolute" }}{% endif %}">
+        {% set id = range(1000000) | random %}
+        <input id="collapsible-{{ label }}-{{ id }}" class="toggle" type="checkbox">
+        <label for="collapsible-{{ label }}-{{ id }}" class="lbl-toggle">
+            <span class="label">{{ label }}</span>
+            <span class="icon">{{ iconCollapsible }}</span>
+        </label>
+        <div class="collapsible-content">
+            <div class="content-inner">
+                {{ content }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
