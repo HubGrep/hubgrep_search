@@ -19,8 +19,16 @@ footer {
       flex-direction: row;
       margin: 0;
 
+      &-logo {
+        // omit logo image
+      }
+
       &-title {
         min-width: 8.75rem;
+
+        h1 {
+          margin: 1rem 0 1rem .5rem;
+        }
       }
     }
 

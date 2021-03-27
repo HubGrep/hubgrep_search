@@ -11,7 +11,7 @@ body > section {
 
 .nav {
   position: absolute;
-  top: 1rem;
+  top: 1.5rem;
   right: 1rem;
   display: flex;
   justify-content: space-between;
@@ -21,8 +21,94 @@ body > section {
 
   &-main {
 
+    &-logo {
+      position: relative;
+      margin: 5rem 0 3rem;
+
+      .body {
+        width: 250px;
+        height: 161px;
+        background-size: cover;
+        background: url('images/frog_big.png') no-repeat center;
+      }
+
+      .eye {
+        z-index: -1;
+        position: absolute;
+        right: 27px;
+        top: 17px;
+
+        width: 43px;
+        height: 41px;
+        background-size: cover;
+        background: url('images/frog_big_eye.png') no-repeat center;
+        background-color: color(frogEye);
+      }
+
+      &:hover {
+        .eye {
+          animation: .35s eye-spin infinite linear;
+        }
+      }
+    }
+
+    &-title {
+      position: absolute;
+      top: 1rem;
+      left: 1.5rem;
+
+      h1 {
+        margin: 0;
+      }
+    }
+
     &-form { // form-wrapper
-      // TODO landing page look
+      min-height: 40vh;
     }
   }
 }
+
+@keyframes eye-spin {
+  0% {
+    transform: rotate(0deg);
+    background-color: rgb(255, 127, 0);
+  }
+  8% {
+    background-color: rgb(255, 255, 0);
+  }
+  16% {
+    background-color: rgb(127, 255, 0);
+  }
+  25% {
+    background-color: rgb(0, 255, 0);
+  }
+  33% {
+    background-color: rgb(0, 255, 127);
+  }
+  41% {
+    background-color: rgb(0, 255, 255);
+  }
+  50% {
+    transform: translate(-1px, 0) rotate(180deg);
+    background-color: rgb(0, 127, 255);
+  }
+  58% {
+    background-color: rgb(0, 0, 255);
+  }
+  66% {
+    background-color: rgb(127, 0, 255);
+  }
+  75% {
+    background-color: rgb(255, 0, 255);
+  }
+  83% {
+    background-color: rgb(255, 0, 127);
+  }
+  91% {
+    background-color: rgb(255, 0, 0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+

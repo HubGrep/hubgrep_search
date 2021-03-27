@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% import "components/nav.html" as nav %}
-{% set nav_items = [[url_for('frontend.about'), "About"], [url_for('frontend.imprint'), "Imprint"]] %}
+{% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.imprint'), "imprint"]] %}
 {% if current_user.is_authenticated %}
     {% set _ = nav_items.append([url_for('frontend.manage_instances'), "Manage"]) %}
     {% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
@@ -41,6 +41,12 @@
 {% block content %}
     <div class="search">
         <div class="search-main">
+            <div class="search-main-logo">
+                <div class="body" title="&#34;its Hobgrebbit, the hubgrep logo!&#34;" aria-label="hubgrep logo image">
+                    <div class="eye"></div>
+                </div>
+            </div>
+
             <div class="search-main-title">
                 <a class="negate" href="/">
                     <h1>{{ title }}</h1>

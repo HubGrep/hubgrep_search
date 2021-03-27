@@ -11,6 +11,11 @@
     align-items: center;
 
     &-title {
+      h1 {
+        margin: 0;
+        color: color(hubgrep);
+      }
+
       a:hover {
         text-decoration: none;
       }
