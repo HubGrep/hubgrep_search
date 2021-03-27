@@ -1,0 +1,11 @@
+{% macro create_form(search_url, search_phrase) %}
+    <form>
+        <form action="{{ search_url }}" method="get">
+            <div class="input-bar">
+                <label for="searchbar" aria-label="search"></label>
+                <input type="text" id="searchbar" name="s" value="{{ search_phrase }}"
+                       required="required">
+            </div>
+        </form>
+    </form>
+{% endmacro %}

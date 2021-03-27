@@ -1,6 +1,6 @@
 import click
 from flask import current_app as app
-from hubgrep.lib.fetch_results import filter_results
+from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
 
