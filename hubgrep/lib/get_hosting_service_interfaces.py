@@ -7,6 +7,8 @@ from flask import current_app as app
 from hubgrep.lib.hosting_service_interfaces.github import GitHubSearch
 from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch
 from hubgrep.lib.hosting_service_interfaces.gitlab import GitLabSearch
+
+from hubgrep.models import HostingService
 from hubgrep import redis_client
 
 hosting_service_interfaces_by_name = dict(
@@ -16,22 +18,31 @@ hosting_service_interfaces_by_name = dict(
 
 def get_hosting_service_interfaces(cache=False):
     hosting_service_interfaces = {}
-    for name_bytes in redis_client.keys("hosting_service:*"):
-        name = name_bytes.decode()
-        config_str = redis_client.get(name)
+
+    for service in HostingService.query.all():
+        service: HostingService
+
+        config_str = service.config
         config = json.loads(config_str)
 
-        SearchClass = hosting_service_interfaces_by_name[config["type"]]
+        SearchClass = hosting_service_interfaces_by_name[service.type]
 
         if cache:
             cache_backend = RedisCache(connection=redis_client)
             cached_session = CachedSession(
                 expire_after=app.config["CACHE_TIME"], backend=cache_backend
             )
-            args = {**config["args"], "requests_session": cached_session}
+            args = dict(
+                base_url=service.api_url,
+                **config,
+                requests_session=cached_session,
+            )
         else:
-            args = config["args"]
+            args = dict(
+                base_url=service.api_url,
+                **config,
+            )
 
-        hosting_service_interfaces[name] = SearchClass(**args)
+        hosting_service_interfaces[service.api_url] = SearchClass(**args)
     print(hosting_service_interfaces)
     return hosting_service_interfaces

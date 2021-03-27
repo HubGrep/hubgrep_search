@@ -5,6 +5,7 @@ import click
 import humanize
 import requests
 
+from flask import current_app
 
 class SearchResult:
     def __init__(
@@ -77,6 +78,7 @@ class HostingServiceInterface:
             self.requests = requests_session
         else:
             self.requests = requests.session()
+        self.requests.headers.update({'referer': current_app.config['REFERER']})
 
     def search(self, keywords: list, tags: dict):
         raise NotImplementedError

@@ -1,21 +1,18 @@
-import unittest
-
 from flask.testing import FlaskClient
 
 from hubgrep import create_app
 
 
-class TestRoutes(unittest.TestCase):
-    _test_client: FlaskClient = create_app().test_client()
+class TestRoutes():
 
-    def test_index(self):
-        res = self._test_client.get('/')
+    def test_index(self, test_client: FlaskClient):
+        res = test_client.get('/')
         assert res.status_code == 200
 
-    def test_localization(self):
-        res = self._test_client.get('/', headers=[("Accept-Language", "de")])
+    def test_localization(self, test_client: FlaskClient):
+        res = test_client.get('/', headers=[("Accept-Language", "de")])
         assert '<html lang="de">' in str(res.data)
 
-    def test_about(self):
-        res = self._test_client.get('/about')
+    def test_about(self, test_client: FlaskClient):
+        res = test_client.get('/about')
         assert res.status_code == 200

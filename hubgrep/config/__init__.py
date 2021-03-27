@@ -30,9 +30,13 @@ class Config:
     LOGLEVEL = "debug"
     VERSION = "0.0.0"
 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     BABEL_DEFAULT_LOCALE = "en"
     BABEL_DEFAULT_TIMEZONE = "UTC"
     LANGUAGES = {"en": "English", "de": "Deutsch"}
+
+    REFERER = f'HubGrep v{VERSION}'
 
     # https://flask-security-too.readthedocs.io/en/stable/configuration.html
     SECURITY_LOGIN_URL = "/login"

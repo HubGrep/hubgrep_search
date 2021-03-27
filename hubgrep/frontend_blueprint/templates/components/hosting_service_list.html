@@ -1,0 +1,10 @@
+{% macro hosting_services(hosting_services=[]) %}
+    <nav class="">
+        {% for instance in hosting_services %}
+
+        <div class="item">
+        <a class="" href="{{ instance.landingpage_url }}">{{ instance.landingpage_url }} ({{ instance.type }})</a>
+        </div>
+        {% endfor %}
+    </nav>
+{% endmacro %}
