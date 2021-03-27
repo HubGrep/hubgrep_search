@@ -1,10 +1,12 @@
+import logging
 from iso8601 import iso8601
-
+from typing import List, Union
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
 )
 
+logger = logging.getLogger(__name__)
 
 class GitLabSearchResult(SearchResult):
     """
@@ -71,7 +73,9 @@ class GitLabSearch(HostingServiceInterface):
         )
         self.api_token = api_token
 
-    def search(self, keywords: list = [], tags: dict = {}):
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> (bool, str, Union[Exception, List[GitLabSearchResult]],):
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
         try:
@@ -85,5 +89,7 @@ class GitLabSearch(HostingServiceInterface):
             result = response.json()
             results = [GitLabSearchResult(item) for item in result]
         except Exception as e:
+            logger.error(result)
+            logger.error(e, exc_info=True)
             return False, self.api_url, e
         return True, self.api_url, results

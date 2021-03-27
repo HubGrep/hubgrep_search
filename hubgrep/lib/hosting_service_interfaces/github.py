@@ -1,9 +1,16 @@
+import logging
+
 from iso8601 import iso8601
+
+from typing import List, Union
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
 )
+
+logger = logging.getLogger(__name__)
+
 
 # https://developer.github.com/v3/search/
 
@@ -91,7 +98,9 @@ class GitHubSearch(HostingServiceInterface):
             requests_session=requests_session,
         )
 
-    def search(self, keywords: list = [], tags: dict = {}):
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> (bool, str, Union[Exception, List[GitHubSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
             response = self.requests.get(self.request_url, params=params)
@@ -101,6 +110,8 @@ class GitHubSearch(HostingServiceInterface):
             results = [GitHubSearchResult(item) for item in result["items"]]
 
         except Exception as e:
+            logger.error(result)
+            logger.error(e, exc_info=True)
             return False, self.api_url, e
 
         return True, self.api_url, results

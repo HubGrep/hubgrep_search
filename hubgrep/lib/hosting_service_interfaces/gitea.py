@@ -85,7 +85,6 @@ class GiteaSearchResult(SearchResult):
     """
 
     def __init__(self, search_result_item):
-        logger.error(search_result_item)
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
         repo_description = search_result_item["description"] or ""
@@ -130,7 +129,7 @@ class GiteaSearch(HostingServiceInterface):
 
     def search(
         self, keywords: list = [], tags: dict = {}
-    ) -> (bool, List[GiteaSearchResult], Union[Exception, List[GiteaSearchResult]],):
+    ) -> (bool, str, Union[Exception, List[GiteaSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
             response = self.requests.get(self.request_url, params=params)

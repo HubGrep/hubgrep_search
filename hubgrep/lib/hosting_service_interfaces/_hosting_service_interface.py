@@ -82,6 +82,3 @@ class HostingServiceInterface:
 
     def search(self, keywords: list, tags: dict):
         raise NotImplementedError
-
-    def test_config(self):
-        raise NotImplementedError
