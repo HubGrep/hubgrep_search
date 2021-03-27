@@ -14,8 +14,8 @@ class SearchResult:
         repo_description,
         html_url,
         owner_name,
-        last_commit,
-        created_at,
+        last_commit_dt,
+        created_at_dt,
         forks,
         stars,
         is_fork,
@@ -27,10 +27,10 @@ class SearchResult:
         self.repo_description = repo_description
         self.html_url = html_url
         self.owner_name = owner_name
-        self.last_commit_raw = last_commit
-        self.last_commit = humanize.naturaldate(last_commit)
-        self.created_at_raw = created_at
-        self.created_at = humanize.naturaldate(created_at)
+        self.last_commit_dt = last_commit_dt
+        self.last_commit = humanize.naturaldate(last_commit_dt)
+        self.created_at_dt = created_at_dt
+        self.created_at = humanize.naturaldate(created_at_dt)
         self.language = language
         self.license = license
 
@@ -48,8 +48,8 @@ class SearchResult:
         self.text += f"{value}\n"
 
     def get_cli_formatted(self):
-        self.last_commit = self.last_commit_raw.replace(tzinfo=None)
-        self.created_at = self.created_at_raw.replace(tzinfo=None)
+        self.last_commit = self.last_commit_dt.replace(tzinfo=None)
+        self.created_at = self.created_at_dt.replace(tzinfo=None)
         last_commit = humanize.naturaltime(self.last_commit)
         created_at = humanize.naturaltime(self.created_at)
 
@@ -70,9 +70,9 @@ class SearchResult:
 class HostingServiceInterface:
     name = ""
 
-    def __init__(self, base_url, search_path, requests_session=None):
-        self.base_url = base_url
-        self.request_url = urljoin(self.base_url, search_path)
+    def __init__(self, api_url, search_path, requests_session=None):
+        self.api_url = api_url
+        self.request_url = urljoin(self.api_url, search_path)
 
         if requests_session:
             self.requests = requests_session

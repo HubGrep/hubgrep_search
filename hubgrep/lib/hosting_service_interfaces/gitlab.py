@@ -1,10 +1,12 @@
+import logging
 from iso8601 import iso8601
-
+from typing import List, Union
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
 )
 
+logger = logging.getLogger(__name__)
 
 class GitLabSearchResult(SearchResult):
     """
@@ -31,9 +33,9 @@ class GitLabSearchResult(SearchResult):
     def __init__(self, search_result_item):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["namespace"]["path"]
-        repo_description = search_result_item.get("description", "?") or "?"
-        last_commit = iso8601.parse_date(search_result_item["last_activity_at"])
-        created_at = iso8601.parse_date(search_result_item["created_at"])
+        repo_description = search_result_item.get("description", "") or ""
+        last_commit_dt = iso8601.parse_date(search_result_item["last_activity_at"])
+        created_at_dt = iso8601.parse_date(search_result_item["created_at"])
         language = ""
         license = ""
 
@@ -49,8 +51,8 @@ class GitLabSearchResult(SearchResult):
             repo_description=repo_description,
             html_url=html_url,
             owner_name=owner_name,
-            last_commit=last_commit,
-            created_at=created_at,
+            last_commit_dt=last_commit_dt,
+            created_at_dt=created_at_dt,
             language=language,
             license=license,
             forks=forks,
@@ -63,15 +65,17 @@ class GitLabSearchResult(SearchResult):
 class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
-    def __init__(self, base_url, api_token, requests_session=None):
+    def __init__(self, api_url, api_token, requests_session=None):
         super().__init__(
-            base_url=base_url,
-            search_path="/api/v4/search",
+            api_url=api_url,
+            search_path="search",
             requests_session=requests_session,
         )
         self.api_token = api_token
 
-    def search(self, keywords: list = [], tags: dict = {}):
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> (bool, str, Union[Exception, List[GitLabSearchResult]],):
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
         try:
@@ -80,9 +84,12 @@ class GitLabSearch(HostingServiceInterface):
                 params=params,
                 headers={"PRIVATE-TOKEN": self.api_token},
             )
+            if not response.ok:
+                return False, self.api_url, response.text
+            result = response.json()
+            results = [GitLabSearchResult(item) for item in result]
         except Exception as e:
-            return False, self.base_url, e
-
-        result = response.json()
-        results = [GitLabSearchResult(item) for item in result]
-        return True, self.base_url, results
+            logger.error(result)
+            logger.error(e, exc_info=True)
+            return False, self.api_url, e
+        return True, self.api_url, results

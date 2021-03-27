@@ -33,16 +33,15 @@ def get_hosting_service_interfaces(cache=False):
                 expire_after=app.config["CACHE_TIME"], backend=cache_backend
             )
             args = dict(
-                base_url=service.api_url,
+                api_url=service.api_url,
                 **config,
                 requests_session=cached_session,
             )
         else:
             args = dict(
-                base_url=service.api_url,
+                api_url=service.api_url,
                 **config,
             )
 
         hosting_service_interfaces[service.api_url] = SearchClass(**args)
-    print(hosting_service_interfaces)
     return hosting_service_interfaces
