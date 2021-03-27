@@ -33,7 +33,7 @@ class GitLabSearchResult(SearchResult):
     def __init__(self, search_result_item):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["namespace"]["path"]
-        repo_description = search_result_item.get("description", "")
+        repo_description = search_result_item.get("description", "") or ""
         last_commit_dt = iso8601.parse_date(search_result_item["last_activity_at"])
         created_at_dt = iso8601.parse_date(search_result_item["created_at"])
         language = ""
