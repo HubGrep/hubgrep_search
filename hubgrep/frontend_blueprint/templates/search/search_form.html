@@ -15,7 +15,7 @@
                 <div class="hosting-service">
                     <input type="checkbox" id="{{ service.id }}" name="{{ service.id }}"
                            {% if service.is_checked %}checked{% endif %}>
-                    <label for="{{ service.id }}">{{ service.label }} ({{ service.type }})</label>
+                    <label for="{{ service.id }}">{{ service.label }}</label>
                 </div>
             {% endfor %}
 

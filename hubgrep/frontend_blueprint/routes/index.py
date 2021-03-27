@@ -1,3 +1,4 @@
+from typing import Union
 from collections import namedtuple
 from flask import render_template
 from flask import current_app as app
@@ -16,18 +17,15 @@ checkbox = namedtuple("checkbox", "id label is_checked")
 search_form = namedtuple("form", "search_phrase services allow_forks allow_archived")
 
 
-def _get_search_form(search_phrase):
+def _get_search_form(search_phrase: Union[str, bool], allow_forks: bool, allow_archived: bool) -> search_form:
     service_checkboxes = []
-    allow_forks = request.args.get("f", False) == "on"
-    allow_archived = request.args.get("a", False) == "on"
-    print("EH", request.args.get("a", False), request.args.get("f", False))
     for service in HostingService.query.all():
-        # all active at landing page, otherwise checking for form state
         is_checked = search_phrase is False or request.args.get("s{}".format(service.id), False) == "on"
-        print("ACTIVE", service.id, is_checked)
-        service_checkboxes.append(checkbox(id="s{}".format(service.id), label=service.landingpage_url, is_checked=is_checked))  # TODO add label to service name instead of landingpage_url
+        service_checkboxes.append(checkbox(id="s{}".format(service.id), label="{} - {}".format(service.landingpage_url, service.type),
+                                           is_checked=is_checked))  # TODO add label to service name instead of landingpage_url
 
-    return search_form(search_phrase, service_checkboxes, allow_forks, allow_archived)
+    return search_form(search_phrase=search_phrase, services=service_checkboxes,
+                       allow_forks=allow_forks, allow_archived=allow_archived)
 
 
 @frontend.route("/")
@@ -36,6 +34,8 @@ def index():
     results_offset = int(request.args.get(PARAM_OFFSET, 0))
     results_per_page = int(request.args.get(PARAM_PER_PAGE, app.config['PAGINATION_PER_PAGE_DEFAULT']))
     search_phrase = request.args.get("s", False)
+    allow_forks = search_phrase is False or request.args.get("f", False) == "on"
+    allow_archived = search_phrase is False or request.args.get("a", False) == "on"
     search_feedback = ""
     external_errors = []
     pagination_links = []
@@ -43,7 +43,7 @@ def index():
         terms = search_phrase.split()
         search_interfaces = get_hosting_service_interfaces(cache=app.config['ENABLE_CACHE'])
         results, external_errors = fetch_concurrently(terms, search_interfaces)
-        results = filter_results(results)
+        results = filter_results(results, )
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
         search_feedback = "page {} of {} total matching repositories.".format(
@@ -55,6 +55,6 @@ def index():
                            search_url=request.url,
                            search_phrase=search_phrase,
                            search_feedback=search_feedback,
-                           form=_get_search_form(search_phrase),
+                           form=_get_search_form(search_phrase, allow_forks, allow_archived),
                            pagination_links=pagination_links,  # [PageLink] namedtuples
                            external_errors=external_errors)  # TODO these errors should be formatted to text that is useful for a enduser
