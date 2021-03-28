@@ -30,7 +30,7 @@ class GitLabSearchResult(SearchResult):
     }
     """
 
-    def __init__(self, search_result_item):
+    def __init__(self, search_result_item, host_service_id):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["namespace"]["path"]
         repo_description = search_result_item.get("description", "") or ""
@@ -47,6 +47,7 @@ class GitLabSearchResult(SearchResult):
         html_url = search_result_item["http_url_to_repo"]
 
         super().__init__(
+            host_service_id=host_service_id,
             repo_name=repo_name,
             repo_description=repo_description,
             html_url=html_url,
@@ -65,8 +66,9 @@ class GitLabSearchResult(SearchResult):
 class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
-    def __init__(self, api_url, api_token, requests_session=None):
+    def __init__(self, host_service_id, api_url, api_token, requests_session=None):
         super().__init__(
+            host_service_id=host_service_id,
             api_url=api_url,
             search_path="search",
             requests_session=requests_session,
@@ -87,7 +89,7 @@ class GitLabSearch(HostingServiceInterface):
             if not response.ok:
                 return False, self.api_url, response.text
             result = response.json()
-            results = [GitLabSearchResult(item) for item in result]
+            results = [GitLabSearchResult(item, self.host_service_id) for item in result]
         except Exception as e:
             logger.error(result)
             logger.error(e, exc_info=True)

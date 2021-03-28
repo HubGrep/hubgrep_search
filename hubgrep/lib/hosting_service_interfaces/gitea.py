@@ -7,7 +7,6 @@ from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     SearchResult,
 )
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -84,7 +83,7 @@ class GiteaSearchResult(SearchResult):
     }
     """
 
-    def __init__(self, search_result_item):
+    def __init__(self, search_result_item, host_service_id):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
         repo_description = search_result_item["description"] or ""
@@ -102,6 +101,7 @@ class GiteaSearchResult(SearchResult):
         html_url = search_result_item["html_url"]
 
         super().__init__(
+            host_service_id=host_service_id,
             repo_name=repo_name,
             repo_description=repo_description,
             html_url=html_url,
@@ -120,15 +120,16 @@ class GiteaSearchResult(SearchResult):
 class GiteaSearch(HostingServiceInterface):
     name = "Gitea"
 
-    def __init__(self, api_url, requests_session=None):
+    def __init__(self, host_service_id, api_url, requests_session=None):
         super().__init__(
+            host_service_id=host_service_id,
             api_url=api_url,
             search_path="repos/search",
             requests_session=requests_session,
         )
 
     def search(
-        self, keywords: list = [], tags: dict = {}
+            self, keywords: list = [], tags: dict = {}
     ) -> (bool, str, Union[Exception, List[GiteaSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
@@ -136,7 +137,7 @@ class GiteaSearch(HostingServiceInterface):
             if not response.ok:
                 return False, self.api_url, response.text
             result = response.json()
-            results = [GiteaSearchResult(item) for item in result["data"]]
+            results = [GiteaSearchResult(item, self.host_service_id) for item in result["data"]]
         except Exception as e:
             logger.error(result)
             logger.error(e, exc_info=True)

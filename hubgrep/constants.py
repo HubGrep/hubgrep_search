@@ -9,3 +9,6 @@ CLASS_NEXT = "next"
 SITE_TITLE = "HubGrep"
 REPO_CREATED = "created"
 REPO_MODIFIED = "modified"
+
+# search form
+DATE_FORMAT = "%Y-%m-%d"
