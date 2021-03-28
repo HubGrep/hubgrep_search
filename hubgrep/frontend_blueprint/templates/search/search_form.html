@@ -1,7 +1,7 @@
 {% macro create_form(search_url, form, class="") %}
 
 <div class="searchform {{ class }}">
-    <form action="{{ search_url }}" method="get">
+    <form action="{{ url_for('frontend.index') }}" method="post">
         <div class="input-bar">
             <label for="searchbar" aria-label="search"></label>
             <input type="text" id="searchbar" name="s" value="{{ form.search_phrase }}"

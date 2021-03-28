@@ -3,7 +3,7 @@ from flask import current_app as app
 from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
-from hubgrep.frontend_blueprint.routes.index import SearchForm, _get_service_checkboxes
+from hubgrep.frontend_blueprint.routes.index import SearchForm
 
 from hubgrep.cli_blueprint import cli_bp
 
@@ -24,7 +24,7 @@ def search(terms, no_forks, no_archived):
         print(error)
 
     form = SearchForm(search_phrase=" ".join(terms),
-                      services=_get_service_checkboxes(is_initial=True),
+                      services=SearchForm.get_service_checkboxes(is_initial=True),
                       include_forks=include_fork,
                       include_archived=include_archived)
     results = filter_results(results, form)

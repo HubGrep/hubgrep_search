@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block styles %}
-    {% if request.args.get('s') %}
+    {% if form.search_phrase %}
         {% assets "scss_search" %}
             <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
         {% endassets %}
@@ -27,13 +27,13 @@
         logged in as {{ current_user.email }}
     {% else %}
     {% endif %}
-    {% if not request.args.get('s') %}
+    {% if not form.search_phrase %}
         {{ nav.links(nav_items) }}
     {% endif %}
 {% endblock %}
 
 {% block footer %}
-    {% if request.args.get('s') %}
+    {% if form.search_phrase %}
         {{ nav.links(nav_items) }}
     {% endif %}
 {% endblock %}
