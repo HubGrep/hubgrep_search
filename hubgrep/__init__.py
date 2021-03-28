@@ -28,7 +28,6 @@ mail = Mail()
 
 logger = logging.getLogger(__name__)
 
-
 # fix keep-alive in dev server (dropped connections from client sessions)
 from werkzeug.serving import WSGIRequestHandler
 
@@ -82,7 +81,18 @@ def create_app():
 
     app.jinja_env.globals["get_locale"] = get_locale
 
+    @app.before_first_request
+    def init_hosting_service_cache():
+        set_hosting_service_cache()
+
     return app
+
+
+def set_hosting_service_cache():
+    # used to avoid calling the db on every request
+    from flask import current_app as app
+    from hubgrep.models import HostingService
+    app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()
 
 
 def _build_assets(assets: Environment):

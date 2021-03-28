@@ -8,7 +8,6 @@ from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
-from hubgrep.models import HostingService
 from hubgrep.frontend_blueprint import frontend
 
 checkbox = namedtuple("checkbox", "id label is_checked")
@@ -21,7 +20,7 @@ def _get_search_form() -> search_form:
     allow_forks = search_phrase is "" or request.args.get("f", False) == "on"
     allow_archived = search_phrase is "" or request.args.get("a", False) == "on"
     service_checkboxes = []
-    for service in HostingService.query.all():
+    for service in app.config["CACHED_HOSTING_SERVICES"]:
         is_checked = search_phrase is "" or request.args.get("s{}".format(service.id), False) == "on"
         service_checkboxes.append(checkbox(id="s{}".format(service.id), label=service.label, is_checked=is_checked))
 

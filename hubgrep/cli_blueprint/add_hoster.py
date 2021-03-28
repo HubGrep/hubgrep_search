@@ -3,7 +3,7 @@ import click
 import json
 from hubgrep.cli_blueprint import cli_bp
 
-from hubgrep import db, security
+from hubgrep import db, security, set_hosting_service_cache
 from hubgrep.models import HostingService, get_service_label_from_url
 
 @cli_bp.cli.command()
@@ -32,6 +32,8 @@ def add_hoster(type, api_url, landingpage_url, config):
 
     db.session.add(h)
     db.session.commit()
+
+    set_hosting_service_cache()
 
 
 
