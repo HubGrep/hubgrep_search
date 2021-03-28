@@ -42,6 +42,17 @@
           outline: none 0;
         }
       }
+
+      .dates > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.2em;
+
+        label {
+          margin-right: 1em;
+        }
+      }
     }
   }
 

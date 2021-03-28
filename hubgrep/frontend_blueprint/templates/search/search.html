@@ -53,10 +53,8 @@
                 </a>
             </div>
 
-            <div class="search-main-form">
-                {% import "search/search_form.html" as search_form %}
-                {{ search_form.create_form(search_url, form) }}
-            </div>
+            {% import "search/search_form.html" as search_form %}
+            {{ search_form.create_form(search_url, form, class="search-main-form") }}
         </div>
 
         <div class="search-result">

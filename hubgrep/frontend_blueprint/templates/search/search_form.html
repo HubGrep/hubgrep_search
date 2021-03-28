@@ -1,6 +1,6 @@
-{% macro create_form(search_url, form) %}
+{% macro create_form(search_url, form, class="") %}
 
-<form>
+<div class="searchform {{ class }}">
     <form action="{{ search_url }}" method="get">
         <div class="input-bar">
             <label for="searchbar" aria-label="search"></label>
@@ -10,6 +10,34 @@
 
         {% import "components/collapsible.html" as collapsible %}
         {% set collapsible_content -%}
+        <div class="dates">
+            <div class="dates-created-after">
+                <label for="created">{{ gettext("created after") | safe }}</label>
+                <input type="date" id="created" name="cs">
+            </div>
+            <div class="dates-created-before">
+                <label for="created">{{ gettext("created before") | safe }}</label>
+                <input type="date" id="created" name="ce">
+            </div>
+            <div class="dates-updated">
+                <label for="updated">{{ gettext("updated since") | safe }}</label>
+                <input type="date" id="updated" name="u">
+            </div>
+        </div>
+
+        <div class="misc">
+            <div class="misc-forks">
+                <input type="checkbox" id="forks" name="f"
+                       {% if form.allow_forks %}checked{% endif %}>
+                <label for="forks">{{ gettext("forks") | safe }}</label>
+            </div>
+            <div class="misc-archived">
+                <input type="checkbox" id="archived" name="a"
+                       {% if form.allow_archived %}checked{% endif %}>
+                <label for="archived">{{ gettext("archived") | safe }}</label>
+            </div>
+        </div>
+
         <div class="services">
             {% for service in form.services %}
                 <div class="hosting-service">
@@ -18,23 +46,10 @@
                     <label for="{{ service.id }}">{{ service.label }}</label>
                 </div>
             {% endfor %}
-
         </div>
 
-        <div class="misc">
-            <div class="forks">
-                <input type="checkbox" id="forks" name="f"
-                       {% if form.allow_forks %}checked{% endif %}>
-                <label for="forks">{{ gettext("forks") | safe }}</label>
-            </div>
-            <div class="archived">
-                <input type="checkbox" id="archived" name="a"
-                       {% if form.allow_archived %}checked{% endif %}>
-                <label for="archived">{{ gettext("archived") | safe }}</label>
-            </div>
-        </div>
         {%- endset %} {# collapsible_content end #}
-        {{ collapsible.build(collapsible_content, label=gettext("options") | safe, is_absolute=True) }}
+        {{ collapsible.build(content=collapsible_content, is_absolute=True, icon_src="/static/images/gear.svg", icon_alt=gettext("options gear-icon") | safe) }}
     </form>
-</form>
+</div>
 {% endmacro %}
