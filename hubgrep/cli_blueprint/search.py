@@ -19,8 +19,6 @@ def search(terms, no_forks, no_archived):
     include_fork = not no_forks
     include_archived = not no_archived
 
-    print(f'include archived: {include_archived}')
-
     results, errors = fetch_concurrently(terms, search_interfaces)
     for error in errors:
         print(error)
