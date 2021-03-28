@@ -30,19 +30,16 @@ class SearchForm:
     created_before_dt: datetime
     updated_after_dt: datetime
 
-    def __init__(
-        self,
-        search_phrase: str,
-        service_checkboxes: [Checkbox],
-        include_forks: bool,
-        include_archived: bool,
-        created_after: str,
-        created_before: str,
-        updated_after: str,
-        created_after_dt: datetime,
-        created_before_dt: datetime,
-        updated_after_dt: datetime,
-    ):
+    def __init__(self, search_phrase: str,
+                 service_checkboxes: [Checkbox],
+                 include_forks: bool,
+                 include_archived: bool,
+                 created_after: str = "",
+                 created_before: str = "",
+                 updated_after: str = "",
+                 created_after_dt: datetime = False,
+                 created_before_dt: datetime = False,
+                 updated_after_dt: datetime = False):
         self.search_phrase = search_phrase
         self.service_checkboxes = service_checkboxes
         self.include_forks = include_forks

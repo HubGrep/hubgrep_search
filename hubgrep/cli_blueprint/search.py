@@ -1,5 +1,6 @@
 import click
 from flask import current_app as app
+from hubgrep import set_app_cache
 from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
@@ -13,11 +14,10 @@ from hubgrep.cli_blueprint import cli_bp
 @click.option("--no-forks", is_flag=True, default=False)
 @click.option("--no-archived", is_flag=True, default=False)
 def search(terms, no_forks, no_archived):
+    set_app_cache()
     search_interfaces = get_hosting_service_interfaces(cache=app.config['ENABLE_CACHE'])
     include_fork = not no_forks
     include_archived = not no_archived
-
-    print(f'include archived: {include_archived}')
 
     results, errors = fetch_concurrently(terms, search_interfaces)
     for error in errors:
