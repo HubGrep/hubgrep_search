@@ -47,7 +47,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
 
     links = []
     page_current = offset // per_page
-    page_total = results_total // per_page + 1
+    page_total = results_total // per_page
     link_total = page_total if page_total < link_max else link_max
     allow_detach = detach_min <= page_total
 

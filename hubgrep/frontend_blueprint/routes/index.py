@@ -84,6 +84,13 @@ def _get_search_form() -> SearchForm:
                       updated_after=updated_after, updated_after_dt=updated_after_dt)
 
 
+def get_search_feedback(results_total: int) -> str:
+    if results_total > 0:
+        return "Found {} matching repositories.".format(results_total)
+    else:
+        return "No matching repositories found."
+
+
 @frontend.route("/")
 def index():
     results_paginated = []
@@ -100,8 +107,7 @@ def index():
         results = filter_results(results, form)
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
-        search_feedback = "page {} of {} total matching repositories.".format(
-            results_offset // results_per_page + 1, len(results))
+        search_feedback = get_search_feedback(len(results))
 
     return render_template("search/search.html",
                            title=SITE_TITLE,
