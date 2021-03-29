@@ -63,10 +63,3 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
 
         results = final_sort(keywords, results)
         return results, errors
-
-def filter_results(results: List, include_archived=True, include_fork=True):
-    if not include_archived:
-        results = [r for r in results if r.is_archived is not True]
-    if not include_fork:
-        results = [r for r in results if r.is_fork is not True]
-    return results

@@ -3,7 +3,6 @@ from requests_cache.core import CachedSession
 from requests_cache.backends.redis import RedisCache
 from flask import current_app as app
 
-
 from hubgrep.lib.hosting_service_interfaces.github import GitHubSearch
 from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch
 from hubgrep.lib.hosting_service_interfaces.gitlab import GitLabSearch
@@ -19,7 +18,7 @@ hosting_service_interfaces_by_name = dict(
 def get_hosting_service_interfaces(cache=False):
     hosting_service_interfaces = {}
 
-    for service in HostingService.query.all():
+    for service in app.config["CACHED_HOSTING_SERVICES"]:
         service: HostingService
 
         config_str = service.config
@@ -33,12 +32,14 @@ def get_hosting_service_interfaces(cache=False):
                 expire_after=app.config["CACHE_TIME"], backend=cache_backend
             )
             args = dict(
+                host_service_id=service.id,
                 api_url=service.api_url,
                 **config,
                 requests_session=cached_session,
             )
         else:
             args = dict(
+                host_service_id=service.id,
                 api_url=service.api_url,
                 **config,
             )

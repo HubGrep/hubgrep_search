@@ -53,7 +53,7 @@ class GitHubSearchResult(SearchResult):
     }
     """
 
-    def __init__(self, search_result_item):
+    def __init__(self, search_result_item, host_service_id):
         repo_name = search_result_item["name"]
         owner_name = search_result_item["owner"]["login"]
         repo_description = search_result_item["description"] or ""
@@ -71,6 +71,7 @@ class GitHubSearchResult(SearchResult):
         html_url = search_result_item["html_url"]
 
         super().__init__(
+            host_service_id=host_service_id,
             repo_name=repo_name,
             repo_description=repo_description,
             html_url=html_url,
@@ -91,8 +92,9 @@ class GitHubSearch(HostingServiceInterface):
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self, api_url, requests_session=None):
+    def __init__(self, host_service_id, api_url, requests_session=None):
         super().__init__(
+            host_service_id=host_service_id,
             api_url=api_url,
             search_path="search/repositories",
             requests_session=requests_session,
@@ -107,7 +109,7 @@ class GitHubSearch(HostingServiceInterface):
             if not response.ok:
                 return False, self.api_url, response.text
             result = response.json()
-            results = [GitHubSearchResult(item) for item in result["items"]]
+            results = [GitHubSearchResult(item, self.host_service_id) for item in result["items"]]
 
         except Exception as e:
             logger.error(result)

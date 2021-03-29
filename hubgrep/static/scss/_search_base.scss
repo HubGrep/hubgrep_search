@@ -1,3 +1,6 @@
+@import "./components/status_message";
+@import "./components/collapsible";
+
 .search {
 
   &-main {
@@ -37,6 +40,26 @@
 
         &:focus {
           outline: none 0;
+        }
+      }
+
+      .dates > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .dates, .misc {
+        margin-bottom: 1em;
+      }
+
+      .dates, .misc, .services {
+        > div {
+          margin-bottom: 0.2em;
+
+          label {
+            margin-right: 1em;
+          }
         }
       }
     }

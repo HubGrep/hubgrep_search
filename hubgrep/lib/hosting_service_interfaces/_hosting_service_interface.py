@@ -1,5 +1,5 @@
-from datetime import datetime
 from urllib.parse import urljoin
+import pytz
 
 import click
 import humanize
@@ -7,29 +7,34 @@ import requests
 
 from flask import current_app
 
+utc = pytz.UTC
+
+
 class SearchResult:
     def __init__(
-        self,
-        repo_name,
-        repo_description,
-        html_url,
-        owner_name,
-        last_commit_dt,
-        created_at_dt,
-        forks,
-        stars,
-        is_fork,
-        is_archived,
-        language=None,
-        license=None,
+            self,
+            host_service_id,
+            repo_name,
+            repo_description,
+            html_url,
+            owner_name,
+            last_commit_dt,
+            created_at_dt,
+            forks,
+            stars,
+            is_fork,
+            is_archived,
+            language=None,
+            license=None,
     ):
+        self.host_service_id = host_service_id
         self.repo_name = repo_name
         self.repo_description = repo_description
         self.html_url = html_url
         self.owner_name = owner_name
-        self.last_commit_dt = last_commit_dt
+        self.last_commit_dt = last_commit_dt.astimezone(pytz.utc)
         self.last_commit = humanize.naturaldate(last_commit_dt)
-        self.created_at_dt = created_at_dt
+        self.created_at_dt = created_at_dt.astimezone(pytz.utc)
         self.created_at = humanize.naturaldate(created_at_dt)
         self.language = language
         self.license = license
@@ -70,7 +75,8 @@ class SearchResult:
 class HostingServiceInterface:
     name = ""
 
-    def __init__(self, api_url, search_path, requests_session=None):
+    def __init__(self, host_service_id, api_url, search_path, requests_session=None):
+        self.host_service_id = host_service_id
         self.api_url = api_url
         self.request_url = urljoin(self.api_url, search_path)
 

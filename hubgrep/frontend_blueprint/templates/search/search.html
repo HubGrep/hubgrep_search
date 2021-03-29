@@ -15,16 +15,16 @@
 {% import "components/nav.html" as nav %}
 {% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.imprint'), "imprint"]] %}
 {% if current_user.is_authenticated %}
-{% set _ = nav_items.append([url_for('frontend.manage_instances'), "Manage"]) %}
-{% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
+    {% set _ = nav_items.append([url_for('frontend.manage_instances'), "Manage"]) %}
+    {% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
 {% else %}
-{% set _ = nav_items.append([url_for('security.login'), "login"]) %}
-{% set _ = nav_items.append([url_for('security.register'), "register"]) %}
+    {% set _ = nav_items.append([url_for('security.login'), "login"]) %}
+    {% set _ = nav_items.append([url_for('security.register'), "register"]) %}
 {% endif %}
 
 {% block header %}
     {% if current_user.is_authenticated %}
-    logged in as {{ current_user.email }}
+        logged in as {{ current_user.email }}
     {% else %}
     {% endif %}
     {% if not request.args.get('s') %}
@@ -53,17 +53,8 @@
                 </a>
             </div>
 
-            <div class="search-main-form">
-                <form>
-                    <form action="{{ search_url }}" method="get">
-                        <div class="input-bar">
-                            <label for="searchbar" aria-label="search"></label>
-                            <input type="text" id="searchbar" name="s" value="{{ search_phrase or '' }}"
-                                   required="required">
-                        </div>
-                    </form>
-                </form>
-            </div>
+            {% import "search/search_form.html" as search_form %}
+            {{ search_form.create_form(search_url, form, class="search-main-form") }}
         </div>
 
         <div class="search-result">

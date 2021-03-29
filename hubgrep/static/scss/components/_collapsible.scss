@@ -1,0 +1,82 @@
+
+.collapsible {
+  margin-bottom: 15px;
+
+  &.inline {
+    display: inline-block;
+  }
+
+  &.absolute {
+    position: relative;
+
+    .collapsible-content {
+      box-shadow: 1px 1px 3px color(boxShadow);
+      background-color: color(white);
+      position: absolute;
+      z-index: 1;
+    }
+  }
+
+  > input[type='checkbox'] {
+    display: none;
+  }
+
+  .lbl-toggle {
+    font-family: font(bold2);
+    background-color: color(btn);
+    color: color(fontInvert);
+    fill: color(fontInvert);  // inline svg
+    display: block;
+    cursor: pointer;
+
+    margin-top: 15px;
+    padding: 8px;
+
+    .label {
+      text-decoration: none;
+    }
+  }
+
+  .lbl-toggle:hover {
+    background-color: color(btnHover);
+  }
+
+  .lbl-toggle .icon > * {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    vertical-align: middle;
+    margin-left: 0.5em;
+
+    transform: translateY(-2px);
+  }
+
+  .toggle:checked + .lbl-toggle .icon > * {
+    transform: rotate(180deg) translateY(2px);
+  }
+
+  .collapsible-content {
+    background: color(bgGUI);
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .25s ease-in-out;
+  }
+
+  .toggle:checked + .lbl-toggle + .collapsible-content {
+    max-height: 700px;  // we need a specific height for transition to take effect
+  }
+
+  .toggle:checked + .lbl-toggle {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .collapsible-content .content-inner {
+    padding: 1.5em;
+  }
+
+  .collapsible-content p {
+    margin-bottom: 0;
+  }
+}
+
