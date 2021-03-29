@@ -9,8 +9,15 @@ from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
 from hubgrep.models import HostingService
 
-
 from hubgrep.frontend_blueprint import frontend
+
+
+def get_search_feedback(page_nr: int, results_total: int) -> str:
+    if results_total > 0:
+        return "page {} of {} total matching repositories.".format(page_nr, results_total)
+    else:
+        return "No matching repositories found."
+
 
 @frontend.route("/")
 def index():
@@ -27,8 +34,7 @@ def index():
         results, external_errors = fetch_concurrently(terms, search_interfaces)
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
-        search_feedback = "page {} of {} total matching repositories.".format(
-            results_offset // results_per_page + 1, len(results))
+        search_feedback = get_search_feedback(results_offset // results_per_page + 1, len(results))
 
     return render_template("search/search.html",
                            title=SITE_TITLE,
