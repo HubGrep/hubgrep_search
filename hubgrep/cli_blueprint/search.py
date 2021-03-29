@@ -24,7 +24,7 @@ def search(terms, no_forks, no_archived):
         print(error)
 
     form = SearchForm(search_phrase=" ".join(terms),
-                      services=SearchForm.get_service_checkboxes(is_initial=True),
+                      service_checkboxes=SearchForm.get_service_checkboxes(is_initial=True),
                       include_forks=include_fork,
                       include_archived=include_archived)
     results = filter_results(results, form)
