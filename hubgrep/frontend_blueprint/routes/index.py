@@ -17,9 +17,9 @@ utc = pytz.UTC
 
 class SearchForm:
     search_phrase: str
-    service_checkboxes: [Checkbox]
-    include_forks: bool
-    include_archived: bool
+    exclude_service_checkboxes: [Checkbox]
+    exclude_forks: bool
+    exclude_archived: bool
     created_after: str
     created_before: str
     updated_after: str
@@ -28,9 +28,9 @@ class SearchForm:
     updated_after_dt: datetime
 
     def __init__(self, search_phrase: str,
-                 service_checkboxes: [Checkbox],
-                 include_forks: bool,
-                 include_archived: bool,
+                 exclude_service_checkboxes: [Checkbox],
+                 exclude_forks: bool,
+                 exclude_archived: bool,
                  created_after: str = "",
                  created_before: str = "",
                  updated_after: str = "",
@@ -38,9 +38,9 @@ class SearchForm:
                  created_before_dt: datetime = False,
                  updated_after_dt: datetime = False):
         self.search_phrase = search_phrase
-        self.service_checkboxes = service_checkboxes
-        self.include_forks = include_forks
-        self.include_archived = include_archived
+        self.exclude_service_checkboxes = exclude_service_checkboxes
+        self.exclude_forks = exclude_forks
+        self.exclude_archived = exclude_archived
         self.created_after = created_after
         self.created_before = created_before
         self.updated_after = updated_after
@@ -49,21 +49,21 @@ class SearchForm:
         self.updated_after_dt = updated_after_dt
 
 
-def _get_service_checkboxes(is_initial=True) -> {}:
-    service_checkboxes = dict()
+def _get_exclude_service_checkboxes() -> {}:
+    exclude_service_checkboxes = dict()
     for service in app.config["CACHED_HOSTING_SERVICES"]:
-        is_checked = is_initial or request.args.get("s{}".format(service.id), False) == "on"
-        service_checkboxes[service.id] = Checkbox(service_id=service.id, id="s{}".format(service.id),
+        is_checked = request.args.get("xs{}".format(service.id), False) == "on"
+        exclude_service_checkboxes[service.id] = Checkbox(service_id=service.id, id="xs{}".format(service.id),
                                                   label=service.label, is_checked=is_checked)
-    return service_checkboxes
+    return exclude_service_checkboxes
 
 
 def _get_search_form() -> SearchForm:
     # we default to "on" for missing checkbox params only when search_phrase is empty (as its the landing page)
     search_phrase = request.args.get("s", "")
-    include_forks = search_phrase == "" or request.args.get("f", False) == "on"
-    include_archived = search_phrase == "" or request.args.get("a", False) == "on"
-    service_checkboxes = _get_service_checkboxes(is_initial=search_phrase == "")
+    exclude_forks = request.args.get("f", False) == "on"
+    exclude_archived = request.args.get("a", False) == "on"
+    exclude_service_checkboxes = _get_exclude_service_checkboxes()
     created_after = request.args.get("ca", "")
     created_before = request.args.get("cb", "")
     updated_after = request.args.get("u", "")
@@ -77,8 +77,8 @@ def _get_search_form() -> SearchForm:
     if updated_after != "":
         updated_after_dt = utc.localize(datetime.strptime(updated_after, DATE_FORMAT))
 
-    return SearchForm(search_phrase=search_phrase, service_checkboxes=service_checkboxes,
-                      include_forks=include_forks, include_archived=include_archived,
+    return SearchForm(search_phrase=search_phrase, exclude_service_checkboxes=exclude_service_checkboxes,
+                      exclude_forks=exclude_forks, exclude_archived=exclude_archived,
                       created_after=created_after, created_after_dt=created_after_dt,
                       created_before=created_before, created_before_dt=created_before_dt,
                       updated_after=updated_after, updated_after_dt=updated_after_dt)

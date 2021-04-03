@@ -15,9 +15,11 @@ def _filter_by_date(item: SearchResult, form: "SearchForm") -> bool:
 def filter_results(results: [SearchResult], form: "SearchForm") -> [SearchResult]:
     def predicate(item: SearchResult):
         return (
-                (form.include_forks or not item.is_fork) and                        # filter forks
-                (form.include_archived or not item.is_archived) and                 # filter archived
-                form.service_checkboxes[item.host_service_id].is_checked and        # filter based on hosting-service
+                not (
+                    (form.exclude_forks and item.is_fork) or                        # filter forks
+                    (form.exclude_archived and item.is_archived)                    # filter archived
+                ) and
+                not form.exclude_service_checkboxes[item.host_service_id].is_checked and        # filter based on hosting-service
                 _filter_by_date(item, form)                                         # filters based on time
         )
 

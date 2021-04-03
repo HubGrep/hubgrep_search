@@ -28,18 +28,19 @@
         <div class="misc">
             <div class="misc-forks">
                 <input type="checkbox" id="forks" name="f"
-                       {% if form.include_forks %}checked{% endif %}>
-                <label for="forks">{{ gettext("include forks") | safe }}</label>
+                       {% if form.exclude_forks %}checked{% endif %}>
+                <label for="forks">{{ gettext("exclude forks") | safe }}</label>
             </div>
             <div class="misc-archived">
                 <input type="checkbox" id="archived" name="a"
-                       {% if form.include_archived %}checked{% endif %}>
-                <label for="archived">{{ gettext("include archived") | safe }}</label>
+                       {% if form.exclude_archived %}checked{% endif %}>
+                <label for="archived">{{ gettext("exclude archived") | safe }}</label>
             </div>
         </div>
 
         <div class="services">
-            {% for key, service in form.service_checkboxes.items() %}
+            exclude hoster:
+            {% for key, service in form.exclude_service_checkboxes.items() %}
                 <div class="hosting-service">
                     <input type="checkbox" id="{{ service.id }}" name="{{ service.id }}"
                            {% if service.is_checked %}checked{% endif %}>
