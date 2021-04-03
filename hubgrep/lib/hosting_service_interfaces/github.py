@@ -117,3 +117,8 @@ class GitHubSearch(HostingServiceInterface):
             return False, self.api_url, e
 
         return True, self.api_url, results
+
+
+    @staticmethod
+    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
+        return False

@@ -88,3 +88,12 @@ class HostingServiceInterface:
 
     def search(self, keywords: list, tags: dict):
         raise NotImplementedError
+
+    @staticmethod
+    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
+        return NotImplementedError
+
+    @staticmethod
+    def normalize_url(url):
+        response = requests.head(url)
+        return response.url

@@ -2,6 +2,8 @@ from flask import render_template
 from flask import request
 from flask import abort
 from flask import flash
+from flask import redirect
+from flask import url_for
 from flask_security import current_user
 
 from flask_security import login_required
@@ -9,7 +11,9 @@ from hubgrep.models import HostingService
 
 from hubgrep import db, security
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm
+from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm, HostingServiceFirstStep
+from hubgrep.lib.get_hosting_service_interfaces import hosting_service_interfaces_by_name
+
 
 @frontend.route("/manage")
 @login_required
@@ -27,13 +31,13 @@ def manage_instances():
         is_admin = False
 
     return render_template(
-        "management/hosting_service_list.html",
-        hosting_services=hosting_service_instances_by_user,
-        is_admin=is_admin,
-    )
+                "management/hosting_service_list.html",
+                hosting_services=hosting_service_instances_by_user,
+                is_admin=is_admin
+            )
 
 
-@frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ])
+@frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ],)
 @login_required
 def manage_instance(hosting_service_id):
     h: HostingService = HostingService.query.get(hosting_service_id)
@@ -45,7 +49,6 @@ def manage_instance(hosting_service_id):
     form = HostingServiceForm()
     if form.validate_on_submit():
         h.api_url = form.api_url.data
-        h.type = form.type.data
         h.landingpage_url = form.landingpage_url.data
         h.type = form.type.data
         h.config = form.config.data
@@ -60,3 +63,4 @@ def manage_instance(hosting_service_id):
         flash(form.errors, "error")
   
     return render_template("management/edit_hosting_service.html", form=form)
+

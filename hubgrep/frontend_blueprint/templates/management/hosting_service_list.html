@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block content %}
+
+<a href="{{url_for("frontend.add_instance_step_1")}}">add new hoster</a>
+
 <div class="hosting-service-list">
     {% for user, instances in hosting_services.items() %}
     <h3>{{user}}</h3>

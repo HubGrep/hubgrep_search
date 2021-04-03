@@ -1,5 +1,7 @@
 import logging
 from iso8601 import iso8601
+from urllib.parse import urljoin
+
 from typing import List, Union
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
@@ -95,3 +97,7 @@ class GitLabSearch(HostingServiceInterface):
             logger.error(e, exc_info=True)
             return False, self.api_url, e
         return True, self.api_url, results
+    
+    @staticmethod
+    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
+        return urljoin(landingpage_url, "/api/v4/")
