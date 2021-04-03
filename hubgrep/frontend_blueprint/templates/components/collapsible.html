@@ -3,10 +3,11 @@
             {% if is_inline == true %}{{ "inline" }}{% endif %}
             {% if is_absolute == true %}{{ "absolute" }}{% endif %}">
         {% set id = range(100000) | random %}
-        <input id="collapsible-{{ label }}-{{ id }}" class="toggle" type="checkbox">
-        <label for="collapsible-{{ label }}-{{ id }}" class="lbl-toggle">
+        {% set collapse_id = ("collapsible-" + class[:5] + label[:5]).strip() | safe %}
+        <input id="{{ collapse_id }}" class="toggle" type="checkbox">
+        <label for="{{ collapse_id }}" class="lbl-toggle">
             <span class="label">{{ label }}</span>
-            <span class="icon"><img src="{{ icon_src }}" alt="{{ icon_alt }}"></span>
+            <span class="icon btn-effect"><img src="{{ icon_src }}" alt="{{ icon_alt }}"></span>
         </label>
         <div class="collapsible-content">
             <div class="content-inner">

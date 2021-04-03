@@ -1,6 +1,5 @@
 
 .collapsible {
-  margin-bottom: 15px;
 
   &.inline {
     display: inline-block;
@@ -25,15 +24,17 @@
     font-family: font(bold2);
     background-color: color(btn);
     color: color(fontInvert);
-    fill: color(fontInvert);  // inline svg
+    fill: color(fontInvert); // inline svg
     display: block;
     cursor: pointer;
 
-    margin-top: 15px;
-    padding: 8px;
-
     .label {
       text-decoration: none;
+      margin-right: 0.5em;
+
+      &:empty {
+        margin-right: 0;
+      }
     }
   }
 
@@ -41,18 +42,18 @@
     background-color: color(btnHover);
   }
 
-  .lbl-toggle .icon > * {
+  .lbl-toggle .icon img {
     display: inline-block;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     vertical-align: middle;
-    margin-left: 0.5em;
+    user-select: none;
 
-    transform: translateY(-2px);
+    transition: transform 0.2s linear;
   }
 
-  .toggle:checked + .lbl-toggle .icon > * {
-    transform: rotate(180deg) translateY(2px);
+  .toggle:checked + .lbl-toggle .icon img {
+    transform: rotate(180deg);
   }
 
   .collapsible-content {
@@ -63,7 +64,7 @@
   }
 
   .toggle:checked + .lbl-toggle + .collapsible-content {
-    max-height: 700px;  // we need a specific height for transition to take effect
+    max-height: 700px; // we need a specific height for transition to take effect
   }
 
   .toggle:checked + .lbl-toggle {
@@ -73,10 +74,6 @@
 
   .collapsible-content .content-inner {
     padding: 1.5em;
-  }
-
-  .collapsible-content p {
-    margin-bottom: 0;
   }
 }
 

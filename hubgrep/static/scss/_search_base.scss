@@ -1,5 +1,6 @@
 @import "./components/status_message";
 @import "./components/collapsible";
+@import "./components/searchform";
 
 .search {
 
@@ -15,7 +16,7 @@
 
     &-title {
       h1 {
-        margin: 0;
+        margin: 1rem 0 1rem .5rem;
         color: color(hubgrep);
       }
 
@@ -24,44 +25,8 @@
       }
     }
 
-    &-form { // form-wrapper
+    &-form {
       width: 100%;
-
-      .input-bar {
-        border: 1px solid #dfe1e5;
-        border-radius: 24px;
-        padding: 0.45rem 1rem 0.35rem;
-      }
-
-      #searchbar {
-        font-size: size(body);
-        width: 100%;
-        border: none;
-
-        &:focus {
-          outline: none 0;
-        }
-      }
-
-      .dates > div {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .dates, .misc {
-        margin-bottom: 1em;
-      }
-
-      .dates, .misc, .services {
-        > div {
-          margin-bottom: 0.2em;
-
-          label {
-            margin-right: 1em;
-          }
-        }
-      }
     }
   }
 

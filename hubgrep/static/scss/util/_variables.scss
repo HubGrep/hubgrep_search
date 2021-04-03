@@ -1,5 +1,6 @@
+
 $breakpoints: (
-        mobile: 480px,
+        mobile: (width: 720px),
 );
 
 $fonts: (
@@ -15,14 +16,17 @@ $fontSizes: (
 
 $colors: (
         hubgrep: #78ab58,
+        hubgrepLight: #F2FFB4,
         frogEye: #FFAB00,
         warning: #ff0f0f,
+        elementBg: #dae6a1,
+        elementFont: #636d36,
         white: #FFFFFF,
         whiteAlt: #f2f2f2,
         font: #4d5156,
         fontFade: #7d7d7d,
         boxShadow: rgba(0, 0, 0, 0.17),
-        grey: #ccc,
+        grey: #aaa,
         link: #1a0dab,
         linkVisited: #551a8b,
 );
