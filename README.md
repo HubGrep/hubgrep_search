@@ -3,7 +3,9 @@
 Search for code repositories over many code-hosting services at once, without non-repo clutter.
 
 
-## Setup
+## deployment
+
+### Setup
 
 create a config by copying `.env.dist` to `.env`, and add the missing values.
 
@@ -30,32 +32,63 @@ create the admin user
     flask cli init
 
 
-## Usage - localdev
+    # todo: 
+    - a prod docker container, using external assets, not linking the sourcecode
+    - nginx setup
 
-#### Web-fronend:
+
+
+### usage
+
+after that, add some hosters to search. use either the frontend, 
+or the cli, to add, for example, github:
+
+    flask cli add-hoster github "https://api.github.com/" "https://github.com/" "{}"
+    flask cli add-hoster gitea "https://codeberg.org/api/v1/" "https://codeberg.org/" "{}"
+    flask cli add-hoster gitea "https://gitea.com/api/v1/" "https://gitea.com/" "{}"
+
+
+#### adding gitlab instances
+
+gitlab needs an api key ("token") to use the api.
+
+> ! keep in mind, that with this token, your private repositories can be read as well
+> so its recommended to create a new, empty user account for this !
+
+to create a new token, log in to your gitlab account, 
+find "access tokens" in your user settings, and create a new "personal access token" 
+without an expiration date, and with the `read_api` scope.
+
+after you created your key, you can add this instance as well:
+    
+    flask cli add-hoster gitlab "https://gitlab.com/api/v4/" "https://gitlab.com/" '{"api_token": "XXXXXXXXXXX"}'
+
+
+substitute the base url with whatever gitlab instance you want to add, of course. :)
+
+
+
+## development setup
+
+### Web-fronend:
 
     docker-compose up
 
 Navigate to `0.0.0.0:8080` in your browser to search.
 
-#### CLI:
+### CLI:
 
 ```
 docker-compose run --rm service /bin/bash
 flask cli search <TERMS>
 ```
 
-
-## Testing
+### Testing
 
 Using pytest and pytest-coverage, run:
 
     pytest --cov=hubgrep .
     
-    
-## Deploy
-
-TODO
 
 ## Localization
 
@@ -77,3 +110,5 @@ Finally, compile the translation for usage:
     pybabel compile -d hubgrep/translations -l [YOUR_LANG]
     
 Strings should now be replaced by the appropriate locale variant when rendered.
+
+
