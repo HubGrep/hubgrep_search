@@ -9,9 +9,10 @@ from flask_security import current_user
 from flask_security import login_required
 from hubgrep.models import HostingService
 
-from hubgrep import db, security
+from hubgrep import db, security, set_app_cache
 from hubgrep.frontend_blueprint import frontend
 from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm, HostingServiceFirstStep
+from hubgrep.frontend_blueprint.forms.confirm import ConfirmForm
 from hubgrep.lib.get_hosting_service_interfaces import hosting_service_interfaces_by_name
 
 
@@ -54,6 +55,7 @@ def manage_instance(hosting_service_id):
         h.config = form.config.data
         db.session.add(h)
         db.session.commit()
+        set_app_cache()
 
     form.type.data = h.type
     form.landingpage_url.data = h.landingpage_url
@@ -64,3 +66,28 @@ def manage_instance(hosting_service_id):
   
     return render_template("management/edit_hosting_service.html", form=form)
 
+
+@frontend.route("/manage/<hosting_service_id>/delete", methods=['GET', 'POST'])
+@login_required
+def delete_instance(hosting_service_id):
+    h: HostingService = HostingService.query.get(hosting_service_id)
+    if h.user == current_user or current_user.has_role('admin'):
+        pass
+    else:
+        abort(404)
+
+    form = ConfirmForm()
+    if form.validate_on_submit():
+        db.session.delete(h)
+        db.session.commit()
+        set_app_cache()
+        flash("hoster deleted", "success")
+        return redirect(url_for("frontend.manage_instances"))
+    
+    if form.errors:
+        flash(form.errors, "error")
+
+    confirm_question = f"do you really want to delete {h.label}?"
+    confirm_button_text = f"confirm"
+  
+    return render_template("management/confirm.html", form=form, confirm_question=confirm_question, confirm_button_text=confirm_button_text)

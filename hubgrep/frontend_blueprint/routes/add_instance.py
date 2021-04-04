@@ -8,7 +8,7 @@ from flask import url_for
 from flask_security import current_user
 from flask_security import login_required
 
-from hubgrep import db
+from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
 from hubgrep.frontend_blueprint.forms.edit_hosting_service import (
     HostingServiceForm,
@@ -25,19 +25,17 @@ from hubgrep.models import HostingService, get_service_label_from_url
 def add_instance_step_1():
     form = HostingServiceFirstStep()
     if form.validate_on_submit():
-        print("valid")
         landingpage_url = form.landingpage_url.data
         _type = form.type.data
 
-        s2 = url_for(
+        step_2 = url_for(
             "frontend.add_instance_step_2",
             type=_type,
             landingpage_url=landingpage_url,
         )
 
-        return redirect(s2)
-    else:
-        print("didnt validate")
+        return redirect(step_2)
+
     form.landingpage_url.data = request.form.get("landingpage_url", "")
     form.type.data = request.form.get("type", "")
 
@@ -80,6 +78,7 @@ def add_instance_step_2():
 
         db.session.add(h)
         db.session.commit()
+        set_app_cache()
 
         flash("new hoster added!", "success")
 

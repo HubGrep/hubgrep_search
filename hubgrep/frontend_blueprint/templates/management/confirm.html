@@ -5,18 +5,12 @@
 {% if current_user.has_role('admin') %}
 <h3>{{ current_user.email }} (admin)</h3>
 {% endif %}
-<h2>add new hosting service (step 1)</h2>
+<h2>{{ confirm_question }}</h2>
 
 <form method="POST" action="" class="hosting-service-form">
     {{ form.csrf_token }}
     <div class="hosting-service-form-line">
-        {{ form.type.label }} {{ form.type() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
-    </div>
-    <div class="hosting-service-form-line">
-        <input type="submit" value="Go">
+        <input type="submit" value="{{ confirm_button_text }}">
     </div>
 </form>
 {% endblock %}

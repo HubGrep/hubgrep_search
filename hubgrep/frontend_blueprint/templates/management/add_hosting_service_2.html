@@ -1,10 +1,4 @@
-{% extends 'base.html' %}
-
-{% block styles %}
-{% assets "scss_hosting_service_management" %}
-<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-{% endassets %}
-{% endblock %}
+{% extends 'management/management_base.html' %}
 {% block content %}
 
 {% if current_user.has_role('admin') %}
@@ -26,6 +20,8 @@
     <div class="hosting-service-form-line">
         {{ form.config.label }} {{ form.config(rows=4, cols=30) }}
     </div>
-    <input type="submit" value="Go">
+    <div class="hosting-service-form-line">
+        <input type="submit" value="Go">
+    </div>
 </form>
 {% endblock %}
