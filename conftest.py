@@ -12,6 +12,7 @@ from flask_migrate import upgrade, init
 
 
 from hubgrep import create_app
+from hubgrep import set_app_cache
 from hubgrep import db
 from hubgrep.lib.create_admin import create_admin
 from hubgrep.models import HostingService
@@ -43,6 +44,7 @@ def test_app():
         hoster = get_example_hoster(admin)
         db.session.add(hoster)
         db.session.commit()
+        set_app_cache()
     yield app
 
     os.close(db_fd)

@@ -36,6 +36,7 @@ class TestGithub:
     def test_search(self, test_app):
         with test_app.app_context():
             github_search = GitHubSearch(
+                "host_service_id",
                 "api_url",
             )
             github_search.requests = Mock()
