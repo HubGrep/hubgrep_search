@@ -52,7 +52,8 @@ def add_instance_step_2():
     form.landingpage_url.data = request.args.get("landingpage_url", "")
     form.type.data = request.args.get("type", "")
 
-    form.populate_api_url()
+    if not form.api_url.data:
+        form.populate_api_url()
 
     if form.validate_on_submit():
         HostingServiceInterface = hosting_service_interfaces_by_name.get(
@@ -83,5 +84,8 @@ def add_instance_step_2():
         flash("new hoster added!", "success")
 
         return redirect(url_for("frontend.manage_instances"))
+
+    if form.errors:
+        flash(form.errors, "error")
 
     return render_template("management/add_hosting_service_2.html", form=form)

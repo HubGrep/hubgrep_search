@@ -63,7 +63,7 @@ class HostingServiceForm(HostingServiceFirstStep):
     final step in adding new hosters,
     also form for editing hosters
     """
-    api_url = StringField("Api Url", [InputRequired(), URL()], widget=URLInput())
+    api_url = StringField("Api Url", [InputRequired(), URL(), validate_url], widget=URLInput())
     config = TextAreaField("Config", [validate_config])
 
     def populate_api_url(self):
