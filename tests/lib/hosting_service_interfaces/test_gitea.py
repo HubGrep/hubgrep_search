@@ -32,7 +32,7 @@ class TestGitea:
 
     def test_search(self, test_app):
         with test_app.app_context():
-            gitea_search = GiteaSearch("api_url")
+            gitea_search = GiteaSearch("host_service_id", "api_url")
             gitea_search.requests = Mock()
             gitea_search.requests.get.return_value = self.get_mocked_response()
 

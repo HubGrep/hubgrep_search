@@ -15,7 +15,7 @@
 {% import "components/nav.html" as nav %}
 {% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.imprint'), "imprint"]] %}
 {% if current_user.is_authenticated %}
-    {% set _ = nav_items.append([url_for('frontend.manage_instances'), "Manage"]) %}
+    {% set _ = nav_items.append([url_for('frontend.manage_instances'), "manage"]) %}
     {% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
 {% else %}
     {% set _ = nav_items.append([url_for('security.login'), "login"]) %}
