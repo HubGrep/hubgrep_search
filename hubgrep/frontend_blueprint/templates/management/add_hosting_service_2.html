@@ -1,12 +1,10 @@
 {% extends 'management/management_base.html' %}
-
-
 {% block content %}
 
 {% if current_user.has_role('admin') %}
 <h3>{{ current_user.email }} (admin)</h3>
 {% endif %}
-<h2>edit {{ form.landingpage_url.data }}</h2>
+<h2>add new hosting service (step 2)</h2>
 
 <form method="POST" action="" class="hosting-service-form">
     {{ form.csrf_token }}
