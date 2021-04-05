@@ -51,7 +51,7 @@ footer {
 
   @include maxBreakpoint("mobile") {
     &-result {
-      padding-left: 1rem;
+      padding: 0 1rem;
     }
   }
 }
