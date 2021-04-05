@@ -1,12 +1,11 @@
 {% extends 'management/management_base.html' %}
 
-
 {% block content %}
 
 {% if current_user.has_role('admin') %}
 <h3>{{ current_user.email }} (admin)</h3>
 {% endif %}
-<h2>edit {{ form.landingpage_url.data }}</h2>
+<h2>add new hosting service (step 1)</h2>
 
 <form method="POST" action="" class="hosting-service-form">
     {{ form.csrf_token }}
@@ -15,12 +14,6 @@
     </div>
     <div class="hosting-service-form-line">
         {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.api_url.label }} {{ form.api_url() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.config.label }} {{ form.config(rows=4, cols=30) }}
     </div>
     <div class="hosting-service-form-line">
         <input type="submit" value="Go">

@@ -8,6 +8,6 @@ htmlcov/
 *.egg-info/
 .env
 .webassets-cache/
-hubgrep/static/*.css
+hubgrep/static/css/
 messages.pot
 init_hosters.sh

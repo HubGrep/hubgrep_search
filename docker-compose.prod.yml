@@ -11,15 +11,11 @@ services:
   redis:
     image: redis
 
-  maildev:
-    image: maildev/maildev
-    ports:
-      - 8081:80
-
   service:
-    build: .
-    volumes:
-    - ./:/var/task
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file: .env
 
     restart: ${RESTART}
 
@@ -27,12 +23,7 @@ services:
     ports:
       - 8080:8080
 
-    command: >
-          bash -ic " \
-            pip install -r requirements.txt
-            flask run --host 0.0.0.0 --port 8080
-            "
-    tty: true
+    command: gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
 
 volumes:
   pgdata:

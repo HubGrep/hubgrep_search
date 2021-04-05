@@ -1,12 +1,9 @@
-{% extends 'base.html' %}
-
-{% block styles %}
-{% assets "scss_hosting_service_management" %}
-<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-{% endassets %}
-{% endblock %}
+{% extends 'management/management_base.html' %}
 
 {% block content %}
+
+<a href="{{url_for("frontend.add_instance_step_1")}}">add new hoster</a>
+
 <div class="hosting-service-list">
     {% for user, instances in hosting_services.items() %}
     <h3>{{user}}</h3>
@@ -14,6 +11,7 @@
     <div class="hosting-service">
         {{ instance.landingpage_url }} -
         <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
+        <a href="{{ url_for('frontend.delete_instance', hosting_service_id=instance.id) }}">delete</a>
     </div>
     {% endfor %}
     {% endfor %}
