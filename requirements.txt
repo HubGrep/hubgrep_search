@@ -28,6 +28,7 @@ iso8601==0.1.14
 itsdangerous==1.1.0
 Jinja2==2.11.3
 Mako==1.1.4
+Markdown==3.3.4
 MarkupSafe==1.1.1
 packaging==20.9
 passlib==1.7.4

@@ -113,7 +113,7 @@ Strings should now be replaced by the appropriate locale variant when rendered.
 
 
 
-### building a production container
+## building a production container
 
 there is a separate dockerfile `Dockerfile.prod` for production builds, 
 which is used in the `docker-compose.prod.yml` file.
@@ -128,5 +128,12 @@ just adjust your .env file, and change the docker-compose
 file to your needs (for example, if you are running a separate postgres.)
 
     # todo: serve static assets via webserver, not gunicorn
+
+
+
+## customize the about page
+
+Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a markdown file,
+and it will be rendered into the about page.
 
 
