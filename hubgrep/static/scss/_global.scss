@@ -1,4 +1,5 @@
 html {
+  background-color: color(bg);
   font-family: font(base);
   color: color(font);
 }
@@ -39,7 +40,7 @@ header {
 }
 
 footer {
-  background-color: color(whiteAlt);
+  background-color: color(bgAlt);
   display: flex;
   align-items: center;
 

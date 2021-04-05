@@ -19,6 +19,24 @@ footer {
       flex-direction: row;
       margin: 0;
 
+      &-logo {
+        position: absolute;
+        left: 0;
+        top: 8rem;
+        transition: transform 1s linear;
+
+        .body {
+          width: 98px;
+          height: 118px;
+          background-size: cover;
+          background: url('../images/frog_face.png') no-repeat center;
+        }
+
+        &:hover {
+          transform: translate(-3rem)
+        }
+      }
+
       &-title {
         min-width: 8.75rem;
       }

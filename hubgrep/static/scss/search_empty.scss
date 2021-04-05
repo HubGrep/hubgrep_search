@@ -61,8 +61,12 @@ body > section {
       }
     }
 
-    &-form { // form-wrapper
+    &-form {
       min-height: 40vh;
+
+      .input-bar {
+        box-shadow: 0 0 3px color(boxShadow);
+      }
     }
   }
 }
