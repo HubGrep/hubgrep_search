@@ -28,7 +28,7 @@ body > section {
         width: 250px;
         height: 161px;
         background-size: cover;
-        background: url('images/frog_big.png') no-repeat center;
+        background: url('../images/frog_big.png') no-repeat center;
       }
 
       .eye {
@@ -40,7 +40,7 @@ body > section {
         width: 43px;
         height: 41px;
         background-size: cover;
-        background: url('images/frog_big_eye.png') no-repeat center;
+        background: url('../images/frog_big_eye.png') no-repeat center;
         background-color: color(frogEye);
       }
 

@@ -37,6 +37,13 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 def create_app():
     app = Flask(__name__, static_url_path="/static", static_folder="static")
     assets = Environment(app)
+
+    # disable cache, because that breaks
+    # prod build for some reason.
+    # maybe add to the flask config?
+    assets.cache = False
+    assets.manifest = False
+
     _build_assets(assets)
 
     @app.after_request
@@ -47,6 +54,7 @@ def create_app():
 
     app_env = os.environ.get("APP_ENV", "development")
     config_mapping = {
+        "build": "hubgrep.config.BuildConfig",
         "development": "hubgrep.config.DevelopmentConfig",
         "production": "hubgrep.config.ProductionConfig",
         "testing": "hubgrep.config.testingConfig",
@@ -101,31 +109,31 @@ def _build_assets(assets: Environment):
         "scss/about.scss",
         filters="pyscss",
         depends=["**/*.scss", "**/**/*.scss"],
-        output="about.css",
+        output="css/about.css",
     )
     scss_imprint = Bundle(
         "scss/imprint.scss",
         filters="pyscss",
         depends=["**/*.scss", "**/**/*.scss"],
-        output="imprint.css",
+        output="css/imprint.css",
     )
     scss_search = Bundle(
         "scss/search.scss",
         filters="pyscss",
         depends=["**/*.scss", "**/**/*.scss"],
-        output="search.css",
+        output="css/search.css",
     )
     scss_search_empty = Bundle(
         "scss/search_empty.scss",
         filters="pyscss",
         depends=["**/*.scss", "**/**/*.scss"],
-        output="search_empty.css",
+        output="css/search_empty.css",
     )
     hosting_service_management = Bundle(
         "scss/hosting_service_management.scss",
         filters="pyscss",
         depends=["**/*.scss", "**/**/*.scss"],
-        output="hosting_service_management.css",
+        output="css/hosting_service_management.css",
     )
     assets.register("scss_about", scss_about)
     assets.register("scss_imprint", scss_imprint)

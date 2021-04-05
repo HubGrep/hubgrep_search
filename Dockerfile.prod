@@ -1,0 +1,23 @@
+FROM python:3.8-slim-buster
+
+# build variables
+ARG APP_ENV=build
+
+# build+run variables
+ENV FLASK_APP=hubgrep
+
+
+WORKDIR /var/task
+
+COPY requirements.txt Dockerfile.prod /var/task/
+COPY migrations /var/task/migrations
+COPY hubgrep /var/task/hubgrep
+
+RUN pip install -r requirements.txt
+
+# unicorn is used to serve the app
+RUN pip install gunicorn
+
+# we dont check css in, so we need to build our assets
+RUN flask assets build
+

@@ -83,7 +83,7 @@ docker-compose run --rm service /bin/bash
 flask cli search <TERMS>
 ```
 
-### Testing
+## Testing
 
 Using pytest and pytest-coverage, run:
 
@@ -110,5 +110,23 @@ Finally, compile the translation for usage:
     pybabel compile -d hubgrep/translations -l [YOUR_LANG]
     
 Strings should now be replaced by the appropriate locale variant when rendered.
+
+
+
+### building a production container
+
+there is a separate dockerfile `Dockerfile.prod` for production builds, 
+which is used in the `docker-compose.prod.yml` file.
+
+to build an image with generated assets and source code baked in, 
+run `docker-compose -f docker-compose.prod.yml build`.
+
+you can use it the same way as the development compose file.
+
+configuration is almost the same as in development - 
+just adjust your .env file, and change the docker-compose
+file to your needs (for example, if you are running a separate postgres.)
+
+    # todo: serve static assets via webserver, not gunicorn
 
 
