@@ -48,4 +48,10 @@ footer {
       padding-left: $lMargin;
     }
   }
+
+  @include maxBreakpoint("mobile") {
+    &-result {
+      padding-left: 1rem;
+    }
+  }
 }
