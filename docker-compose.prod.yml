@@ -1,0 +1,29 @@
+version: "2"
+
+services:
+
+  postgres:
+    image: postgres:13
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
+
+  redis:
+    image: redis
+
+  service:
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    env_file: .env
+
+    restart: ${RESTART}
+
+    # uplink port to host
+    ports:
+      - 8080:8080
+
+    command: gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
+
+volumes:
+  pgdata:
