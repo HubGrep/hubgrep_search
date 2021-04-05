@@ -3,6 +3,7 @@
 @import "./components/result_card";
 @import "./components/pagination";
 
+
 header {
   display: none;
 }
@@ -14,6 +15,7 @@ footer {
 .search {
 
   @include minBreakpoint("mobile") {
+    $lMargin: 10rem;
 
     &-main {
       flex-direction: row;
@@ -38,12 +40,12 @@ footer {
       }
 
       &-title {
-        min-width: 8.75rem;
+        min-width: calc(#{$lMargin} - 1rem);
       }
     }
 
     &-result {
-      padding-left: 10rem;
+      padding-left: $lMargin;
     }
   }
 }

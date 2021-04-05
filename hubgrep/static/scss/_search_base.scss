@@ -16,8 +16,9 @@
 
     &-title {
       h1 {
-        margin: 1rem 0 1rem .5rem;
         color: color(hubgrepDark);
+        text-align: center;
+        margin: 1rem 0;
       }
 
       a:hover {
@@ -29,14 +30,25 @@
       width: 100%;
 
       .collapsible-content {
-          margin-top: 0.5em;
-        }
+        margin-top: 0.5em;
+      }
     }
   }
 
   &-result {
     &-messages:first-child {
       margin-top: 1rem;
+    }
+  }
+}
+
+@include maxBreakpoint("mobile") {
+  .search {
+
+    &-main {
+      margin: 0 1em;
+      width: auto;
+      min-width: unset;
     }
   }
 }
