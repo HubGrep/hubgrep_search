@@ -87,7 +87,7 @@ flask cli search <TERMS>
 
 Using pytest and pytest-coverage, run:
 
-    pytest --cov=hubgrep .
+    sh .manage.py test
     
 
 ## Localization
