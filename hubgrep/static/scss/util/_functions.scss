@@ -34,11 +34,11 @@
     @return null;
 }
 
-@function icon($key) {
-    @if map-has-key($icons, $key) {
-        @return map-get($icons, $key);
+@function value($key) {
+    @if map-has-key($vars, $key) {
+        @return map-get($vars, $key);
     }
 
-    @warn "Unknown `#{$key}` in $icons.";
+    @warn "Unknown `#{$key}` in $vars.";
     @return null;
 }

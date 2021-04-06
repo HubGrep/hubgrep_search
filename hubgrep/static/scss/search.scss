@@ -15,7 +15,6 @@ footer {
 .search {
 
   @include minBreakpoint("mobile") {
-    $lMargin: 10rem;
 
     &-main {
       flex-direction: row;
@@ -40,12 +39,12 @@ footer {
       }
 
       &-title {
-        min-width: calc(#{$lMargin} - 1rem);
+        min-width: calc(#{value(lMargin)} - 1rem);
       }
     }
 
     &-result {
-      padding-left: $lMargin;
+      padding-left: value(lMargin);
     }
   }
 
