@@ -34,6 +34,13 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     This list will (when able & enabled) contain a "previous" link at first index
     and a "next" link as the last item.
 
+    The links we construct will come out like below, when all is enabled and fit (".." = divider links)
+    [<previous>, <detach_left links>, .., <mid_start -enum links- mid_end>, .., <detach_right links>, <next>]
+
+    Detached links on left and right will only exist when the ends of the list are further away than what the
+    enumerated links in the middle can show (enumerated_link_max). Like so, if current page is nr 12:
+    1 2 .. 10 11 12 13 14 15 .. 59 60
+
     :param url: current url to modify and/or add query params on regarding pagination
     :param offset: starting offset for the new url in terms of items shown
     :param per_page: amount of results shown on the new page
@@ -62,28 +69,26 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     side_cnt = math.ceil(link_total * side_link_portions)
     mid_max = link_total - side_cnt * 2
     mid_side_cnt = mid_max // 2 + 1
-    mid_left_start = page_current - mid_side_cnt
-    mid_right_end = page_current + mid_side_cnt
+    mid_start = page_current - mid_side_cnt
+    mid_end = page_current + mid_side_cnt
     is_left_detached, is_right_detached = False, False
 
     if allow_detach:
-        if mid_left_start > side_cnt:
+        if mid_start > side_cnt:
             is_left_detached = True
-        if mid_right_end < page_total - side_cnt:
+        if mid_end < page_total - side_cnt:
             is_right_detached = True
 
     link_indexes_right = list(range(page_total - side_cnt, page_total))
     link_indexes_right.reverse()
     for link_index in range(link_total):
-        # TODO check remained calculations for when current page is at the end (or a few indices away from it)
-        # TODO right now it generates fewer enumerated links at the end than what it does for the start - it shouldn't
         class_name = ""
         page_number = link_index
         link_mid_index = link_index - side_cnt
 
         if is_left_detached:
             if link_index >= side_cnt:
-                page_number = mid_left_start + link_mid_index
+                page_number = mid_start + link_mid_index
 
             if link_index == side_cnt:
                 links.append(divider_link)
@@ -99,6 +104,9 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
             class_name = CLASS_CURRENT_PAGE
 
         if page_number >= page_total:
+            # TODO check remainder calculations for when current page is at the end (or a few indices away from it)
+            # TODO right now it generates fewer enumerated links at the end than what it does for the start
+            # TODO instead of breaking here, it should add these extra iterations as links at the start of enum-links
             break  # or else we render links for pages we don't have
 
         links.append(_get_page_link(u, params, page_number * per_page, per_page,
