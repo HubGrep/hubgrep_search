@@ -48,7 +48,7 @@ else
     echo "building... TODO =("
   elif [ "$1" == "test" ]; then
     echo "running tests..."
-    pytest --cov=hubgrep . -s
+    pytest --cov=hubgrep .
   elif [ "$1" == "bumpversion" ]; then
     shift
     bumpversion $@
