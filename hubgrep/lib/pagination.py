@@ -3,13 +3,14 @@ from typing import List
 from collections import namedtuple
 from urllib.parse import urlparse, parse_qs, ParseResult, urlencode
 from flask_babel import gettext
-from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE, CLASS_CURRENT_PAGE, CLASS_NEXT, CLASS_PREV
+from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE, CLASS_CURRENT_PAGE, CLASS_NEXT, CLASS_PREV, CLASS_DIVIDER
 
 PageLink = namedtuple("PageLink", "url label class_name")
-divider_link = PageLink("", "..", "divider")
+divider_link = PageLink("", "..", CLASS_DIVIDER)
 
 
-def _get_page_link(u: ParseResult, params: dict, offset: int, per_page: int, label: str, class_name: str = "") -> PageLink:
+def _get_page_link(u: ParseResult, params: dict, offset: int, per_page: int, label: str,
+                   class_name: str = "") -> PageLink:
     """ Construct a PageLink (namedtuple) for use in templating.
 
     :param u: parsed "urllib" tuple which pagination params will be modified on
@@ -26,7 +27,7 @@ def _get_page_link(u: ParseResult, params: dict, offset: int, per_page: int, lab
     return PageLink(url=res.geturl(), label=label, class_name=class_name)
 
 
-def get_page_links(url: str, offset: int, per_page: int, results_total: int, link_max: int = 10,
+def get_page_links(url: str, offset: int, per_page: int, results_total: int, enumerated_link_max: int = 10,
                    has_next_prev: bool = True, detach_min: int = 10, side_link_portions: float = 0.2) -> List[PageLink]:
     """ Constructs a list of PageLinks (namedtuple) for use in templating.
 
@@ -37,9 +38,9 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
     :param offset: starting offset for the new url in terms of items shown
     :param per_page: amount of results shown on the new page
     :param results_total: total maximum for pagination to work within
-    :param link_max: upper cap for amount of enumerated page-links (but not a cap for the returned list)
+    :param enumerated_link_max: upper cap for amount of enumerated page-links (but not a cap for the returned list when "has_next_prev" is enabled)
     :param detach_min: no link dividers for total links under this value
-    :param has_next_prev: include extra links for adjacent pages (not counted toward link_max)
+    :param has_next_prev: sets label & url for links to adjacent pages (not counted toward link_max), if False it will include empty PageLinks for these
     :param side_link_portions: decimal between 0 - 0.5 assigned to each static end of pagination link-sections
     """
     u = urlparse(url)
@@ -48,7 +49,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
     links = []
     page_current = offset // per_page
     page_total = results_total // per_page
-    link_total = page_total if page_total < link_max else link_max
+    link_total = page_total if page_total < enumerated_link_max else enumerated_link_max
     allow_detach = detach_min <= page_total
 
     # --- append "previous" link
@@ -74,6 +75,8 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, lin
     link_indexes_right = list(range(page_total - side_cnt, page_total))
     link_indexes_right.reverse()
     for link_index in range(link_total):
+        # TODO check remained calculations for when current page is at the end (or a few indices away from it)
+        # TODO right now it generates fewer enumerated links at the end than what it does for the start - it shouldn't
         class_name = ""
         page_number = link_index
         link_mid_index = link_index - side_cnt

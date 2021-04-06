@@ -4,6 +4,7 @@ PARAM_PER_PAGE = "per_page"
 CLASS_CURRENT_PAGE = "current-page"
 CLASS_PREV = "prev"
 CLASS_NEXT = "next"
+CLASS_DIVIDER = "divider"
 
 # frontend
 SITE_TITLE = "HubGrep"
