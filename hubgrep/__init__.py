@@ -111,12 +111,6 @@ def _build_assets(assets: Environment):
         depends=["**/*.scss", "**/**/*.scss"],
         output="css/about.css",
     )
-    scss_imprint = Bundle(
-        "scss/imprint.scss",
-        filters="pyscss",
-        depends=["**/*.scss", "**/**/*.scss"],
-        output="css/imprint.css",
-    )
     scss_search = Bundle(
         "scss/search.scss",
         filters="pyscss",
@@ -136,7 +130,6 @@ def _build_assets(assets: Environment):
         output="css/hosting_service_management.css",
     )
     assets.register("scss_about", scss_about)
-    assets.register("scss_imprint", scss_imprint)
     assets.register("scss_search", scss_search)
     assets.register("scss_search_empty", scss_search_empty)
     assets.register("scss_hosting_service_management", hosting_service_management)
