@@ -35,7 +35,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     and a "next" link as the last item.
 
     The links we construct will come out like below, when all is enabled and fit (".." = divider links)
-    [<previous>, <detach_left links>, .., <mid_start -enum links- mid_end>, .., <detach_right links>, <next>]
+    [<previous>, <detach_left enum links>, .., <mid_start -enum links- mid_end>, .., <detach_right enum links>, <next>]
 
     Detached links on left and right will only exist when the ends of the list are further away than what the
     enumerated links in the middle can show (enumerated_link_max). Like so, if current page is nr 12:
