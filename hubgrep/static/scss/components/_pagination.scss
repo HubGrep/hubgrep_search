@@ -27,4 +27,16 @@
       text-decoration: none;
     }
   }
+
+  @include maxBreakpoint("mobile") {
+    display: flex;
+
+    &-control {
+      margin: 0 0.5em;
+    }
+
+    .prev, .next {
+      flex: 1 0 auto;
+    }
+  }
 }

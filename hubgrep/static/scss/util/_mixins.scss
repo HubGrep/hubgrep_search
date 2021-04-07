@@ -1,4 +1,4 @@
-/* mixin for multiline */
+/* only add ellipsis after x-lines, on overflow - caveat with justify layout */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
   overflow: hidden;
   position: relative;
@@ -22,4 +22,41 @@
     margin-top: 0.2em;
     background: $bgColor;
   }
+}
+
+$breakpoints: () !default;
+@mixin minBreakpoint($breakpoint) {
+    @if (map-has-key($breakpoints, $breakpoint)) {
+        @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
+            @media (min-height: #{map-get(map-get($breakpoints, $breakpoint), height)}){
+                @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+                    @content;
+                }
+            }
+        } @else {
+            @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+                @content;
+            }
+        }
+    } @else {
+        @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+    }
+}
+
+@mixin maxBreakpoint($breakpoint) {
+    @if (map-has-key($breakpoints, $breakpoint)) {
+        @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
+            @media (max-height: #{map-get(map-get($breakpoints, $breakpoint), height)}){
+                @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+                    @content;
+                }
+            }
+        } @else {
+            @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+                @content;
+            }
+        }
+    } @else {
+        @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+    }
 }

@@ -9,11 +9,10 @@ body > section {
 }
 
 .nav {
-  position: absolute;
-  top: 1.5rem;
-  right: 1rem;
+  margin: 1.5rem 0;
+  padding: 0 1rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
 }
 
 .search {
@@ -54,15 +53,21 @@ body > section {
     &-title {
       position: absolute;
       top: 1rem;
-      left: 1.5rem;
+      left: 0;
+      min-width: calc(#{value(lMargin)} - 1rem);
+      text-align: center;
 
       h1 {
         margin: 0;
       }
     }
 
-    &-form { // form-wrapper
+    &-form {
       min-height: 40vh;
+
+      .input-bar {
+        box-shadow: 0 0 3px color(boxShadow);
+      }
     }
   }
 }

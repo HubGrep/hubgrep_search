@@ -3,6 +3,7 @@
 @import "./components/result_card";
 @import "./components/pagination";
 
+
 header {
   display: none;
 }
@@ -13,26 +14,43 @@ footer {
 
 .search {
 
-  @media (min-width: 720px) {
+  @include minBreakpoint("mobile") {
+
     &-main {
       flex-direction: row;
       margin: 0;
 
       &-logo {
-        // omit logo image
+        position: absolute;
+        left: 0;
+        top: 8rem;
+        transition: transform 1s linear;
+
+        .body {
+          width: 98px;
+          height: 118px;
+          background-size: cover;
+          background: url('../images/frog_face.png') no-repeat center;
+        }
+
+        &:hover {
+          transform: translate(-3rem)
+        }
       }
 
       &-title {
-        min-width: 8.75rem;
-
-        h1 {
-          margin: 1rem 0 1rem .5rem;
-        }
+        min-width: calc(#{value(lMargin)} - 1rem);
       }
     }
 
     &-result {
-      padding-left: 10rem;
+      padding-left: value(lMargin);
+    }
+  }
+
+  @include maxBreakpoint("mobile") {
+    &-result {
+      padding: 0 1rem;
     }
   }
 }

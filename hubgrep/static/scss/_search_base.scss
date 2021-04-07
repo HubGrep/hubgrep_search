@@ -1,5 +1,6 @@
 @import "./components/status_message";
 @import "./components/collapsible";
+@import "./components/searchform";
 
 .search {
 
@@ -15,8 +16,9 @@
 
     &-title {
       h1 {
-        margin: 0;
-        color: color(hubgrep);
+        color: color(hubgrepDark);
+        text-align: center;
+        margin: 1rem 0;
       }
 
       a:hover {
@@ -24,43 +26,11 @@
       }
     }
 
-    &-form { // form-wrapper
+    &-form {
       width: 100%;
 
-      .input-bar {
-        border: 1px solid #dfe1e5;
-        border-radius: 24px;
-        padding: 0.45rem 1rem 0.35rem;
-      }
-
-      #searchbar {
-        font-size: size(body);
-        width: 100%;
-        border: none;
-
-        &:focus {
-          outline: none 0;
-        }
-      }
-
-      .dates > div {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .dates, .misc {
-        margin-bottom: 1em;
-      }
-
-      .dates, .misc, .services {
-        > div {
-          margin-bottom: 0.2em;
-
-          label {
-            margin-right: 1em;
-          }
-        }
+      .collapsible-content {
+        margin-top: 0.5em;
       }
     }
   }
@@ -68,6 +38,17 @@
   &-result {
     &-messages:first-child {
       margin-top: 1rem;
+    }
+  }
+}
+
+@include maxBreakpoint("mobile") {
+  .search {
+
+    &-main {
+      margin: 0 1em;
+      width: auto;
+      min-width: unset;
     }
   }
 }

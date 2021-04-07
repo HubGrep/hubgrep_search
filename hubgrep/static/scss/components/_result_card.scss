@@ -55,7 +55,7 @@
     font-size: size(detail);
 
     &-desc {
-      @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: white);
+      @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
     }
 
     &-date {
