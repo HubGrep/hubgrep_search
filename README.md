@@ -87,7 +87,7 @@ flask cli search <TERMS>
 
 Using pytest and pytest-coverage, run:
 
-    sh .manage.py test
+    ./manage.sh test
     
 
 ## Localization
