@@ -2,10 +2,10 @@
 
 {% block styles %}
     {% if request.args.get('s') %}
-        <link href="{{ url_for('static', filename='css/search/search.css') }}"
+        <link href="{{ url_for('static', filename='css/search/search.scss.css') }}"
               rel="stylesheet" type="text/css">
     {% else %}
-        <link href="{{ url_for('static', filename='css/search/search_empty.css') }}"
+        <link href="{{ url_for('static', filename='css/search/search_empty.scss.css') }}"
               rel="stylesheet" type="text/css">
     {% endif %}
 {% endblock %}

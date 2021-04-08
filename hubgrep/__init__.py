@@ -8,7 +8,9 @@ from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from flask_scss import Scss
+from sassutils.wsgi import SassMiddleware
 
+from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION
 from hubgrep.lib.init_logging import init_logging
 
 from flask_security import (
@@ -35,9 +37,8 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 def create_app():
-
     app = Flask(__name__, static_url_path="/static", static_folder="static")
-    Scss(app=app, static_dir="hubgrep/static", asset_dir="hubgrep/frontend_blueprint/templates")
+    # Scss(app=app, static_dir="hubgrep/static", asset_dir="hubgrep/frontend_blueprint/templates")
     assets = Environment(app)
 
     # disable cache, because that breaks
@@ -52,15 +53,18 @@ def create_app():
         response.headers.add("X-Clacks-Overhead", "GNU Terry Pratchett")
         return response
 
-    app_env = os.environ.get("APP_ENV", "development")
     config_mapping = {
-        "build": "hubgrep.config.BuildConfig",
-        "development": "hubgrep.config.DevelopmentConfig",
-        "production": "hubgrep.config.ProductionConfig",
-        "testing": "hubgrep.config.testingConfig",
+        APP_ENV_BUILD: "hubgrep.config.BuildConfig",
+        APP_ENV_DEVELOPMENT: "hubgrep.config.DevelopmentConfig",
+        APP_ENV_PRODUCTION: "hubgrep.config.ProductionConfig",
+        APP_ENV_TESTING: "hubgrep.config.testingConfig",
     }
-
+    app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
     app.config.from_object(config_mapping[app_env])
+
+    if app_env != APP_ENV_PRODUCTION:
+        app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
+
     babel = Babel(app)
     redis_client.init_app(app)
 
@@ -101,4 +105,3 @@ def set_app_cache():
     from flask import current_app as app
     from hubgrep.models import HostingService
     app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()
-

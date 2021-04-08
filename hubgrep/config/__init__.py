@@ -37,8 +37,11 @@ class Config:
     SECURITY_RESET_PASSWORD_TEMPLATE = "security/reset_password.html"
     SECURITY_FORGOT_PASSWORD_TEMPLATE = "security/forgot_password.html"
 
-
     PAGINATION_PER_PAGE_DEFAULT = 10
+
+    SASS_MANIFEST = {
+        "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css')
+    }
 
 
 class _EnvironmentConfig():
@@ -58,16 +61,18 @@ class _EnvironmentConfig():
     MAIL_DEFAULT_SENDER = os.environ.get('HUBGREP_MAIL_DEFAULT_SENDER', None)
     MAIL_MAX_EMAILS = os.environ.get('HUBGREP_MAIL_MAX_EMAILS', None)
 
-
     SQLALCHEMY_DATABASE_URI = os.environ.get("HUBGREP_SQLALCHEMY_DATABASE_URI", False)
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
+
 class ProductionConfig(Config, _EnvironmentConfig):
     DEBUG = False
 
+
 class DevelopmentConfig(Config, _EnvironmentConfig):
     DEBUG = True
+
 
 class BuildConfig(Config):
     TESTING = True
@@ -82,6 +87,7 @@ class BuildConfig(Config):
     SQLALCHEMY_DATABASE_URI = ""
     SECURITY_PASSWORD_SALT = ""
     SECRET_KEY = ""
+
 
 class TestingConfig(Config):
     TESTING = True
