@@ -1,6 +1,7 @@
-@import "./components/status_message";
-@import "./components/collapsible";
-@import "./components/searchform";
+@import "../shared_bundle";
+@import "../components/status_message/status_message";
+@import "../components/collapsible/collapsible";
+@import "../components/search_form/searchform";
 
 .search {
 

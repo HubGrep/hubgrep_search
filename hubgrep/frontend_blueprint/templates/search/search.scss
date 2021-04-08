@@ -1,7 +1,7 @@
-@import "./shared_bundle";
-@import "search_base";
-@import "./components/result_card";
-@import "./components/pagination";
+@import "components/result_card/result_card";
+@import "components/pagination/pagination";
+@import "search/search_base";
+
 
 
 header {
@@ -30,7 +30,7 @@ footer {
           width: 98px;
           height: 118px;
           background-size: cover;
-          background: url('../images/frog_face.png') no-repeat center;
+          background: url('../../../static/images/frog_face.png') no-repeat center;
         }
 
         &:hover {

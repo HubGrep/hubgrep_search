@@ -1,8 +1,7 @@
 {% extends 'base.html' %}
 
 {% block styles %}
-{% assets "scss_hosting_service_management" %}
-<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-{% endassets %}
+    <link href="{{ url_for('static', filename='css/hosting_service_management/hosting_service_management.css') }}"
+              rel="stylesheet" type="text/css">
 {% endblock %}
 
