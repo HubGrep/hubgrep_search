@@ -13,7 +13,7 @@ footer {
 
 .search {
 
-  @include minBreakpoint("mobile") {
+  @include minBreakpoint(mobile) {
 
     &-main {
       flex-direction: row;
@@ -47,7 +47,7 @@ footer {
     }
   }
 
-  @include maxBreakpoint("mobile") {
+  @include maxBreakpoint(mobile) {
     &-result {
       padding: 0 1rem;
     }

@@ -1,15 +1,5 @@
 {% extends 'base.html' %}
 
-{% block styles %}
-    {% if request.args.get('s') %}
-        <link href="{{ url_for('static', filename='css/search/search.scss.css') }}"
-              rel="stylesheet" type="text/css">
-    {% else %}
-        <link href="{{ url_for('static', filename='css/search/search_empty.scss.css') }}"
-              rel="stylesheet" type="text/css">
-    {% endif %}
-{% endblock %}
-
 {% import "components/nav/nav.html" as nav %}
 {% set nav_items = [[url_for('frontend.about'), "about"]] %}
 {% if current_user.is_authenticated %}

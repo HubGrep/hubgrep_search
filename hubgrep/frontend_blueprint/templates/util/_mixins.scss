@@ -1,3 +1,5 @@
+@import "variables";
+
 /* only add ellipsis after x-lines, on overflow - caveat with justify layout */
 @mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
   overflow: hidden;

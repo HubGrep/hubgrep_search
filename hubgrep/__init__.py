@@ -2,12 +2,11 @@ import logging
 import os
 from flask import Flask, request
 from flask_babel import Babel
-from flask_assets import Environment, Bundle
+from flask_assets import Environment
 from flask_redis import FlaskRedis
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
-from flask_scss import Scss
 from sassutils.wsgi import SassMiddleware
 
 from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION
@@ -38,7 +37,6 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 def create_app():
     app = Flask(__name__, static_url_path="/static", static_folder="static")
-    # Scss(app=app, static_dir="hubgrep/static", asset_dir="hubgrep/frontend_blueprint/templates")
     assets = Environment(app)
 
     # disable cache, because that breaks
@@ -61,8 +59,9 @@ def create_app():
     }
     app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
     app.config.from_object(config_mapping[app_env])
+    is_testing = app.config['TESTING'] is True
 
-    if app_env != APP_ENV_PRODUCTION:
+    if not is_testing and app_env != APP_ENV_PRODUCTION and ['TESTING']:
         app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
 
     babel = Babel(app)

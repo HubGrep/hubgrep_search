@@ -3,7 +3,7 @@ from flask.testing import FlaskClient
 
 class TestRoutes:
 
-    def test_index(self, test_client: FlaskClient):
+    def test_search(self, test_client: FlaskClient):
         res = test_client.get('/')
         assert res.status_code == 200
 

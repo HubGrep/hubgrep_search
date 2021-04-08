@@ -33,7 +33,7 @@
     }
   }
 
-  @include maxBreakpoint("mobile") {
+  @include maxBreakpoint(mobile) {
     display: flex;
 
     &-control {

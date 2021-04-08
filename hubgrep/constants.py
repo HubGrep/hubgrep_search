@@ -4,6 +4,9 @@ APP_ENV_DEVELOPMENT = "development"
 APP_ENV_PRODUCTION = "production"
 APP_ENV_TESTING = "testing"
 
+# search form
+
+
 # pagination
 PARAM_OFFSET = "offset"
 PARAM_PER_PAGE = "per_page"
