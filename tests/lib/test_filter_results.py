@@ -107,7 +107,7 @@ class TestFilterResults:
         form.exclude_forks = False
         form.exclude_archived = False
         form.created_before_dt = form.get_form_datetime_in_utc("2100-01-01")
-        form.created_after = form.get_form_datetime_in_utc("1970-01-01")
-        form.updated_after = form.get_form_datetime_in_utc("1970-01-01")
+        form.created_after_dt = form.get_form_datetime_in_utc("1970-01-01")
+        form.updated_after_dt = form.get_form_datetime_in_utc("1970-01-01")
         filter_res = filter_results(results=results, form=form)
         assert len(filter_res) == 2
