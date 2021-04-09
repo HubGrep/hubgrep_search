@@ -40,7 +40,7 @@ services:
       - -c
       - |
          if [ -z ${STATIC_PATH} ]; then
-         echo "";
+           echo "";
          else
            flask cli copy-static "${STATIC_PATH}"
          fi
