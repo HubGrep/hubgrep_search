@@ -41,6 +41,8 @@ class Config:
 
     PAGINATION_PER_PAGE_DEFAULT = 10
 
+    HUBGREP_ABOUT_MARKDOWN_FILE = os.environ.get('HUBGREP_ABOUT_MARKDOWN_FILE', False)
+
 
 class _EnvironmentConfig():
     # user defined config

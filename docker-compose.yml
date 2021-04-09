@@ -21,6 +21,9 @@ services:
     volumes:
     - ./:/var/task
 
+    #environment:
+    #    HUBGREP_ABOUT_MARKDOWN_FILE: about.md
+
     restart: ${RESTART}
 
     # uplink port to host

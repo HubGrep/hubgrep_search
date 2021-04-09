@@ -137,3 +137,15 @@ Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a ma
 and it will be rendered into the about page.
 
 
+
+
+# Funded from March 2021 until August 2021 by
+
+<p style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+    <a href="https://www.bmbf.de/en/" rel="nofollow">
+        <img src="hubgrep/static/logos/bmbf_de.jpg" alt="Logo of the German Ministry for Education and Research" style="max-width:100%; padding:20px;" height="150px">
+    </a>
+    <a href="https://prototypefund.de/en/" rel="nofollow">
+        <img src="hubgrep/static/images/logos/prototype_fund.svg" alt="Logo of the Prototype Fund" style="max-width:100%; padding:20px;" height="150px">
+    </a>
+</p>

@@ -6,7 +6,9 @@ from hubgrep.constants import SITE_TITLE
 from hubgrep.frontend_blueprint import frontend
 
 
-about_text = """
+@frontend.route("/about")
+def about():
+    about_text = """
 # about
 
 HubGrep is a search engine for public code repositories.
@@ -20,13 +22,22 @@ Also, HubGrep is free software - you can host your own instance, with your own s
 
 You can find the source code (ironically) [on Github](https://github.com/HubGrep/hubgrep_search").  
 If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - we currently support Gitea, Gitlab, and Github!
-"""
 
 
-@frontend.route("/about")
-def about():
+## Funded from March 2021 until August 2021 by
+
+<p style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+    <a href="https://www.bmbf.de/en/" rel="nofollow">
+        <img src="{{ url_for('static', filename='images/logos/bmbf_de.jpg') }}" alt="Logo of the German Ministry for Education and Research" style="max-width:100%; padding:20px;" height="150px">
+    </a>
+    <a href="https://prototypefund.de/en/" rel="nofollow">
+        <img src="{{ url_for('static', filename='images/logos/prototype_fund.svg') }}" alt="Logo of the Prototype Fund" style="max-width:100%; padding:20px;" height="150px">
+    </a>
+</p>
+    """
+
     # read external markdown file if set
-    markdown_file = app.config.get('HUBGREP_ABOUT_MARKDOWN_FILE')
+    markdown_file = app.config.get("HUBGREP_ABOUT_MARKDOWN_FILE")
     if markdown_file:
         with open(markdown_file) as f:
             about_text = f.read()
