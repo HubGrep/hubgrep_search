@@ -1,6 +1,5 @@
 @import "util/mixins";
 
-
 .item {
   $lh: 1.4rem;
 
@@ -47,8 +46,8 @@
       font-size: size(detail);
 
       &:hover {
-      text-decoration: underline;
-    }
+        text-decoration: underline;
+      }
     }
   }
 
