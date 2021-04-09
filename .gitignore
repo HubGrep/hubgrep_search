@@ -11,3 +11,4 @@ htmlcov/
 hubgrep/static/css/
 messages.pot
 init_hosters.sh
+host_static/
