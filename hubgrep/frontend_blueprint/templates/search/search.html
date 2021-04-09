@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% import "components/nav/nav.html" as nav %}
-{% set nav_items = [[url_for('frontend.about'), "about"]] %}
+{% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.hosters'), "hosters"]] %}
 {% if current_user.is_authenticated %}
     {% set _ = nav_items.append([url_for('frontend.manage_instances'), "manage"]) %}
     {% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
