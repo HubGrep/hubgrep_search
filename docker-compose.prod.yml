@@ -25,10 +25,27 @@ services:
     #    HUBGREP_ABOUT_MARKDOWN_FILE: hubgrep_about.md
     
     # uplink port to host
+    
+
+    # to copy static files out of the container
+    # set STATIC_PATH in .env, and link 
+    # the folder to the host
+    #volumes:
+    #  - "./host_static:${STATIC_PATH}"
+
     ports:
       - 8080:8080
-
-    command: gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
-
+    command:
+      - /bin/bash
+      - -c
+      - |
+         echo starting
+         set -o xtrace
+         if [ -z ${STATIC_PATH} ]; then
+         echo "";
+         else
+           flask cli copy-static "${STATIC_PATH}"
+         fi
+         gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
 volumes:
   pgdata:

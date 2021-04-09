@@ -83,6 +83,8 @@ class BuildConfig(Config):
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
 
+    CSS_OUTPUT_STYLE = "compressed"
+
     ENABLE_CACHE = False
     CACHE_TIME = 3600
 

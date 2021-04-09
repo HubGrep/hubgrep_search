@@ -19,5 +19,5 @@ RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
 # we dont check css in, so we need to build our assets
-# TODO
-RUN exit 1
+RUN flask cli build-scss
+

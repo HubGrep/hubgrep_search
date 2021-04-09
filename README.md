@@ -127,7 +127,11 @@ configuration is almost the same as in development -
 just adjust your .env file, and change the docker-compose
 file to your needs (for example, if you are running a separate postgres.)
 
-    # todo: serve static assets via webserver, not gunicorn
+
+you probably want to serve the assets via webserver, not with gunicorn.
+to get the assets, you can run `flask cli copy-static`.  
+this can be used to get the files out of a docker container - see `docker-compose.prod.yml`
+for an example!
 
 
 

@@ -45,7 +45,7 @@ if [ -z "$1" ]; then
 else
 
   if [ "$1" == "build" ]; then
-    echo "building... TODO =("
+    APP_ENV="build" flask cli build-scss
   elif [ "$1" == "test" ]; then
     echo "running tests..."
     pytest --cov=hubgrep .
