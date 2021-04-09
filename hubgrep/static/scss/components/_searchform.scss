@@ -1,0 +1,119 @@
+.searchform {
+
+  .input-bar {
+    $br: 24px;
+
+    background-color: color(white);
+    border: 1px solid color(borderGrey);
+    border-radius: $br;
+
+    display: flex;
+    flex-wrap: nowrap;
+
+    input::placeholder {
+      color: color(fontFade);
+    }
+
+    #submit {
+      display: none;
+    }
+
+    #searchbar, .search-btn {
+      padding: 0.45rem 1rem 0.35rem;
+    }
+
+    #searchbar {
+      font-size: size(body);
+      width: 100%;
+      border: none;
+      background-color: transparent;
+
+      &:-webkit-autofill {
+        border-radius: $br 0 0 $br;
+      }
+
+      &:focus {
+        outline: none 0;
+      }
+    }
+
+    .search-btn {
+      cursor: pointer;
+      flex: 0 0 auto;
+
+      img {
+        transform: translateY(1px);
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+
+  .dates, .misc {
+    margin-bottom: 1em;
+  }
+
+  .dates, .misc, .services {
+    > div {
+      margin-bottom: 0.2em;
+
+      label {
+        margin-right: 1em;
+      }
+    }
+  }
+
+  .dates {
+    > div {
+      max-width: 20em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .services {
+    &-label {
+      margin: 0 0 0.25em 0;
+    }
+
+    &-sources {
+      display: flex;
+      flex-wrap: wrap;
+
+      .hosting-service {
+        flex: 0 0 50%;
+      }
+    }
+  }
+
+  // override collapse component since part of the form is used as collapse-label, and part is in content
+  .lbl-toggle {
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+
+    input, img {
+      pointer-events: all;
+    }
+
+    .label {
+      flex: 1 0 100%; // pushes options btn to overflow on right
+    }
+  }
+
+  @include maxBreakpoint("mobile") {
+    .lbl-toggle {
+      .label {
+        flex: 1 0 auto; // no options btn overflow
+      }
+    }
+
+    .collapsible.absolute .collapsible-content {
+      position: static;
+    }
+  }
+
+  @include minBreakpoint("mobile") {
+  }
+}

@@ -1,15 +1,13 @@
 from flask.testing import FlaskClient
 
-from hubgrep import create_app
 
-
-class TestRoutes():
+class TestRoutes:
 
     def test_index(self, test_client: FlaskClient):
         res = test_client.get('/')
         assert res.status_code == 200
 
-    def test_localization(self, test_client: FlaskClient):
+    def test_localization_de(self, test_client: FlaskClient):
         res = test_client.get('/', headers=[("Accept-Language", "de")])
         assert '<html lang="de">' in str(res.data)
 

@@ -1,5 +1,6 @@
+
 $breakpoints: (
-        mobile: 480px,
+        mobile: (width: 720px),
 );
 
 $fonts: (
@@ -15,14 +16,23 @@ $fontSizes: (
 
 $colors: (
         hubgrep: #78ab58,
+        hubgrepDark: #6f7d42,
+        hubgrepLight: #f2ffb4,
         frogEye: #FFAB00,
         warning: #ff0f0f,
-        white: #FFFFFF,
+        bg: #fbfbf5, //#fffff8,  // tufte bg
+        bgAlt: #e2e4d3, //#e7ead3,
+        white: #ffffff,
         whiteAlt: #f2f2f2,
         font: #4d5156,
         fontFade: #7d7d7d,
         boxShadow: rgba(0, 0, 0, 0.17),
-        grey: #ccc,
+        grey: #afafaa,
+        borderGrey: #e7e7e1,
         link: #1a0dab,
         linkVisited: #551a8b,
 );
+
+$vars: (
+        lMargin: 10rem,
+)

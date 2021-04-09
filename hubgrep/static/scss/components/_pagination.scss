@@ -19,12 +19,29 @@
     pointer-events: none;
   }
 
-  .current-page, .divider {
-    color: color(font);
+  .divider {
+    pointer-events: none;
+    text-decoration: none;
+  }
+
+  .current-page {
+    color: color(frogEye);
 
     &:hover, &:active, &:focus {
       color: color(font);
       text-decoration: none;
+    }
+  }
+
+  @include maxBreakpoint("mobile") {
+    display: flex;
+
+    &-control {
+      margin: 0 0.5em;
+    }
+
+    .prev, .next {
+      flex: 1 0 auto;
     }
   }
 }
