@@ -2,7 +2,7 @@ import logging
 import os
 from flask import Flask, request
 from flask_babel import Babel
-from flask_assets import Environment, Bundle
+from flask_assets import Environment
 from flask_redis import FlaskRedis
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -37,7 +37,6 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 def create_app():
     app = Flask(__name__, static_url_path="/static", static_folder="static")
-    # Scss(app=app, static_dir="hubgrep/static", asset_dir="hubgrep/frontend_blueprint/templates")
     assets = Environment(app)
 
     # disable cache, because that breaks

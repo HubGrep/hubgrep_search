@@ -1,12 +1,3 @@
-@function breakpoint($key) {
-    @if map-has-key(breakpoints, $key) {
-        @return map-get(map-get(breakpoints, $key), width);
-    }
-
-    @warn "Unknown `#{$key}` in $breakpoints.";
-    @return null;
-}
-
 @function color($key) {
     @if map-has-key($colors, $key) {
         @return map-get($colors, $key);

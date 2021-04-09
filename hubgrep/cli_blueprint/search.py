@@ -4,7 +4,7 @@ from hubgrep import set_app_cache
 from hubgrep.lib.filter_results import filter_results
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
-from hubgrep.frontend_blueprint.routes.index import SearchForm, get_service_checkboxes
+from hubgrep.frontend_blueprint.routes.search import SearchForm
 
 from hubgrep.cli_blueprint import cli_bp
 
@@ -22,7 +22,6 @@ def search(terms, no_forks, no_archived):
         print(error)
 
     form = SearchForm(search_phrase=" ".join(terms),
-                      exclude_service_checkboxes=get_service_checkboxes(),
                       exclude_forks=no_forks,
                       exclude_archived=no_archived)
     results = filter_results(results, form)

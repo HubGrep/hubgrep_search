@@ -40,7 +40,7 @@ class Config:
     PAGINATION_PER_PAGE_DEFAULT = 10
 
     SASS_MANIFEST = {
-        "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css')
+        "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css', True)  # 4th val = strip_extensions
     }
 
     WATCH_SCSS = False
