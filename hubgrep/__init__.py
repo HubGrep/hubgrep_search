@@ -8,7 +8,6 @@ from flask_redis import FlaskRedis
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
-
 from hubgrep.lib.init_logging import init_logging
 
 from flask_security import (
@@ -75,7 +74,6 @@ def create_app():
 
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security.init_app(app, user_datastore)
-
     from hubgrep.frontend_blueprint import frontend
     from hubgrep.cli_blueprint import cli_bp
 
