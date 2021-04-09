@@ -38,7 +38,7 @@ create the admin user
 
 
 
-### usage
+### Usage
 
 after that, add some hosters to search. use either the frontend, 
 or the cli, to add, for example, github:
@@ -48,7 +48,7 @@ or the cli, to add, for example, github:
     flask cli add-hoster gitea "https://gitea.com/api/v1/" "https://gitea.com/" "{}"
 
 
-#### adding gitlab instances
+#### Adding Gitlab Instances
 
 gitlab needs an api key ("token") to use the api.
 
@@ -68,7 +68,7 @@ substitute the base url with whatever gitlab instance you want to add, of course
 
 
 
-## development setup
+## Development Setup
 
 ### Web-fronend:
 
@@ -112,30 +112,53 @@ Finally, compile the translation for usage:
 Strings should now be replaced by the appropriate locale variant when rendered.
 
 
+## Production Setup
 
-## building a production container
 
-there is a separate dockerfile `Dockerfile.prod` for production builds, 
+There is a separate dockerfile `Dockerfile.prod` for production builds, 
 which is used in the `docker-compose.prod.yml` file.
 
-to build an image with generated assets and source code baked in, 
+To build an image with generated assets and source code baked in, 
 run `docker-compose -f docker-compose.prod.yml build`.
 
-you can use it the same way as the development compose file.
+You can use it the same way as the development compose file.
 
-configuration is almost the same as in development - 
+Configuration is almost the same as in development - 
 just adjust your .env file, and change the docker-compose
 file to your needs (for example, if you are running a separate postgres.)
 
 
-you probably want to serve the assets via webserver, not with gunicorn.
-to get the assets, you can run `flask cli copy-static`.  
-this can be used to get the files out of a docker container - see `docker-compose.prod.yml`
+To start the container, just run
+
+```
+docker-compose -f docker-compose.prod.yml up
+``` 
+
+(or add a `-d` to detach).
+
+On first setup, you need to create the database structure and set up the admin user.
+Easiest is, to run a new shell in the container:
+
+```
+docker-compose -f docker-compose.prod.yml run --rm service /bin/bash
+```
+
+and in there, run
+
+```
+flask db upgrade
+flask cli init
+```
+
+
+You probably want to serve the assets via webserver, not with gunicorn.
+To get the assets, you can run `flask cli copy-static`.  
+This can be used to get the files out of a docker container - see `docker-compose.prod.yml`
 for an example!
 
 
 
-## customize the about page
+## Customize the About Page
 
 Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a markdown file,
 and it will be rendered into the about page.
