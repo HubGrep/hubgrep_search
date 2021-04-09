@@ -37,8 +37,6 @@ class Config:
     SECURITY_RESET_PASSWORD_TEMPLATE = "security/reset_password.html"
     SECURITY_FORGOT_PASSWORD_TEMPLATE = "security/forgot_password.html"
 
-    ABOUT_MARKDOWN_FILE = os.environ.get('HUBGREP_ABOUT_MARKDOWN_FILE', False)
-
     PAGINATION_PER_PAGE_DEFAULT = 10
 
 
