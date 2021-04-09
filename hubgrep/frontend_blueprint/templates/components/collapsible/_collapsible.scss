@@ -21,10 +21,6 @@
   }
 
   .lbl-toggle {
-    font-family: font(bold2);
-    background-color: color(btn);
-    color: color(fontInvert);
-    fill: color(fontInvert); // inline svg
     display: block;
     cursor: pointer;
 
@@ -36,10 +32,6 @@
         margin-right: 0;
       }
     }
-  }
-
-  .lbl-toggle:hover {
-    background-color: color(btnHover);
   }
 
   .lbl-toggle .icon img {
@@ -57,7 +49,6 @@
   }
 
   .collapsible-content {
-    background: color(bgGUI);
     max-height: 0;
     overflow: hidden;
     transition: max-height .25s ease-in-out;

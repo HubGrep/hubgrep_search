@@ -39,6 +39,12 @@ class Config:
 
     PAGINATION_PER_PAGE_DEFAULT = 10
 
+    SASS_MANIFEST = {
+        "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css')
+    }
+
+    WATCH_SCSS = False
+
 
 class _EnvironmentConfig():
     # user defined config
@@ -63,11 +69,14 @@ class _EnvironmentConfig():
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
+
 class ProductionConfig(Config, _EnvironmentConfig):
     DEBUG = False
 
+
 class DevelopmentConfig(Config, _EnvironmentConfig):
     DEBUG = True
+    WATCH_SCSS = True
 
 class BuildConfig(Config):
     TESTING = True
@@ -82,6 +91,7 @@ class BuildConfig(Config):
     SQLALCHEMY_DATABASE_URI = ""
     SECURITY_PASSWORD_SALT = ""
     SECRET_KEY = ""
+
 
 class TestingConfig(Config):
     TESTING = True

@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
-{% import "components/hosting_service_list.html" as hosting_service_list %}
+{% import "components/hosting_service_list/hosting_service_list.html" as hosting_service_list %}
 
 {% block styles %}
-{% assets "scss_about" %}
-<link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-{% endassets %}
+    <link href="{{ url_for('static', filename='css/about/about.scss.css') }}"
+              rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}

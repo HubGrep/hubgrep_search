@@ -2,17 +2,15 @@
 
 {% block styles %}
     {% if request.args.get('s') %}
-        {% assets "scss_search" %}
-            <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-        {% endassets %}
+        <link href="{{ url_for('static', filename='css/search/search.scss.css') }}"
+              rel="stylesheet" type="text/css">
     {% else %}
-        {% assets "scss_search_empty" %}
-            <link rel=stylesheet type=text/css href="{{ ASSET_URL }}">
-        {% endassets %}
+        <link href="{{ url_for('static', filename='css/search/search_empty.scss.css') }}"
+              rel="stylesheet" type="text/css">
     {% endif %}
 {% endblock %}
 
-{% import "components/nav.html" as nav %}
+{% import "components/nav/nav.html" as nav %}
 {% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.hosters'), "hosters"]] %}
 {% if current_user.is_authenticated %}
     {% set _ = nav_items.append([url_for('frontend.manage_instances'), "manage"]) %}
@@ -53,26 +51,26 @@
                 </a>
             </div>
 
-            {% import "search/search_form.html" as search_form %}
+            {% import "components/search_form/search_form.html" as search_form %}
             {{ search_form.create_form(search_url, form, class="search-main-form") }}
         </div>
 
         <div class="search-result">
             <div class="search-result-messages">
-                {% import "components/status_message.html" as status %}
+                {% import "components/status_message/status_message.html" as status %}
                 {% for error in external_errors %}
                     {{ status.message("warn", error, "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>
             <div class="search-result-items">
-                {% import "search/result_card.html" as result_card %}
+                {% import "components/result_card/result_card.html" as result_card %}
                 {% for search_result in search_results %}
                     {{ result_card.card(search_result) }}
                 {% endfor %}
             </div>
             <div class="search-result-pagination">
-                {% import "components/pagination.html" as pagination %}
+                {% import "components/pagination/pagination.html" as pagination %}
                 {{ pagination.controls(pagination_links) }}
             </div>
         </div>

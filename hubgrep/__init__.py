@@ -4,10 +4,12 @@ from flask import Flask, request
 from flask_babel import Babel
 from flask_assets import Environment, Bundle
 from flask_redis import FlaskRedis
-
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
+from sassutils.wsgi import SassMiddleware
+
+from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION
 from hubgrep.lib.init_logging import init_logging
 
 from flask_security import (
@@ -35,6 +37,7 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 def create_app():
     app = Flask(__name__, static_url_path="/static", static_folder="static")
+    # Scss(app=app, static_dir="hubgrep/static", asset_dir="hubgrep/frontend_blueprint/templates")
     assets = Environment(app)
 
     # disable cache, because that breaks
@@ -43,23 +46,24 @@ def create_app():
     assets.cache = False
     assets.manifest = False
 
-    _build_assets(assets)
-
     @app.after_request
     def add_gnu_tp_header(response):
         # www.gnuterrypratchett.com
         response.headers.add("X-Clacks-Overhead", "GNU Terry Pratchett")
         return response
 
-    app_env = os.environ.get("APP_ENV", "development")
     config_mapping = {
-        "build": "hubgrep.config.BuildConfig",
-        "development": "hubgrep.config.DevelopmentConfig",
-        "production": "hubgrep.config.ProductionConfig",
-        "testing": "hubgrep.config.testingConfig",
+        APP_ENV_BUILD: "hubgrep.config.BuildConfig",
+        APP_ENV_DEVELOPMENT: "hubgrep.config.DevelopmentConfig",
+        APP_ENV_PRODUCTION: "hubgrep.config.ProductionConfig",
+        APP_ENV_TESTING: "hubgrep.config.testingConfig",
     }
-
+    app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
     app.config.from_object(config_mapping[app_env])
+
+    if app.config['WATCH_SCSS']:
+        app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
+
     babel = Babel(app)
     redis_client.init_app(app)
 
@@ -99,35 +103,3 @@ def set_app_cache():
     from flask import current_app as app
     from hubgrep.models import HostingService
     app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()
-
-
-def _build_assets(assets: Environment):
-    # TODO we dont want to do this with watchers for prod, only for localdev
-    scss_about = Bundle(
-        "scss/about.scss",
-        filters="pyscss",
-        depends=["**/*.scss", "**/**/*.scss"],
-        output="css/about.css",
-    )
-    scss_search = Bundle(
-        "scss/search.scss",
-        filters="pyscss",
-        depends=["**/*.scss", "**/**/*.scss"],
-        output="css/search.css",
-    )
-    scss_search_empty = Bundle(
-        "scss/search_empty.scss",
-        filters="pyscss",
-        depends=["**/*.scss", "**/**/*.scss"],
-        output="css/search_empty.css",
-    )
-    hosting_service_management = Bundle(
-        "scss/hosting_service_management.scss",
-        filters="pyscss",
-        depends=["**/*.scss", "**/**/*.scss"],
-        output="css/hosting_service_management.css",
-    )
-    assets.register("scss_about", scss_about)
-    assets.register("scss_search", scss_search)
-    assets.register("scss_search_empty", scss_search_empty)
-    assets.register("scss_hosting_service_management", hosting_service_management)
