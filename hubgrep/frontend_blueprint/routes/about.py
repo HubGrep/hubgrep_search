@@ -37,7 +37,7 @@ If you are hosting projects yourself, consider [adding your instance to our list
     """
 
     # read external markdown file if set
-    markdown_file = app.config.get("HUBGREP_ABOUT_MARKDOWN_FILE")
+    markdown_file = app.config.get("ABOUT_MARKDOWN_FILE")
     if markdown_file:
         with open(markdown_file) as f:
             about_text = f.read()
