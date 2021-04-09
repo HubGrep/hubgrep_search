@@ -57,7 +57,7 @@ class _EnvironmentConfig():
     MAIL_DEFAULT_SENDER = os.environ.get('HUBGREP_MAIL_DEFAULT_SENDER', None)
     MAIL_MAX_EMAILS = os.environ.get('HUBGREP_MAIL_MAX_EMAILS', None)
 
-    ABOUT_MARKDOWN_FILE = os.environ.get('HUBGREP_ABOUT_MARKDOWN_FILE', False)
+    ABOUT_MARKDOWN_FILE = os.environ.get('HUBGREP_ABOUT_MARKDOWN_FILE', "hubgrep_about.md")
 
     SQLALCHEMY_DATABASE_URI = os.environ.get("HUBGREP_SQLALCHEMY_DATABASE_URI", False)
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
