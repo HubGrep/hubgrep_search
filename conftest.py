@@ -36,7 +36,6 @@ def test_app():
     app = create_app()
     db_fd, file_path = tempfile.mkstemp()
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{file_path}'
-    app.config['TESTING'] = True
 
     with app.app_context():
         db.create_all()

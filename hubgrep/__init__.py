@@ -59,9 +59,8 @@ def create_app():
     }
     app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
     app.config.from_object(config_mapping[app_env])
-    is_testing = app.config['TESTING'] is True
 
-    if not is_testing and app.config['WATCH_SCSS']:
+    if app.config['WATCH_SCSS']:
         app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
 
     babel = Babel(app)
