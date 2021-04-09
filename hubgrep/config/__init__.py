@@ -43,6 +43,8 @@ class Config:
         "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css')
     }
 
+    WATCH_SCSS = False
+
 
 class _EnvironmentConfig():
     # user defined config
@@ -74,7 +76,7 @@ class ProductionConfig(Config, _EnvironmentConfig):
 
 class DevelopmentConfig(Config, _EnvironmentConfig):
     DEBUG = True
-
+    WATCH_SCSS = True
 
 class BuildConfig(Config):
     TESTING = True
