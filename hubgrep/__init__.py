@@ -61,7 +61,7 @@ def create_app():
     app.config.from_object(config_mapping[app_env])
     is_testing = app.config['TESTING'] is True
 
-    if not is_testing and app_env != APP_ENV_PRODUCTION and ['TESTING']:
+    if not is_testing and app.config['WATCH_SCSS']:
         app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
 
     babel = Babel(app)
@@ -78,7 +78,6 @@ def create_app():
 
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security.init_app(app, user_datastore)
-
     from hubgrep.frontend_blueprint import frontend
     from hubgrep.cli_blueprint import cli_bp
 

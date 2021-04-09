@@ -21,6 +21,11 @@ services:
     volumes:
     - ./:/var/task
 
+    # override the about page text
+    # hubgrep_about.md is the default path
+    #environment:
+    #    HUBGREP_ABOUT_MARKDOWN_FILE: hubgrep_about.md
+
     restart: ${RESTART}
 
     # uplink port to host
