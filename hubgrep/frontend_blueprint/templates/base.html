@@ -1,7 +1,7 @@
 {% import "components/nav/nav.html" as nav %}
 
 <!DOCTYPE html>
-<html {% block html_attribs %}lang="{{ get_locale() }}"{% endblock html_attribs %}>
+<html lang="{{ get_locale() }}" {% block html_attribs %}{% endblock html_attribs %}>
 <head>
     {%- block head %}
         {% block metas %}
