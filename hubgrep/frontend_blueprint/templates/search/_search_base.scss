@@ -4,12 +4,12 @@
 @import "../components/search_form/searchform";
 
 .search {
+  padding: 0;
 
   &-main {
     margin: 0 auto;
     width: 100%;
-    min-width: 25rem;
-    max-width: 37.5rem;
+    min-width: 30rem;
 
     display: flex;
     flex-direction: column;
@@ -24,14 +24,6 @@
 
       a:hover {
         text-decoration: none;
-      }
-    }
-
-    &-form {
-      width: 100%;
-
-      .collapsible-content {
-        margin-top: 0.5em;
       }
     }
   }

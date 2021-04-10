@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    <link href="{{ url_for('static', filename='css/security_hubgrep/security.css') }}"
+          rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block content %}
+    <div class="security">
+        {% block body_attribs %}{% endblock body_attribs %}
+        {% block body -%}
+            {% block navbar %}
+            {%- endblock navbar %}
+            {% block content_security -%}
+            {%- endblock content_security %}
+            {% block scripts %}
+            {%- endblock scripts %}
+        {%- endblock body %}
+    </div>
+{% endblock %}

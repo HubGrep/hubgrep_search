@@ -1,8 +1,16 @@
 @import "variables";
 @import "functions";
 
+@mixin cardify($padding: 2em, $bgColor: #{color(white)}, $bRadius: 3px,
+               $shadowOffsetX: 1px, $shadowOffsetY: 1px, $shadowBlur: 3px, $shadowColor: #{color(boxShadow)}) {
+  padding: $padding;
+  background-color: $bgColor;
+  border-radius: $bRadius;
+  box-shadow: $shadowOffsetX $shadowOffsetY $shadowBlur $shadowColor;
+}
+
 /* only add ellipsis after x-lines, on overflow - caveat with justify layout */
-@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: white){
+@mixin multiLineEllipsis($lineHeight: 1.2em, $lineCount: 1, $bgColor: #{color(white)}) {
   overflow: hidden;
   position: relative;
   line-height: $lineHeight;
@@ -29,37 +37,37 @@
 
 $breakpoints: () !default;
 @mixin minBreakpoint($breakpoint) {
-    @if (map-has-key($breakpoints, $breakpoint)) {
-        @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
-            @media (min-height: #{map-get(map-get($breakpoints, $breakpoint), height)}){
-                @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
-                    @content;
-                }
-            }
-        } @else {
-            @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
-                @content;
-            }
+  @if (map-has-key($breakpoints, $breakpoint)) {
+    @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
+      @media (min-height: #{map-get(map-get($breakpoints, $breakpoint), height)}) {
+        @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+          @content;
         }
+      }
     } @else {
-        @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+      @media (min-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+        @content;
+      }
     }
+  } @else {
+    @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+  }
 }
 
 @mixin maxBreakpoint($breakpoint) {
-    @if (map-has-key($breakpoints, $breakpoint)) {
-        @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
-            @media (max-height: #{map-get(map-get($breakpoints, $breakpoint), height)}){
-                @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
-                    @content;
-                }
-            }
-        } @else {
-            @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
-                @content;
-            }
+  @if (map-has-key($breakpoints, $breakpoint)) {
+    @if (map-has-key(map-get($breakpoints, $breakpoint), height)) {
+      @media (max-height: #{map-get(map-get($breakpoints, $breakpoint), height)}) {
+        @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+          @content;
         }
+      }
     } @else {
-        @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+      @media (max-width: #{map-get(map-get($breakpoints, $breakpoint), width)}) {
+        @content;
+      }
     }
+  } @else {
+    @warn "Breakpoint: \"" + $breakpoint + "\" is not defined";
+  }
 }

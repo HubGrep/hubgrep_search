@@ -1,14 +1,8 @@
 import os
-import click
-import json
+from flask import current_app as app
+from sassutils.builder import Manifest
 from hubgrep.cli_blueprint import cli_bp
 
-from hubgrep import redis_client
-
-from sassutils.builder import Manifest
-
-from flask import current_app as app
-from tempfile import TemporaryDirectory
 
 def delete_empty_folders(base_path):
     # https://stackoverflow.com/a/64025990
@@ -17,13 +11,15 @@ def delete_empty_folders(base_path):
         if len(os.listdir(path)) == 0:
             os.rmdir(path)
 
+
 @cli_bp.cli.command()
 def build_scss():
     manifests = Manifest.normalize_manifests(app.config["SASS_MANIFEST"])
 
+    css_files = []
     for package_name, manifest in manifests.items():
         css_files = manifest.build("hubgrep/", output_style=app.config.get("CSS_OUTPUT_STYLE", "compressed"))
 
-    print(f"built css files: {list(css_files)}") 
+    print(f"built css files: {list(css_files)}")
     print("deleting empty folders...")
     delete_empty_folders("hubgrep/static/")

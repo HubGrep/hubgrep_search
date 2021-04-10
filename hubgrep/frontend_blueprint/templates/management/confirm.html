@@ -1,16 +1,12 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
+    <h1>{{ confirm_question }}</h1>
 
-{% if current_user.has_role('admin') %}
-<h3>{{ current_user.email }} (admin)</h3>
-{% endif %}
-<h2>{{ confirm_question }}</h2>
-
-<form method="POST" action="" class="hosting-service-form">
-    {{ form.csrf_token }}
-    <div class="hosting-service-form-line">
-        <input type="submit" value="{{ confirm_button_text }}">
-    </div>
-</form>
+    <form method="POST" action="" class="hosting-service-form no-card">
+        {{ form.csrf_token }}
+        <div class="form-submit">
+            <input type="submit" value="{{ confirm_button_text }}">
+        </div>
+    </form>
 {% endblock %}

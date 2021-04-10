@@ -1,23 +1,20 @@
-@import "search/search_base";
+@import "./search_base";
 
-body > section {
+body {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-around;
-}
+  justify-content: space-between;
 
-.nav {
-  margin: 1.5rem 0;
-  padding: 0 1rem;
-  display: flex;
-  justify-content: flex-end;
+  & > section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+  }
 }
 
 .search {
 
   &-main {
-
     &-logo {
       position: relative;
       margin: 5rem 0 3rem;
@@ -50,6 +47,7 @@ body > section {
     }
 
     &-title {
+      display: none !important;
       position: absolute;
       top: 1rem;
       left: 0;
@@ -61,11 +59,21 @@ body > section {
       }
     }
 
-    &-form {
+    .searchform {
       min-height: 40vh;
 
       .input-bar {
         box-shadow: 0 0 3px color(boxShadow);
+      }
+    }
+  }
+}
+
+@include maxBreakpoint(small) {
+  .search {
+    &-main {
+      &-logo {
+        margin: 3rem 0;
       }
     }
   }

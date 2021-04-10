@@ -1,27 +1,28 @@
 {% extends 'management/management_base.html' %}
 {% block content %}
-
-{% if current_user.has_role('admin') %}
-<h3>{{ current_user.email }} (admin)</h3>
-{% endif %}
-<h2>add new hosting service (step 2)</h2>
-
-<form method="POST" action="" class="hosting-service-form">
-    {{ form.csrf_token }}
-    <div class="hosting-service-form-line">
-        {{ form.type.label }} {{ form.type() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.landingpage_url.label }} {{ form.landingpage_url() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.api_url.label }} {{ form.api_url() }}
-    </div>
-    <div class="hosting-service-form-line">
-        {{ form.config.label }} {{ form.config(rows=4, cols=30) }}
-    </div>
-    <div class="hosting-service-form-line">
-        <input type="submit" value="Go">
-    </div>
-</form>
+    <h1>Add new hosting service (step 2)</h1>
+    <form method="POST" action="" class="hosting-service-form">
+        {{ form.csrf_token }}
+        <div class="form-fields">
+            <p>
+                {{ form.type.label }}
+                {{ form.type() }}
+            </p>
+            <p>
+                {{ form.landingpage_url.label }}
+                {{ form.landingpage_url() }}
+            </p>
+            <p>
+                {{ form.api_url.label }}
+                {{ form.api_url() }}
+            </p>
+            <p>
+                {{ form.config.label }}
+                {{ form.config(rows=4) }}
+            </p>
+        </div>
+        <div class="form-submit">
+            <input type="submit" value="submit">
+        </div>
+    </form>
 {% endblock %}

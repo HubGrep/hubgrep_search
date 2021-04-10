@@ -1,6 +1,7 @@
 
 $breakpoints: (
         mobile: (width: 720px),
+        small: (width: 420px),
 );
 
 $fonts: (
@@ -8,6 +9,7 @@ $fonts: (
 );
 
 $fontSizes: (
+        title: 1.5rem,
         header: 1.25rem,
         body: 1rem,
         footer: 1rem,
@@ -34,5 +36,8 @@ $colors: (
 );
 
 $vars: (
+        maxPageWidth: 1000px,
+        maxContentWidth: 680px,
         lMargin: 10rem,
+        cardShadow: 1px 1px 3px map-get($colors, white),
 )

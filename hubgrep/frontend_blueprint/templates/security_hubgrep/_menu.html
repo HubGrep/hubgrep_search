@@ -1,0 +1,10 @@
+{% if security.registerable or security.recoverable or security.confirmable %}
+<ul class="security-menu">
+  {% if security.recoverable %}
+  <li><a href="{{ url_for_security('forgot_password') }}">{{ _('Forgot password') }}</a><br/></li>
+  {% endif %}
+  {% if security.confirmable %}
+  <li><a href="{{ url_for_security('send_confirmation') }}">{{ _('Confirm account') }}</a></li>
+  {% endif %}
+</ul>
+{% endif %}

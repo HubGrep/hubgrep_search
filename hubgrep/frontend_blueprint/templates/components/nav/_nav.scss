@@ -1,4 +1,16 @@
 .nav {
+  white-space: nowrap;
+  padding: 0 1rem;
+  display: flex;
+  justify-content: flex-end;
+
+  > ul {
+    list-style: none;
+	margin: 0;
+	padding: 0;
+    display: flex;
+  }
+
   &-item {
     font-size: size(detail);
     margin: 0 1rem;

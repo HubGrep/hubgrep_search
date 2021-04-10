@@ -1,5 +1,4 @@
 from flask import render_template
-from flask import request
 from flask import abort
 from flask import flash
 from flask import redirect
@@ -9,11 +8,10 @@ from flask_security import current_user
 from flask_security import login_required
 from hubgrep.models import HostingService
 
-from hubgrep import db, security, set_app_cache
+from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm, HostingServiceFirstStep
+from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm
 from hubgrep.frontend_blueprint.forms.confirm import ConfirmForm
-from hubgrep.lib.get_hosting_service_interfaces import hosting_service_interfaces_by_name
 
 
 @frontend.route("/manage")
@@ -31,14 +29,12 @@ def manage_instances():
         hosting_service_instances_by_user[current_user.email] = current_user.hosting_services
         is_admin = False
 
-    return render_template(
-                "management/hosting_service_list.html",
-                hosting_services=hosting_service_instances_by_user,
-                is_admin=is_admin
-            )
+    return render_template("management/hosting_service_list.html",
+                           hosting_services=hosting_service_instances_by_user,
+                           is_admin=is_admin)
 
 
-@frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ],)
+@frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ], )
 @login_required
 def manage_instance(hosting_service_id):
     h: HostingService = HostingService.query.get(hosting_service_id)
@@ -63,8 +59,10 @@ def manage_instance(hosting_service_id):
     form.config.data = h.config
     if form.errors:
         flash(form.errors, "error")
-  
-    return render_template("management/edit_hosting_service.html", form=form)
+
+    return render_template("management/edit_hosting_service.html",
+                           form=form,
+                           owner=h.user.email)
 
 
 @frontend.route("/manage/<hosting_service_id>/delete", methods=['GET', 'POST'])
@@ -83,11 +81,15 @@ def delete_instance(hosting_service_id):
         set_app_cache()
         flash("hoster deleted", "success")
         return redirect(url_for("frontend.manage_instances"))
-    
+
     if form.errors:
         flash(form.errors, "error")
 
-    confirm_question = f"do you really want to delete {h.label}?"
+    confirm_question = f"Do you really want to delete \"{h.label}\" for user \"{h.user.email}\"?"
     confirm_button_text = f"confirm"
-  
-    return render_template("management/confirm.html", form=form, confirm_question=confirm_question, confirm_button_text=confirm_button_text)
+
+    return render_template("management/confirm.html",
+                           form=form,
+                           owner=h.user.email,
+                           confirm_question=confirm_question,
+                           confirm_button_text=confirm_button_text)

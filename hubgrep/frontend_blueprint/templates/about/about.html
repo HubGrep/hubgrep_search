@@ -3,16 +3,11 @@
 
 {% block styles %}
     <link href="{{ url_for('static', filename='css/about/about.css') }}"
-              rel="stylesheet" type="text/css">
+          rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block content %}
-
-
-<div style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center">
     <div class="about">
         {{ about_html | safe }}
-
     </div>
-</div>
 {% endblock %}

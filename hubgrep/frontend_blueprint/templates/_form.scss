@@ -1,0 +1,39 @@
+form {
+  min-width: 20rem;
+
+  &:not(form.no-card) {
+    @include cardify()
+  }
+
+  .form-fields {
+    & > p {
+      display: flex;
+      justify-content: space-between;
+      align-self: center;
+
+      & > p {
+        &:first-child {
+          $labelMargin: 0.5em;
+          flex: 0 0 calc(40% - #{$labelMargin});
+          margin-right: $labelMargin;
+          text-align: right;
+        }
+
+        &:not(&:first-child) {
+          flex: 1 0 auto;
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  .form-submit {
+    display: flex;
+    justify-content: flex-end;
+    align-self: flex-end;
+
+    & > p {
+      margin-left: 1rem;
+    }
+  }
+}
