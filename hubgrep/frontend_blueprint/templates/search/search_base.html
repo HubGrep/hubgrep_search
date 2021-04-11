@@ -1,44 +1,12 @@
 {% extends 'base.html' %}
 
-{% import "components/nav/nav.html" as nav %}
-{% set nav_items = [[url_for('frontend.about'), "about"], [url_for('frontend.hosters'), "hosters"]] %}
-{% if current_user.is_authenticated %}
-    {% set _ = nav_items.append([url_for('frontend.manage_instances'), "manage"]) %}
-    {% set _ = nav_items.append([url_for('security.logout'), "logout"]) %}
-{% else %}
-    {% set _ = nav_items.append([url_for('security.login'), "login"]) %}
-    {% set _ = nav_items.append([url_for('security.register'), "register"]) %}
-{% endif %}
-
-{% block header %}
-    {% if current_user.is_authenticated %}
-        logged in as {{ current_user.email }}
-    {% else %}
-    {% endif %}
-    {% if not request.args.get('s') %}
-        {{ nav.links(nav_items) }}
-    {% endif %}
-{% endblock %}
-
-{% block footer %}
-    {% if request.args.get('s') %}
-        {{ nav.links(nav_items) }}
-    {% endif %}
-{% endblock %}
-
 {% block content %}
     <div class="search">
         <div class="search-main">
-            <div class="search-main-logo">
-                <div class="body" title="it's Hobgrebbit, the HubGrep logo!" aria-label="hubgrep logo image">
-                    <div class="eye"></div>
-                </div>
-            </div>
+            {% block search_title %}{% endblock %}
 
-            <div class="search-main-title">
-                <a class="negate" href="/">
-                    <h1>{{ title }}</h1>
-                </a>
+            <div class="search-main-logo">
+                {% block search_logo %}{% endblock %}
             </div>
 
             {% import "components/search_form/search_form.html" as search_form %}

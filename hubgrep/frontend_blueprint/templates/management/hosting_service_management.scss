@@ -1,38 +1,67 @@
 @import "../shared_bundle";
 
 footer {
-    justify-content: flex-end;
+  justify-content: flex-end;
 }
 
 .hosting-service-managenent {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
 }
+
 .hosting-service {
-    padding-left: 5rem;
+  display: flex;
+  margin: 0.5em 0;
+
+  & > * {
+    &:first-child {
+      flex: 1 0 auto;
+      margin-right: 2em;
+    }
+
+    &:not(&:first-child) {
+      flex: 0 0 auto;
+      margin-left: 0.5em;
+    }
+  }
+
+  &-list {
+    &-add {
+      text-align: right;
+    }
+
+    &-users {
+      .user {
+        margin: 1em;
+        @include cardify();
+
+        h2 {
+          font-size: size(header);
+        }
+      }
+    }
+  }
 }
 
 .hosting-service-form {
+  display: flex;
+  flex-direction: column;
+
+  &-line {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
 
-
-    &-line {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-
-        > label {
-            flex: 1 0 8rem;
-            max-width: 10rem;
-        }
-
-        > input, select {
-            flex: 1 0 8rem;
-            max-width: 1rem;
-        }
+    & > label {
+      flex: 1 0 8rem;
+      max-width: 10rem;
     }
 
+    & > input, select {
+      flex: 1 0 8rem;
+      max-width: 1rem;
+    }
+  }
 }
 

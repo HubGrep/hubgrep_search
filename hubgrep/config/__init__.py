@@ -21,21 +21,21 @@ class Config:
     SECURITY_LOGOUT_URL = "/logout"
     SECURITY_POST_LOGIN_VIEW = "/"
     SECURITY_POST_LOGOUT_VIEW = "/"
-    SECURITY_LOGIN_USER_TEMPLATE = "security/login_user.html"
+    SECURITY_LOGIN_USER_TEMPLATE = "security_hubgrep/login_user.html"
 
     SECURITY_REGISTERABLE = True
     SECURITY_SEND_REGISTER_EMAIL = True
     SECURITY_EMAIL_SUBJECT_REGISTER = "Welcome"
-    SECURITY_REGISTER_USER_TEMPLATE = "security/register_user.html"
+    SECURITY_REGISTER_USER_TEMPLATE = "security_hubgrep/register_user.html"
     SECURITY_REGISTER_URL = "/register"
 
     SECURITY_CONFIRMABLE = True
-    SECURITY_SEND_CONFIRMATION_TEMPLATE = "security/send_confirmation.html"
+    SECURITY_SEND_CONFIRMATION_TEMPLATE = "security_hubgrep/send_confirmation.html"
 
     SECURITY_RECOVERABLE = True
     SECURITY_RESET_URL = "/reset"
-    SECURITY_RESET_PASSWORD_TEMPLATE = "security/reset_password.html"
-    SECURITY_FORGOT_PASSWORD_TEMPLATE = "security/forgot_password.html"
+    SECURITY_RESET_PASSWORD_TEMPLATE = "security_hubgrep/reset_password.html"
+    SECURITY_FORGOT_PASSWORD_TEMPLATE = "security_hubgrep/forgot_password.html"
 
     PAGINATION_PER_PAGE_DEFAULT = 10
 

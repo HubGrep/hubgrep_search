@@ -1,16 +1,16 @@
-# about
+# About
 
-HubGrep is a search engine for public code repositories.
+HubGrep is a search engine for public code repositories. It searches through a list of code hosting services such as Gitlab or Github and presents matching results to you.
 
-Based on a list of code hosting services, it searches through all these services,
-and shows you the collected results.
+With HubGrep it is less important where projects are hosted - all sources are treated equally when presenting results to you.
 
-That way its less important where projects are hosted - all sources are treated equally.
+HubGrep is free software - we encourage you to host your own search instance, with your own set of code hosters!
 
-Also, HubGrep is free software - you can host your own instance, with your own set of code hosters!
+You can find the open-source code [on Github](https://github.com/HubGrep/hubgrep_search).
+  
+If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - HubGrep currently support Gitea, Gitlab, and Github! 
 
-You can find the source code (ironically) [on Github](https://github.com/HubGrep/hubgrep_search").  
-If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - we currently support Gitea, Gitlab, and Github!
+Something missing? Open a pull request or [create an issue](https://github.com/HubGrep/hubgrep_search/issues/new) for us!
 
 
 ## Funded from March 2021 until August 2021 by

@@ -2,7 +2,7 @@ from flask import render_template
 from flask import current_app as app
 from flask import request
 
-from hubgrep.constants import SITE_TITLE, PARAM_OFFSET, PARAM_PER_PAGE
+from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE
 from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.filter_results import filter_results
@@ -18,11 +18,11 @@ def search():
     results_per_page = int(request.args.get(PARAM_PER_PAGE, app.config['PAGINATION_PER_PAGE_DEFAULT']))
     form = SearchForm(search_phrase=request.args.get("s", ""),
                       exclude_service_checkboxes=SearchForm.get_request_service_checkboxes(),
-                      exclude_forks=request.args.get("f", None) == "on",
-                      exclude_archived=request.args.get("a", None) == "on",
-                      created_after=request.args.get("ca", None),
-                      created_before=request.args.get("cb", None),
-                      updated_after=request.args.get("ua", None))
+                      exclude_forks=request.args.get("f", "") == "on",
+                      exclude_archived=request.args.get("a", "") == "on",
+                      created_after=request.args.get("ca", ""),
+                      created_before=request.args.get("cb", ""),
+                      updated_after=request.args.get("ua", ""))
     search_feedback = ""
     external_errors = []
     pagination_links = []
@@ -37,7 +37,6 @@ def search():
 
     template_path = "search/search_list.html" if form.search_phrase else "search/landing_page.html"
     return render_template(template_path,
-                           title=SITE_TITLE,
                            form=form,
                            search_url=request.url,
                            search_results=results_paginated,

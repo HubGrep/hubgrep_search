@@ -1,7 +1,48 @@
 html {
   background-color: color(bg);
-  font-family: font(base);
   color: color(font);
+}
+
+body {
+  overflow-x: hidden;
+  margin: 0 auto;
+  min-height: 100vh;
+  max-width: value(maxPageWidth);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+header, footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer {
+  position: relative;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 1rem 0;
+
+  & > * {
+    margin: 0;
+  }
+}
+
+section {
+  margin: 0 auto;
+  max-width: value(maxContentWidth);
+
+  & > * {
+    padding: 0 1rem;
+  }
+
+  h1 {
+    margin: 2em 0;
+    text-align: center;
+  }
 }
 
 a {
@@ -18,28 +59,5 @@ a {
 
   &.negate, &.negate:visited, &.negate:hover {
     color: inherit;
-  }
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-header {
-
-}
-
-footer {
-  background-color: color(bgAlt);
-  display: flex;
-  align-items: center;
-
-  > * {
-    margin: 1rem 0;
   }
 }

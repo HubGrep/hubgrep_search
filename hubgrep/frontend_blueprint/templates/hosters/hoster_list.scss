@@ -1,0 +1,10 @@
+@import "../shared_bundle";
+@import "../components/hosting_service_list/hosting_service_list";
+
+.hoster-list {
+  &-add {
+    margin-top: 2em;
+    text-align: end;
+    font-size: 1.25rem;
+  }
+}

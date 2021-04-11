@@ -1,29 +1,49 @@
+{% import "components/nav/nav.html" as nav %}
+
 <!DOCTYPE html>
-<html lang="{{ get_locale() }}">
+<html lang="{{ get_locale() }}" {% block html_attribs %}{% endblock html_attribs %}>
 <head>
-    <meta charset="UTF-8">
-    <title>{{ title }}</title>
-    <link rel="icon" type="image/png" href="static/images/favicon.png">
-    {% block styles %}{% endblock %}
+    {%- block head %}
+        {% block metas %}
+            <meta charset="UTF-8">
+        {% endblock metas %}
+
+        <title>{{ title }}</title>
+
+        <link rel="icon" type="image/png" href="static/images/favicon.png">
+
+        {% block styles %}{% endblock styles %}
+    {%- endblock head %}
 </head>
 <body>
 <header>
-    {% block header %}{% endblock %}
+    {% block header %}
+        {% block header_title %}
+            <div class="main-title">
+                <a class="negate" href="{{ url_for('frontend.search') }}">
+                    <h1>{{ title }}</h1>
+                </a>
+            </div>
+        {% endblock header_title %}
+        {% block header_menu %}
+            {{ nav.links(current_user=current_user) }}
+        {% endblock header_menu %}
+    {% endblock header %}
 </header>
 <section>
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
+        {% if messages %}
+            <ul class=flashes>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endwith %}
-    {% block content %}{% endblock %}
+    {% block content %}{% endblock content %}
 </section>
 <footer>
-    {% block footer %}{% endblock %}
+    {% block footer %}{% endblock footer %}
 </footer>
 </body>
 </html>

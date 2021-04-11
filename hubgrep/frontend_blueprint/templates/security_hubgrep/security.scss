@@ -1,0 +1,39 @@
+@import "../shared_bundle";
+
+body {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.security {
+
+  &-menu {
+    text-align: end;
+    list-style: none;
+    padding: 0;
+    margin: 1em 0;
+
+    li {
+      margin: 0.5em 0;
+    }
+  }
+
+  &-form-fields {
+    > * {
+      display: flex;
+      justify-content: space-between;
+      align-self: center;
+    }
+  }
+
+  &-form-submit {
+    display: flex;
+    justify-content: flex-end;
+    align-self: center;
+
+    > * {
+      margin-left: 1rem;
+    }
+  }
+}
+

@@ -23,7 +23,6 @@ def about():
     # in the template, we need to add the "safe" filter, otherwise our html will be escaped
     return render_template(
         "about/about.html",
-        title=SITE_TITLE,
         hosting_instances=app.config["CACHED_HOSTING_SERVICES"],
         about_html=about_html,
     )

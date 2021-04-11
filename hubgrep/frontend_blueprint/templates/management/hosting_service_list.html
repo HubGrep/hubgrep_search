@@ -1,20 +1,25 @@
 {% extends 'management/management_base.html' %}
 
 {% block content %}
+    <div class="hosting-service-list">
+        <h1>Manage</h1>
+        <div class="hosting-service-list-add">
+            <a href="{{ url_for("frontend.add_instance_step_1") }}">add new hoster</a>
+        </div>
 
-<a href="{{url_for("frontend.add_instance_step_1")}}">add new hoster</a>
-
-<div class="hosting-service-list">
-    {% for user, instances in hosting_services.items() %}
-    <h3>{{user}}</h3>
-    {% for instance in instances %}
-    <div class="hosting-service">
-        {{ instance.landingpage_url }} -
-        <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
-        <a href="{{ url_for('frontend.delete_instance', hosting_service_id=instance.id) }}">delete</a>
+        <div class="hosting-service-list-users">
+            {% for user, instances in hosting_services.items() %}
+                <div class="user">
+                    <h2>{{ user }}</h2>
+                    {% for instance in instances %}
+                        <p class="hosting-service">
+                            <span>{{ instance.landingpage_url }}</span>
+                            <a href="{{ url_for('frontend.manage_instance', hosting_service_id=instance.id) }}">edit</a>
+                            <a href="{{ url_for('frontend.delete_instance', hosting_service_id=instance.id) }}">delete</a>
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
-    {% endfor %}
-</div>
-
 {% endblock %}

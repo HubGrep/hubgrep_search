@@ -9,10 +9,9 @@
     position: relative;
 
     .collapsible-content {
-      box-shadow: 1px 1px 3px color(boxShadow);
-      background-color: color(white);
       position: absolute;
       z-index: 1;
+      @include cardify(0)
     }
   }
 

@@ -9,7 +9,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
 from sassutils.wsgi import SassMiddleware
 
-from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION
+from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION, SITE_TITLE
 from hubgrep.lib.init_logging import init_logging
 
 from flask_security import (
@@ -21,9 +21,7 @@ from flask_security import (
 
 db = SQLAlchemy()
 security = Security()
-
 migrate = Migrate()
-
 redis_client = FlaskRedis()
 mail = Mail()
 
@@ -89,10 +87,16 @@ def create_app():
         return lang
 
     app.jinja_env.globals["get_locale"] = get_locale
+    app.jinja_env.trim_blocks = True
+    app.jinja_env.lstrip_blocks = True
 
     @app.before_first_request
     def post_setup():
         set_app_cache()
+
+    @app.context_processor
+    def inject_title():
+        return dict(title=SITE_TITLE)  # always expose these in templates
 
     return app
 

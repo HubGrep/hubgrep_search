@@ -1,6 +1,25 @@
 {% extends 'search/search_base.html' %}
 
+{% import "components/nav/nav.html" as nav %}
+
 {% block styles %}
     <link href="{{ url_for('static', filename='css/search/search_list.css') }}"
           rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block header_menu %}
+    {# override, we're moving it into footer #}
+{% endblock %}
+
+{% block search_title %}
+    <h1>{{ gettext("Search results") | safe }}</h1>
+{% endblock %}
+
+{% block search_logo %}
+    <div class="body" title="don't touch me!" aria-label="hubgrep logo image"></div>
+{% endblock %}
+
+{% block footer %}
+    <div class="footer-bg"><div></div></div>
+    {{ nav.links(current_user=current_user) }}
 {% endblock %}

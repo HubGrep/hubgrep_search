@@ -1,21 +1,58 @@
-@import "components/result_card/result_card";
-@import "components/pagination/pagination";
-@import "search/search_base";
+@import "../components/result_card/result_card";
+@import "../components/pagination/pagination";
+@import "../search/search_base";
 
+body, section {
+  margin: 0; // disable page centering
+}
 
 header {
-  display: none;
+  display: flex;
+  justify-content: space-around;
 }
 
 footer {
-  justify-content: flex-end;
+  .footer-bg {
+    display: flex;
+    justify-content: center;
+
+    div {
+      justify-self: normal;
+      background: color(bgAlt);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100vw;
+      height: 100%;
+      pointer-events: none;
+    }
+  }
+}
+
+.nav {
+  margin: 0;
 }
 
 .search {
+  h1 {
+    visibility: hidden;
+    position: absolute;
+  }
 
-  @include minBreakpoint(mobile) {
+  &-result {
+    padding: 0 1rem;
+  }
+}
 
+@include minBreakpoint(mobile) {
+  header {
+    position: absolute;
+  }
+
+  .search {
     &-main {
+      max-width: 37.5rem;
       flex-direction: row;
       margin: 0;
 
@@ -37,19 +74,13 @@ footer {
         }
       }
 
-      &-title {
-        min-width: calc(#{value(lMargin)} - 1rem);
+      .searchform {
+        margin: 0.75rem 0 0 calc(#{value(lMargin)} - 1rem);
       }
     }
 
     &-result {
       padding-left: value(lMargin);
-    }
-  }
-
-  @include maxBreakpoint(mobile) {
-    &-result {
-      padding: 0 1rem;
     }
   }
 }
