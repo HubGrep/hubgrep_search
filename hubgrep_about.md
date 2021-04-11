@@ -10,7 +10,7 @@ You can find the open-source code [on Github](https://github.com/HubGrep/hubgrep
   
 If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - HubGrep currently support Gitea, Gitlab, and Github! 
 
-Something missing? Open a pull requests or [create an issue](https://github.com/HubGrep/hubgrep_search/issues/new) for us!
+Something missing? Open a pull request or [create an issue](https://github.com/HubGrep/hubgrep_search/issues/new) for us!
 
 
 ## Funded from March 2021 until August 2021 by
