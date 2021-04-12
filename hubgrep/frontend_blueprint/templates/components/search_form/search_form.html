@@ -1,7 +1,7 @@
-{% macro create_form(search_url, form, class="") %}
+{% macro create_form(form, class="") %}
 
 <div class="searchform {{ class }}">
-    <form class="no-card" action="{{ search_url }}" method="get">
+    <form class="no-card" method="get">
         {% set searchbar_html %}
         <div class="input-bar">
             <label for="searchbar" aria-label="search"></label>

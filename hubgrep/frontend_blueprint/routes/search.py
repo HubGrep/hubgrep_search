@@ -10,6 +10,9 @@ from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_inter
 from hubgrep.lib.search_form import SearchForm
 from hubgrep.frontend_blueprint import frontend
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 @frontend.route("/")
 def search():
@@ -38,7 +41,6 @@ def search():
     template_path = "search/search_list.html" if form.search_phrase else "search/landing_page.html"
     return render_template(template_path,
                            form=form,
-                           search_url=request.url,
                            search_results=results_paginated,
                            search_feedback=search_feedback,
                            pagination_links=pagination_links,  # [PageLink] namedtuples

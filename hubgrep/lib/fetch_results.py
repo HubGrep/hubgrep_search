@@ -1,3 +1,4 @@
+import logging
 import difflib
 from concurrent import futures
 from typing import List
@@ -6,6 +7,9 @@ from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 def final_sort(keywords, results):
@@ -60,6 +64,8 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
                     results += _results
             else:
                 errors.append((base_url, _results))
-
+        
+        if errors:
+            logger.warn(f"got some errors: {errors}")
         results = final_sort(keywords, results)
         return results, errors

@@ -12,6 +12,7 @@ WORKDIR /var/task
 COPY requirements.txt Dockerfile.prod /var/task/
 COPY migrations /var/task/migrations
 COPY hubgrep /var/task/hubgrep
+COPY hubgrep /var/task/hubgrep
 
 RUN pip install -r requirements.txt
 
@@ -19,5 +20,6 @@ RUN pip install -r requirements.txt
 RUN pip install gunicorn
 
 # we dont check css in, so we need to build our assets
+RUN mkdir -p /var/task/hubgrep/static/css
 RUN flask cli build-scss
 
