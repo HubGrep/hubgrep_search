@@ -69,7 +69,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     side_cnt = math.ceil(link_total * side_link_portions)
     mid_max = link_total - side_cnt * 2
     mid_side_cnt = mid_max // 2
-    mid_shift = max(0, page_current + mid_side_cnt - page_total + 2)  # only shift if we're adding above page_total
+    mid_shift = max(0, page_current + mid_side_cnt - page_total + 2)  # shift mid start/end to avoid links outside total
     mid_start = page_current - mid_side_cnt - mid_shift
     mid_end = page_current + mid_side_cnt - mid_shift
 
