@@ -22,7 +22,7 @@ class TestPagination:
         assert len(links) == 14  # 10 + 2 prev/next + 2 dividers
         assert links[0].class_name == CLASS_PREV
         assert links[3].class_name == CLASS_DIVIDER
-        assert links[8].class_name == CLASS_CURRENT_PAGE
+        assert links[7].class_name == CLASS_CURRENT_PAGE
         assert links[-4].class_name == CLASS_DIVIDER
         assert links[-1].class_name == CLASS_NEXT
 
@@ -30,8 +30,7 @@ class TestPagination:
         """ when current page is at the end, we should have one divider on the end as the max-enum links allow it """
         links = get_page_links(url="/", offset=990, per_page=10, results_total=1000, enumerated_link_max=10,
                                has_next_prev=True, detach_min=10, side_link_portions=0.2)
-        assert len(links) == 10  # 7 + 2 prev/next + 1 dividers
-        # 7.. there's a bug, but I don't think it matters if the end generates fewer enumerated links
+        assert len(links) == 13  # 10 + 2 prev/next + 1 dividers
         assert links[0].class_name == CLASS_PREV
         assert links[3].class_name == CLASS_DIVIDER
         assert links[-2].class_name == CLASS_CURRENT_PAGE

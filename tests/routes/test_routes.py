@@ -9,7 +9,8 @@ class TestRoutes:
 
     def test_localization_de(self, test_client: FlaskClient):
         res = test_client.get('/', headers=[("Accept-Language", "de")])
-        assert '<html lang="de">' in str(res.data)
+        html_attr = str(res.data).split("<html")[1].split(">")[0]
+        assert 'lang="de"' in html_attr
 
     def test_about(self, test_client: FlaskClient):
         res = test_client.get('/about')

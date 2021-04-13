@@ -31,10 +31,10 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
                    has_next_prev: bool = True, detach_min: int = 10, side_link_portions: float = 0.2) -> List[PageLink]:
     """ Constructs a list of PageLinks (namedtuple) for use in templating.
 
-    This list will (when able & enabled) contain a "previous" link at first index
-    and a "next" link as the last item.
+    This list (when able & enabled) will contain a "previous" link at first index and a "next" link as the last item.
+    It may also contain empty links as dividers when there are more pages total than shown.
 
-    The links we construct will come out like below, when all is enabled and fit (".." = divider links)
+    The constructed list will look like below (".." = divider links):
     [<previous>, <detach_left enum links>, .., <mid_start -enum links- mid_end>, .., <detach_right enum links>, <next>]
 
     Detached links on left and right will only exist when the ends of the list are further away than what the
@@ -47,7 +47,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     :param results_total: total maximum for pagination to work within
     :param enumerated_link_max: upper cap for amount of enumerated page-links (but not a cap for the returned list when "has_next_prev" is enabled)
     :param detach_min: no link dividers for total links under this value
-    :param has_next_prev: sets label & url for links to adjacent pages (not counted toward link_max), if False it will include empty PageLinks for these
+    :param has_next_prev: sets label & url for links to adjacent pages (not counted toward link_max), if False it will still include empty PageLinks!
     :param side_link_portions: decimal between 0 - 0.5 assigned to each static end of pagination link-sections
     """
     u = urlparse(url)
@@ -55,7 +55,7 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
 
     links = []
     page_current = offset // per_page
-    page_total = results_total // per_page
+    page_total = math.ceil(results_total / per_page)
     link_total = page_total if page_total < enumerated_link_max else enumerated_link_max
     allow_detach = detach_min <= page_total
 
@@ -68,11 +68,12 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     # --- append & calculate enumerated links
     side_cnt = math.ceil(link_total * side_link_portions)
     mid_max = link_total - side_cnt * 2
-    mid_side_cnt = mid_max // 2 + 1
-    mid_start = page_current - mid_side_cnt
-    mid_end = page_current + mid_side_cnt
-    is_left_detached, is_right_detached = False, False
+    mid_side_cnt = mid_max // 2
+    mid_shift = max(0, page_current + mid_side_cnt - page_total + 2)  # only shift if we're adding above page_total
+    mid_start = page_current - mid_side_cnt - mid_shift
+    mid_end = page_current + mid_side_cnt - mid_shift
 
+    is_left_detached, is_right_detached = False, False
     if allow_detach:
         if mid_start > side_cnt:
             is_left_detached = True
@@ -84,11 +85,10 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
     for link_index in range(link_total):
         class_name = ""
         page_number = link_index
-        link_mid_index = link_index - side_cnt
 
         if is_left_detached:
             if link_index >= side_cnt:
-                page_number = mid_start + link_mid_index
+                page_number = mid_start + link_index - side_cnt
 
             if link_index == side_cnt:
                 links.append(divider_link)
@@ -102,12 +102,6 @@ def get_page_links(url: str, offset: int, per_page: int, results_total: int, enu
 
         if page_number == page_current:
             class_name = CLASS_CURRENT_PAGE
-
-        if page_number >= page_total:
-            # TODO check remainder calculations for when current page is at the end (or a few indices away from it)
-            # TODO right now it generates fewer enumerated links at the end than what it does for the start
-            # TODO instead of breaking here, it should add these extra iterations as links at the start of enum-links
-            break  # or else we render links for pages we don't have
 
         links.append(_get_page_link(u, params, page_number * per_page, per_page,
                                     label=str(page_number + 1), class_name=class_name))
