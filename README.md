@@ -3,49 +3,87 @@
 Search for code repositories over many code-hosting services at once, without non-repo clutter.
 
 
-## deployment
+## Deployment
 
-### Setup
+### Setup (Docker)
 
-create a config by copying `.env.dist` to `.env`, and add the missing values.
+#### Creating your configuration
 
-then start the service and database
+Create a config by copying `.env.dist` to `.env`, 
+and add the missing values.
 
-    docker-compose up
+Next, there is a`docker-compose.prod.yml` file, 
+which would start an instance of hubgrep. along with a redis db for caching,
+and postgres to store user data, like hosters you want to include in your searches.
+
+You should check if this is running the configuration you want (maybe you want to use another database, for example).
+
+Also, it might be a good idea to make a copy of that file to use, 
+so that you dont run into conflicts when pulling new versions of this repo.
+
+#### First start
+
+To build an image with generated assets and source code baked in, 
+run `docker-compose -f docker-compose.prod.yml build`.  
+This is not needed the first time you start,
+but to trigger building the container after an update to a new version this is neccessary.
+
+To start the containers, run
+
+    docker-compose -f docker-compose.prod.yml up
+
+(or add a `-d` to detach).
 
 
-and maybe you want to have a container to run cli commands:
+On first setup, you need to setup the database and the admin user.
+Easiest is, to run a new shell in the container:
 
-    docker-compose run --rm service /bin/bash
+    docker-compose -f docker-compose.prod.yml run --rm service /bin/bash
 
-in the container you have to run the db migrations
 
-    # create migration files, 
-    # only if you changed something in the models
-    #flask db migrate  
+and in there, run
 
-    # upgrade your datbase
     flask db upgrade
-
-create the admin user
-
     flask cli init
 
-
-    # todo: 
-    - a prod docker container, using external assets, not linking the sourcecode
-    - nginx setup
+The first command migrates the database (meaning, it creates the neccessary tables), 
+the second one creates an admin user as defined in the environment variables.
 
 
+Afterwards, the service should be accessible on `http://yourip:8080`.
 
-### Usage
+#### Adding some hosters
 
 after that, add some hosters to search. use either the frontend, 
-or the cli, to add, for example, github:
+or the cli, to add some:
 
     flask cli add-hoster github "https://api.github.com/" "https://github.com/" "{}"
     flask cli add-hoster gitea "https://codeberg.org/api/v1/" "https://codeberg.org/" "{}"
     flask cli add-hoster gitea "https://gitea.com/api/v1/" "https://gitea.com/" "{}"
+
+(For gitlab, see [this note](#adding-gitlab-instances))
+
+#### Nginx setup
+
+You probably want to serve everything via webserver,
+not with gunicorn (the thing that serves the app, 
+if you didnt change the docker-compose file), 
+so that you can add a certificate for https, 
+and to serve the assets more efficiently. 
+
+To get the static files, there is an example setup in `docker-compose.prod.yml` already.
+Just uncomment the "volumes" section in the compose file, and the `STATIC_PATH` in your `.env`.
+This would copy the static files to `./host_static` on startup.
+
+Alternatively, you can run `flask cli copy-static /some/path` inside the container.
+
+You can find an example nginx config [here](./nginx_example.conf).
+
+
+#### Customizing the About Page
+
+Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a markdown file,
+and it will be rendered into the about page.
 
 
 #### Adding Gitlab Instances
@@ -110,59 +148,6 @@ Finally, compile the translation for usage:
     pybabel compile -d hubgrep/translations -l [YOUR_LANG]
     
 Strings should now be replaced by the appropriate locale variant when rendered.
-
-
-## Production Setup
-
-
-There is a separate dockerfile `Dockerfile.prod` for production builds, 
-which is used in the `docker-compose.prod.yml` file.
-
-To build an image with generated assets and source code baked in, 
-run `docker-compose -f docker-compose.prod.yml build`.
-
-You can use it the same way as the development compose file.
-
-Configuration is almost the same as in development - 
-just adjust your .env file, and change the docker-compose
-file to your needs (for example, if you are running a separate postgres.)
-
-
-To start the container, just run
-
-```
-docker-compose -f docker-compose.prod.yml up
-``` 
-
-(or add a `-d` to detach).
-
-On first setup, you need to create the database structure and set up the admin user.
-Easiest is, to run a new shell in the container:
-
-```
-docker-compose -f docker-compose.prod.yml run --rm service /bin/bash
-```
-
-and in there, run
-
-```
-flask db upgrade
-flask cli init
-```
-
-
-You probably want to serve the assets via webserver, not with gunicorn.
-To get the assets, you can run `flask cli copy-static`.  
-This can be used to get the files out of a docker container - see `docker-compose.prod.yml`
-for an example!
-
-
-
-## Customize the About Page
-
-Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a markdown file,
-and it will be rendered into the about page.
-
 
 
 
