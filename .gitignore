@@ -13,4 +13,5 @@ messages.pot
 init_hosters.sh
 host_static/
 sync.sh
+restore_backup.sh
 rsync.exclude

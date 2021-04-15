@@ -13,6 +13,8 @@ COPY requirements.txt Dockerfile.prod /var/task/
 COPY migrations /var/task/migrations
 COPY hubgrep /var/task/hubgrep
 
+COPY hubgrep_about.md /var/task/hubgrep_about.md
+
 RUN pip install -r requirements.txt
 
 # unicorn is used to serve the app
