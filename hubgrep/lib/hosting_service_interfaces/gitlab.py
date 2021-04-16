@@ -77,7 +77,7 @@ class GitLabSearch(HostingServiceInterface):
         )
         self.api_token = api_token
 
-    def search(
+    def _search(
         self, keywords: list = [], tags: dict = {}
     ) -> (bool, str, Union[Exception, List[GitLabSearchResult]],):
         tags = {**tags, **dict(scope="projects")}

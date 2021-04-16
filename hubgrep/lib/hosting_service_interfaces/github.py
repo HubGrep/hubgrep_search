@@ -100,7 +100,7 @@ class GitHubSearch(HostingServiceInterface):
             requests_session=requests_session,
         )
 
-    def search(
+    def _search(
         self, keywords: list = [], tags: dict = {}
     ) -> (bool, str, Union[Exception, List[GitHubSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
