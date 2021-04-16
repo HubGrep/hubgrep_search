@@ -1,31 +1,36 @@
-from urllib.parse import urljoin
-import pytz
+import logging
+import time
 
 import click
 import humanize
 import requests
+import pytz
+
+from urllib.parse import urljoin
 
 from flask import current_app
+
+logger = logging.getLogger(__name__)
 
 utc = pytz.UTC
 
 
 class SearchResult:
     def __init__(
-            self,
-            host_service_id,
-            repo_name,
-            repo_description,
-            html_url,
-            owner_name,
-            last_commit_dt,
-            created_at_dt,
-            forks,
-            stars,
-            is_fork,
-            is_archived,
-            language=None,
-            license=None,
+        self,
+        host_service_id,
+        repo_name,
+        repo_description,
+        html_url,
+        owner_name,
+        last_commit_dt,
+        created_at_dt,
+        forks,
+        stars,
+        is_fork,
+        is_archived,
+        language=None,
+        license=None,
     ):
         self.host_service_id = host_service_id
         self.repo_name = repo_name
@@ -84,9 +89,15 @@ class HostingServiceInterface:
             self.requests = requests_session
         else:
             self.requests = requests.session()
-        self.requests.headers.update({'referer': current_app.config['REFERER']})
+        self.requests.headers.update({"referer": current_app.config["REFERER"]})
 
-    def search(self, keywords: list, tags: dict):
+    def search(self, keywords: list = [], tags: dict = {}):
+        time_before = time.time()
+        result = self._search(keywords, tags)
+        logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
+        return result
+
+    def _search(self, keywords: list, tags: dict):
         raise NotImplementedError
 
     @staticmethod
