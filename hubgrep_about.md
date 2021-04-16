@@ -15,9 +15,9 @@ Something missing? Open a pull request or [create an issue](https://github.com/H
 
 ## Funded from March 2021 until August 2021 by
 
-<p style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+<p style="display: flex; flex-direction: row; justify-content: center; align-items: center; background:#ffffff;">
     <a href="https://www.bmbf.de/en/" rel="nofollow">
-        <img src="{{ url_for('static', filename='images/logos/bmbf_de.jpg') }}" alt="Logo of the German Ministry for Education and Research" style="max-width:100%; padding:20px;" height="150px">
+        <img src="{{ url_for('static', filename='images/logos/bmbf_en.jpg') }}" alt="Logo of the German Ministry for Education and Research" style="max-width:100%; padding:20px;" height="150px">
     </a>
     <a href="https://prototypefund.de/en/" rel="nofollow">
         <img src="{{ url_for('static', filename='images/logos/prototype_fund.svg') }}" alt="Logo of the Prototype Fund" style="max-width:100%; padding:20px;" height="150px">
