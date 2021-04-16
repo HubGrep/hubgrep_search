@@ -1,6 +1,10 @@
 # HubGrep
 
-Search for code repositories over many code-hosting services at once, without non-repo clutter.
+Search for code repositories over many code-hosting services at once. 
+
+This means you don't have to mentally filter non-repo results in view, but perhaps more importantly, 
+one service does not get prioritized over another in non-transparent ways - they're all equal to one another with HubGrep.
+
 
 ## Supported services
  
