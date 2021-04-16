@@ -2,6 +2,18 @@
 
 Search for code repositories over many code-hosting services at once, without non-repo clutter.
 
+## Supported services
+ 
+Currently supported service types:
+
+* Github
+* Gitlab
+* Gitea
+
+A code-hosting service, from now on referred to as hoster-service is an external site which host code repositories that 
+HubGrep has support for searching through.
+
+Individual instances of these need to be added manually to HubGrep (see [Adding service-hosters](#adding-service-hosters)).
 
 ## Deployment
 
@@ -12,14 +24,14 @@ Search for code repositories over many code-hosting services at once, without no
 Create a config by copying `.env.dist` to `.env`, 
 and add the missing values.
 
-Next, there is a`docker-compose.prod.yml` file, 
-which would start an instance of hubgrep. along with a redis db for caching,
-and postgres to store user data, like hosters you want to include in your searches.
+Next, there is a`docker-compose.prod.yml` file, which would start an instance of HubGrep. 
+It contains redis db for caching, and postgres to store user data such as service-hosters which have been added.
 
-You should check if this is running the configuration you want (maybe you want to use another database, for example).
+You should check if the dockerfile contain the configuration you want 
+(maybe you want to use another database, for example).
 
-Also, it might be a good idea to make a copy of that file to use, 
-so that you dont run into conflicts when pulling new versions of this repo.
+Also, it might be a good idea to make a copy of this dockerfile, so that you dont run into conflicts when pulling new 
+versions of this repo.
 
 #### First start
 
@@ -41,18 +53,19 @@ Easiest is, to run a new shell in the container:
     docker-compose -f docker-compose.prod.yml run --rm service /bin/bash
 
 
-and in there, run
+and in there, run:
 
     flask db upgrade
     flask cli init
 
-The first command migrates the database (meaning, it creates the neccessary tables), 
+The first command migrates the database (creating the database structure that we use), 
 the second one creates an admin user as defined in the environment variables.
 
 
 Afterwards, the service should be accessible on `http://yourip:8080`.
 
-#### Adding some hosters
+<a name="adding-service-hosters"></a>
+#### Adding service-hosters 
 
 after that, add some hosters to search. use either the frontend, 
 or the cli, to add some:
@@ -85,7 +98,7 @@ You can find an example nginx config [here](./nginx_example.conf).
 Set environment variable `HUBGREP_ABOUT_MARKDOWN_FILE` to a path containing a markdown file,
 and it will be rendered into the about page.
 
-
+<a name="adding-gitlab-instances"></a>
 #### Adding Gitlab Instances
 
 gitlab needs an api key ("token") to use the api.
