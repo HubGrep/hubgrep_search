@@ -4,6 +4,7 @@ from iso8601 import iso8601
 
 from typing import List, Union
 
+from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -92,7 +93,11 @@ class GitHubSearch(HostingServiceInterface):
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self, host_service_id, api_url, requests_session=None, timeout=2):
+    def __init__(self,
+                 host_service_id,
+                 api_url,
+                 requests_session=None,
+                 timeout=REQUEST_TIMEOUT_DEFAULT):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,

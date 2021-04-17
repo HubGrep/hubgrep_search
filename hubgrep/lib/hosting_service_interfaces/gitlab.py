@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 from typing import List, Union
 
+from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -71,7 +72,12 @@ class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
     def __init__(
-        self, host_service_id, api_url, api_token, requests_session=None, timeout=2
+            self,
+            host_service_id,
+            api_url,
+            api_token,
+            requests_session=None,
+            timeout=REQUEST_TIMEOUT_DEFAULT
     ):
         super().__init__(
             host_service_id=host_service_id,
@@ -83,7 +89,7 @@ class GitLabSearch(HostingServiceInterface):
         self.api_token = api_token
 
     def _search(
-        self, keywords: list = [], tags: dict = {}
+            self, keywords: list = [], tags: dict = {}
     ) -> (bool, str, Union[Exception, List[GitLabSearchResult]],):
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)

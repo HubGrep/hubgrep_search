@@ -4,6 +4,10 @@ APP_ENV_DEVELOPMENT = "development"
 APP_ENV_PRODUCTION = "production"
 APP_ENV_TESTING = "testing"
 
+# hosting services
+REQUEST_TIMEOUT_DEFAULT = 2
+
+
 # search form
 
 

@@ -9,6 +9,7 @@ import pytz
 from urllib.parse import urljoin
 
 from flask import current_app
+from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 
 logger = logging.getLogger(__name__)
 
@@ -17,20 +18,20 @@ utc = pytz.UTC
 
 class SearchResult:
     def __init__(
-        self,
-        host_service_id,
-        repo_name,
-        repo_description,
-        html_url,
-        owner_name,
-        last_commit_dt,
-        created_at_dt,
-        forks,
-        stars,
-        is_fork,
-        is_archived,
-        language=None,
-        license=None,
+            self,
+            host_service_id,
+            repo_name,
+            repo_description,
+            html_url,
+            owner_name,
+            last_commit_dt,
+            created_at_dt,
+            forks,
+            stars,
+            is_fork,
+            is_archived,
+            language=None,
+            license=None,
     ):
         self.host_service_id = host_service_id
         self.repo_name = repo_name
@@ -80,7 +81,12 @@ class SearchResult:
 class HostingServiceInterface:
     name = ""
 
-    def __init__(self, host_service_id, api_url, search_path, requests_session=None, timeout=2):
+    def __init__(self,
+                 host_service_id,
+                 api_url,
+                 search_path,
+                 requests_session=None,
+                 timeout=REQUEST_TIMEOUT_DEFAULT):
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.request_url = urljoin(self.api_url, search_path)
