@@ -45,7 +45,7 @@ class Config:
 
     WATCH_SCSS = False
 
-    HOSTER_SERVICE_REQUESTS_TIMEOUT = int(os.environ.get('HUBGREP_HOSTER_SERVICE_REQUESTS_TIMEOUT', 2))
+    HOSTING_SERVICE_REQUEST_TIMEOUT = int(os.environ.get('HUBGREP_HOSTING_SERVICE_REQUEST_TIMEOUT', 2))
 
 
 class _EnvironmentConfig():
