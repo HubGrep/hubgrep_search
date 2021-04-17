@@ -80,10 +80,11 @@ class SearchResult:
 class HostingServiceInterface:
     name = ""
 
-    def __init__(self, host_service_id, api_url, search_path, requests_session=None):
+    def __init__(self, host_service_id, api_url, search_path, requests_session=None, timeout=2):
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.request_url = urljoin(self.api_url, search_path)
+        self.timeout = timeout
 
         if requests_session:
             self.requests = requests_session

@@ -3,6 +3,8 @@ import difflib
 from concurrent import futures
 from typing import List
 
+from flask import current_app as app
+
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -56,15 +58,20 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
 
         results = []
         errors = []
-        for future in futures.as_completed(to_do):
-            success, base_url, _results = future.result(timeout=5)  # TODO tweak this for better UX as it blocks pageload on broken external services
-            if success:
-                if _results:
-                    _normalize(_results)
-                    results += _results
-            else:
-                errors.append((base_url, _results))
-        
+
+        future_timeout = app.config['HOSTER_REQUESTS_TIMEOUT'] + 2
+        try:
+            for future in futures.as_completed(to_do, timeout=future_timeout):
+                success, base_url, _results = future.result()
+                if success:
+                    if _results:
+                        _normalize(_results)
+                        results += _results
+                else:
+                    errors.append((base_url, _results))
+        except futures._base.TimeoutError as e:
+            logger.error('something went wrong with the requests')
+            logger.error(e, exc_info=True)
         if errors:
             logger.warn(f"got some errors: {errors}")
         results = final_sort(keywords, results)
