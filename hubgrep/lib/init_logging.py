@@ -7,7 +7,7 @@ def init_logging(loglevel="info"):
             "version": 1,
             "disable_existing_loggers": False,
             "formatters": {
-                "default": {"format": "%(name)s [%(levelname)s]: %(message)s"},
+                "default": {"format": "%(asctime)s %(name)s [%(levelname)s]: %(message)s"},
             },
             "handlers": {
                 "default": {

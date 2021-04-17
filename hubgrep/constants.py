@@ -1,8 +1,13 @@
+
 # app
 APP_ENV_BUILD = "build"
 APP_ENV_DEVELOPMENT = "development"
 APP_ENV_PRODUCTION = "production"
 APP_ENV_TESTING = "testing"
+
+# hosting services
+HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT = 2
+
 
 # search form
 

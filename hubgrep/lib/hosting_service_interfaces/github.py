@@ -92,12 +92,18 @@ class GitHubSearch(HostingServiceInterface):
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self, host_service_id, api_url, requests_session=None):
+    def __init__(self,
+                 host_service_id,
+                 api_url,
+                 timeout=None,
+                 requests_session=None,
+                 ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
             search_path="search/repositories",
             requests_session=requests_session,
+            timeout=timeout,
         )
 
     def _search(
@@ -105,20 +111,25 @@ class GitHubSearch(HostingServiceInterface):
     ) -> (bool, str, Union[Exception, List[GitHubSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
-            response = self.requests.get(self.request_url, params=params)
+            response = self.requests.get(
+                self.request_url,
+                params=params,
+                timeout=self.timeout,
+            )
             if not response.ok:
                 return False, self.api_url, response.text
             result = response.json()
-            results = [GitHubSearchResult(item, self.host_service_id) for item in result["items"]]
+            results = [
+                GitHubSearchResult(item, self.host_service_id)
+                for item in result["items"]
+            ]
 
         except Exception as e:
-            logger.error(result)
             logger.error(e, exc_info=True)
             return False, self.api_url, e
 
         return True, self.api_url, results
 
-
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return ''
+        return ""
