@@ -3,7 +3,6 @@ import os
 from flask import Flask, request
 from flask_babel import Babel
 from flask_assets import Environment
-from flask_redis import FlaskRedis
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
@@ -22,7 +21,6 @@ from flask_security import (
 db = SQLAlchemy()
 security = Security()
 migrate = Migrate()
-redis_client = FlaskRedis()
 mail = Mail()
 
 logger = logging.getLogger(__name__)
@@ -53,7 +51,7 @@ def create_app():
         APP_ENV_BUILD: "hubgrep.config.BuildConfig",
         APP_ENV_DEVELOPMENT: "hubgrep.config.DevelopmentConfig",
         APP_ENV_PRODUCTION: "hubgrep.config.ProductionConfig",
-        APP_ENV_TESTING: "hubgrep.config.testingConfig",
+        APP_ENV_TESTING: "hubgrep.config.TestingConfig",
     }
     app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
     app.config.from_object(config_mapping[app_env])
@@ -62,7 +60,6 @@ def create_app():
         app.wsgi_app = SassMiddleware(app.wsgi_app, app.config["SASS_MANIFEST"])
 
     babel = Babel(app)
-    redis_client.init_app(app)
 
     init_logging(loglevel=app.config["LOGLEVEL"])
 

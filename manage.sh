@@ -50,7 +50,7 @@ else
     APP_ENV="build" flask cli build-scss
   elif [ "$1" == "test" ]; then
     echo "running tests..."
-    pytest --cov=hubgrep .
+    APP_ENV="testing" pytest --cov=hubgrep .
   elif [ "$1" == "bumpversion" ]; then
     shift
     bumpversion $@
