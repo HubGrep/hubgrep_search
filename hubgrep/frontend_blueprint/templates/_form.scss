@@ -9,19 +9,17 @@ form {
     & > p {
       display: flex;
       justify-content: space-between;
-      align-self: center;
+      align-items: center;
 
-      & > p {
+      & > * {
+        flex: 1 0 auto;
+        text-align: left;
+
         &:first-child {
           $labelMargin: 0.5em;
           flex: 0 0 calc(40% - #{$labelMargin});
           margin-right: $labelMargin;
           text-align: right;
-        }
-
-        &:not(&:first-child) {
-          flex: 1 0 auto;
-          text-align: left;
         }
       }
     }
