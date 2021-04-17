@@ -59,7 +59,7 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
         results = []
         errors = []
 
-        future_timeout = app.config['HOSTER_REQUESTS_TIMEOUT'] + 2
+        future_timeout = app.config['HOSTER_SERVICE_REQUESTS_TIMEOUT'] + 2
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
                 success, base_url, _results = future.result()

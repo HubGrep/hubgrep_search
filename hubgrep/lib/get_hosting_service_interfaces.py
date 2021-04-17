@@ -36,14 +36,14 @@ def get_hosting_service_interfaces(cache=False):
                 api_url=service.api_url,
                 **config,
                 requests_session=cached_session,
-                timeout=app.config['HOSTER_REQUESTS_TIMEOUT']
+                timeout=app.config['HOSTER_SERVICE_REQUESTS_TIMEOUT']
             )
         else:
             args = dict(
                 host_service_id=service.id,
                 api_url=service.api_url,
                 **config,
-                timeout=app.config['HOSTER_REQUESTS_TIMEOUT'],
+                timeout=app.config['HOSTER_SERVICE_REQUESTS_TIMEOUT'],
             )
 
         hosting_service_interfaces[service.api_url] = SearchClass(**args)
