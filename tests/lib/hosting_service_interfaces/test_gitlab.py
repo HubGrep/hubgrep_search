@@ -30,7 +30,7 @@ class TestGitlab:
 
     def test_search(self, test_app):
         with test_app.app_context():
-            gitlab_search = GitLabSearch("host_service_id", "api_url", "api_token")
+            gitlab_search = GitLabSearch("host_service_id", "api_url", "api_token", timeout=2)
             gitlab_search.requests = Mock()
             gitlab_search.requests.get.return_value = self.get_mocked_response()
 

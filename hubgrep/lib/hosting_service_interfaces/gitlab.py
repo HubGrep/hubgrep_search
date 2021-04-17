@@ -4,7 +4,6 @@ from urllib.parse import urljoin
 
 from typing import List, Union
 
-from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -76,8 +75,8 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id,
             api_url,
             api_token,
+            timeout,
             requests_session=None,
-            timeout=REQUEST_TIMEOUT_DEFAULT
     ):
         super().__init__(
             host_service_id=host_service_id,

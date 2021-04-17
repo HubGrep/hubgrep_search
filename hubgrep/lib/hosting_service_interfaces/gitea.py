@@ -3,7 +3,6 @@ from typing import List, Union
 from iso8601 import iso8601
 from urllib.parse import urljoin
 
-from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -125,8 +124,9 @@ class GiteaSearch(HostingServiceInterface):
     def __init__(self,
                  host_service_id,
                  api_url,
+                 timeout,
                  requests_session=None,
-                 timeout=REQUEST_TIMEOUT_DEFAULT):
+                 ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,

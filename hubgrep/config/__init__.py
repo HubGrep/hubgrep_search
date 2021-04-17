@@ -1,4 +1,5 @@
 import os
+from hubgrep.constants import HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT
 
 
 class Config:
@@ -14,7 +15,7 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = "UTC"
     LANGUAGES = {"en": "English", "de": "Deutsch"}
 
-    REFERER = f'HubGrep v{VERSION}'
+    REFERER = f"HubGrep v{VERSION}"
 
     # https://flask-security-too.readthedocs.io/en/stable/configuration.html
     SECURITY_LOGIN_URL = "/login"
@@ -40,32 +41,44 @@ class Config:
     PAGINATION_PER_PAGE_DEFAULT = 10
 
     SASS_MANIFEST = {
-        "hubgrep": ('frontend_blueprint/templates', 'static/css', '/static/css', True)  # 4th val = strip_extensions
+        "hubgrep": (
+            "frontend_blueprint/templates",
+            "static/css",
+            "/static/css",
+            True,
+        )  # 4th val = strip_extensions
     }
 
     WATCH_SCSS = False
 
-    HOSTING_SERVICE_REQUEST_TIMEOUT = int(os.environ.get('HUBGREP_HOSTING_SERVICE_REQUEST_TIMEOUT', 2))
+    HOSTING_SERVICE_REQUEST_TIMEOUT = int(
+        os.environ.get(
+            "HUBGREP_HOSTING_SERVICE_REQUEST_TIMEOUT",
+            HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT,
+        )
+    )
 
 
-class _EnvironmentConfig():
+class _EnvironmentConfig:
     # user defined config
     ENABLE_CACHE = os.environ.get("HUBGREP_ENABLE_CACHE", True)
     CACHE_TIME = os.environ.get("HUBGREP_CACHE_TIME", 3600)
     REDIS_URL = os.environ.get("HUBGREP_REDIS_URL", False)
 
-    MAIL_DEBUG = os.environ.get('HUBGREP_MAIL_DEBUG', False)
+    MAIL_DEBUG = os.environ.get("HUBGREP_MAIL_DEBUG", False)
 
-    MAIL_SERVER = os.environ.get('HUBGREP_MAIL_SERVER', False)
-    MAIL_PORT = os.environ.get('HUBGREP_MAIL_PORT', False)
-    MAIL_USE_TLS = os.environ.get('HUBGREP_MAIL_USE_TLS', False)
-    MAIL_USE_SSL = os.environ.get('HUBGREP_MAIL_USE_SSL', False)
-    MAIL_USERNAME = os.environ.get('HUBGREP_MAIL_USERNAME', False)
-    MAIL_PASSWORD = os.environ.get('HUBGREP_MAIL_PASSWORD', None)
-    MAIL_DEFAULT_SENDER = os.environ.get('HUBGREP_MAIL_DEFAULT_SENDER', None)
-    MAIL_MAX_EMAILS = os.environ.get('HUBGREP_MAIL_MAX_EMAILS', None)
+    MAIL_SERVER = os.environ.get("HUBGREP_MAIL_SERVER", False)
+    MAIL_PORT = os.environ.get("HUBGREP_MAIL_PORT", False)
+    MAIL_USE_TLS = os.environ.get("HUBGREP_MAIL_USE_TLS", False)
+    MAIL_USE_SSL = os.environ.get("HUBGREP_MAIL_USE_SSL", False)
+    MAIL_USERNAME = os.environ.get("HUBGREP_MAIL_USERNAME", False)
+    MAIL_PASSWORD = os.environ.get("HUBGREP_MAIL_PASSWORD", None)
+    MAIL_DEFAULT_SENDER = os.environ.get("HUBGREP_MAIL_DEFAULT_SENDER", None)
+    MAIL_MAX_EMAILS = os.environ.get("HUBGREP_MAIL_MAX_EMAILS", None)
 
-    ABOUT_MARKDOWN_FILE = os.environ.get('HUBGREP_ABOUT_MARKDOWN_FILE', "hubgrep_about.md")
+    ABOUT_MARKDOWN_FILE = os.environ.get(
+        "HUBGREP_ABOUT_MARKDOWN_FILE", "hubgrep_about.md"
+    )
 
     SQLALCHEMY_DATABASE_URI = os.environ.get("HUBGREP_SQLALCHEMY_DATABASE_URI", False)
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
@@ -79,6 +92,7 @@ class ProductionConfig(Config, _EnvironmentConfig):
 class DevelopmentConfig(Config, _EnvironmentConfig):
     DEBUG = True
     WATCH_SCSS = True
+
 
 class BuildConfig(Config):
     TESTING = True

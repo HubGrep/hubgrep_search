@@ -9,7 +9,6 @@ import pytz
 from urllib.parse import urljoin
 
 from flask import current_app
-from hubgrep.constants import REQUEST_TIMEOUT_DEFAULT
 
 logger = logging.getLogger(__name__)
 
@@ -85,8 +84,9 @@ class HostingServiceInterface:
                  host_service_id,
                  api_url,
                  search_path,
+                 timeout,
                  requests_session=None,
-                 timeout=REQUEST_TIMEOUT_DEFAULT):
+                 ):
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.request_url = urljoin(self.api_url, search_path)
