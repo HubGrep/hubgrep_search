@@ -38,6 +38,7 @@ class TestGithub:
             github_search = GitHubSearch(
                 "host_service_id",
                 "api_url",
+                timeout=2
             )
             github_search.requests = Mock()
             github_search.requests.get.return_value = self.get_mocked_response()

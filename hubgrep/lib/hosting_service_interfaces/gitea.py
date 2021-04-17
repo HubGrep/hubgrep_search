@@ -121,26 +121,37 @@ class GiteaSearchResult(SearchResult):
 class GiteaSearch(HostingServiceInterface):
     name = "Gitea"
 
-    def __init__(self, host_service_id, api_url, requests_session=None):
+    def __init__(self,
+                 host_service_id,
+                 api_url,
+                 timeout=None,
+                 requests_session=None,
+                 ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
             search_path="repos/search",
             requests_session=requests_session,
+            timeout=timeout,
         )
 
     def _search(
-            self, keywords: list = [], tags: dict = {}
+        self, keywords: list = [], tags: dict = {}
     ) -> (bool, str, Union[Exception, List[GiteaSearchResult]],):
         params = dict(q="+".join(keywords), **tags)
         try:
-            response = self.requests.get(self.request_url, params=params)
+            response = self.requests.get(
+                self.request_url,
+                params=params,
+                timeout=self.timeout,
+            )
             if not response.ok:
                 return False, self.api_url, response.text
             result = response.json()
-            results = [GiteaSearchResult(item, self.host_service_id) for item in result["data"]]
+            results = [
+                GiteaSearchResult(item, self.host_service_id) for item in result["data"]
+            ]
         except Exception as e:
-            logger.error(result)
             logger.error(e, exc_info=True)
             return False, self.api_url, e
         return True, self.api_url, results
@@ -148,4 +159,3 @@ class GiteaSearch(HostingServiceInterface):
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
         return urljoin(landingpage_url, "/api/v1/")
-
