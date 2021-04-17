@@ -3,8 +3,6 @@ from typing import List, Union
 from iso8601 import iso8601
 from urllib.parse import urljoin
 
-from flask import current_app as app
-
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
