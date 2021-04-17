@@ -84,7 +84,7 @@ class HostingServiceInterface:
                  host_service_id,
                  api_url,
                  search_path,
-                 timeout,
+                 timeout=None,
                  requests_session=None,
                  ):
         self.host_service_id = host_service_id

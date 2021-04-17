@@ -95,7 +95,7 @@ class GitHubSearch(HostingServiceInterface):
     def __init__(self,
                  host_service_id,
                  api_url,
-                 timeout,
+                 timeout=None,
                  requests_session=None,
                  ):
         super().__init__(

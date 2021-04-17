@@ -75,7 +75,7 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id,
             api_url,
             api_token,
-            timeout,
+            timeout=None,
             requests_session=None,
     ):
         super().__init__(
