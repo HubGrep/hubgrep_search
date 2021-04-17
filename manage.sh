@@ -6,6 +6,8 @@ set -o allexport
 source $DIR/.env
 set +o allexport
 
+# exit on errors
+set -e
 
 USAGE="$0 COMMAND
 
