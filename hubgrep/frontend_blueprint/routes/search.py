@@ -31,7 +31,7 @@ def search():
     pagination_links = []
     if form.search_phrase:
         terms = form.search_phrase.split()
-        search_interfaces = get_hosting_service_interfaces(cache=app.config['ENABLE_CACHE'])
+        search_interfaces = get_hosting_service_interfaces()
         results, external_errors = fetch_concurrently(terms, search_interfaces)
         results = filter_results(results, form)
         results_paginated = results[results_offset:(results_offset + results_per_page)]

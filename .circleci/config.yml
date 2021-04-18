@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: 2.1
 
 orbs:
@@ -9,7 +10,7 @@ jobs:
     steps:
       - checkout
       - run: docker build -f Dockerfile.prod -t hubgrep:test .
-      - run: docker run --rm service /bin/bash -c "./manage.sh test"
+      - run: docker run --rm hubgrep:test /bin/bash -c "./manage.sh test"
    
     
 
@@ -18,3 +19,4 @@ workflows:
   main:
     jobs:
       - build-and-test
+

@@ -1,0 +1,13 @@
+language: python
+
+services:
+  - docker
+
+before_install:
+  - cp .gitignore .dockerignore
+  - docker build -f Dockerfile.prod -t hubgrep:test .
+
+script:
+  - docker run --rm service /bin/bash -c "./manage.sh test"
+
+
