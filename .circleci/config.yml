@@ -1,0 +1,9 @@
+version: 2
+jobs:
+ build:
+   machine: true
+   steps:
+     - checkout
+
+     - run: docker build -f Dockerfile.prod -t hubgrep:test .
+     - run: docker run --rm service /bin/bash -c "./manage.sh test"
