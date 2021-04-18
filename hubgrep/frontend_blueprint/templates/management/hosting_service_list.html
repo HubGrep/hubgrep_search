@@ -6,11 +6,10 @@
         <div class="hosting-service-list-add">
             <a href="{{ url_for("frontend.add_instance_step_1") }}">add new hoster</a>
         </div>
-
         <div class="hosting-service-list-users">
             {% for user, instances in hosting_services.items() %}
                 <div class="user">
-                    <h2>{{ user }}</h2>
+                    {% if is_admin %}<h2>{{ user }}</h2>{% endif %}
                     {% for instance in instances %}
                         <p class="hosting-service">
                             <span>{{ instance.landingpage_url }}</span>
@@ -18,6 +17,11 @@
                             <a href="{{ url_for('frontend.delete_instance', hosting_service_id=instance.id) }}">delete</a>
                         </p>
                     {% endfor %}
+                    {% if not instances %}
+                        <p class="hosting-service">
+                            <span>you dont have any hosting services - add one!</span>
+                        </p>
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
