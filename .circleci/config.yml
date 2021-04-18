@@ -1,0 +1,20 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@0.2.1
+
+jobs:
+  build-and-test:
+    machine: true
+    steps:
+      - checkout
+      - run: docker build -f Dockerfile.prod -t hubgrep:test .
+      - run: docker run --rm service /bin/bash -c "./manage.sh test"
+   
+    
+
+    
+workflows:
+  main:
+    jobs:
+      - build-and-test
