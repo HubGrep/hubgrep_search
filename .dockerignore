@@ -1,0 +1,17 @@
+.idea/
+env/
+env_*/
+*.pyc
+__pycache__/
+htmlcov/
+.coverage
+*.egg-info/
+.env
+.webassets-cache/
+hubgrep/static/css/
+messages.pot
+init_hosters.sh
+host_static/
+sync.sh
+restore_backup.sh
+rsync.exclude

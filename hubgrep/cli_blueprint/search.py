@@ -15,7 +15,7 @@ from hubgrep.cli_blueprint import cli_bp
 @click.option("--no-archived", is_flag=True, default=False)
 def search(terms, no_forks, no_archived):
     set_app_cache()
-    search_interfaces = get_hosting_service_interfaces(cache=app.config['ENABLE_CACHE'])
+    search_interfaces = get_hosting_service_interfaces()
 
     results, errors = fetch_concurrently(terms, search_interfaces)
     for error in errors:

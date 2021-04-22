@@ -9,11 +9,7 @@ ENV FLASK_APP=hubgrep
 
 WORKDIR /var/task
 
-COPY requirements.txt Dockerfile.prod /var/task/
-COPY migrations /var/task/migrations
-COPY hubgrep /var/task/hubgrep
-
-COPY hubgrep_about.md /var/task/hubgrep_about.md
+COPY ./ /var/task/
 
 RUN pip install -r requirements.txt
 
