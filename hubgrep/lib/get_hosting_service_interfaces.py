@@ -63,6 +63,7 @@ def get_hosting_service_interfaces():
             host_service_id=service.id,
             api_url=service.api_url,
             **config,
+            timeout=app.config['HOSTING_SERVICE_REQUEST_TIMEOUT'],
             requests_session=session,
         )
 

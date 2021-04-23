@@ -48,7 +48,9 @@ def _normalize(results):
             result.forks_normalized = 0
 
 
-def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingServiceInterface]):
+def fetch_concurrently(
+    keywords, hosting_service_interfaces: List[HostingServiceInterface]
+):
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
@@ -59,7 +61,15 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
         results = []
         errors = []
 
-        future_timeout = app.config['HOSTING_SERVICE_REQUEST_TIMEOUT'] + 2
+        # HOSTING_SERVICE_REQUEST_TIMEOUT is used in the hosting service classes.
+        # its used as a limit to the first connect,
+        # and then again for reading. (see https://docs.python-requests.org/en/master/user/advanced/#timeouts)
+        # that means, the requests can take up to
+        # two times the "HOSTING_SERVICE_REQUEST_TIMEOUT" time
+        # before cancelling.
+        # so we take this as a reference here, and add another second before
+        # we actually break, throwing an error to the user
+        future_timeout = (app.config["HOSTING_SERVICE_REQUEST_TIMEOUT"] * 2) + 1
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
                 success, base_url, _results = future.result()
@@ -70,7 +80,7 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
                 else:
                     errors.append((base_url, _results))
         except futures._base.TimeoutError as e:
-            logger.error('something went wrong with the requests')
+            logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
         if errors:
             logger.warn(f"got some errors: {errors}")
