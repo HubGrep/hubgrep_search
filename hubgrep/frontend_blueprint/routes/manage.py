@@ -24,14 +24,11 @@ def manage_instances():
             if not hosting_service_instances_by_user.get(email):
                 hosting_service_instances_by_user[email] = []
             hosting_service_instances_by_user[email].append(instance)
-        is_admin = True
     else:
         hosting_service_instances_by_user[current_user.email] = current_user.hosting_services
-        is_admin = False
 
     return render_template("management/hosting_service_list.html",
-                           hosting_services=hosting_service_instances_by_user,
-                           is_admin=is_admin)
+                           hosting_services=hosting_service_instances_by_user)
 
 
 @frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ], )
