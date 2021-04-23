@@ -20,7 +20,7 @@
                     {% if current_user.has_role("admin") %}
                         {{ status.message("warn", error, "(ADMIN) Hosting-service failure: ") }}
                     {% else %}
-                        {{ status.message("warn", error, "TODO VAGUE MSG") }}
+                        {{ status.message("warn", "There was a problem getting results from " + get_service_label_from_url(error[0]) + ".") }}
                     {% endif %}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}

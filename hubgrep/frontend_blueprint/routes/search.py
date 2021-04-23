@@ -3,6 +3,7 @@ from flask import current_app as app
 from flask import request
 
 from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE
+from hubgrep.models import get_service_label_from_url
 from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.filter_results import filter_results
@@ -13,6 +14,7 @@ from hubgrep.frontend_blueprint import frontend
 import logging
 
 logger = logging.getLogger(__name__)
+
 
 @frontend.route("/")
 def search():
@@ -44,7 +46,8 @@ def search():
                            search_results=results_paginated,
                            search_feedback=search_feedback,
                            pagination_links=pagination_links,  # [PageLink] namedtuples
-                           external_errors=external_errors)  # TODO these errors should be formatted to text that is useful for a enduser
+                           external_errors=external_errors,
+                           get_service_label_from_url=get_service_label_from_url)
 
 
 def get_search_feedback(results_total: int) -> str:
