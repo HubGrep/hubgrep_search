@@ -85,4 +85,4 @@ def fetch_concurrently(
         if errors:
             logger.warn(f"got some errors: {errors}")
         results = final_sort(keywords, results)
-    return results, errors
+        return results, errors
