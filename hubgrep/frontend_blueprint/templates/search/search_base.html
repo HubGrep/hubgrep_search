@@ -17,7 +17,11 @@
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
                 {% for error in external_errors %}
-                    {{ status.message("warn", error, "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
+                    {% if current_user.has_role("admin") %}
+                        {{ status.message("warn", error, "(ADMIN) Hosting-service failure: ") }}
+                    {% else %}
+                        {{ status.message("warn", error, "TODO VAGUE MSG") }}
+                    {% endif %}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>
