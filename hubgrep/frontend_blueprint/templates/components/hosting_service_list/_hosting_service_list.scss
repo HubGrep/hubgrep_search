@@ -6,7 +6,17 @@
     flex-wrap: wrap;
 
     li {
-      flex: 1 0 12em;
+      min-width: 12em;
+      flex: 0 0 33%;
+    }
+  }
+
+  @include maxBreakpoint(mobile) {
+    > ul {
+      li {
+        margin: 0.25em 0;
+        flex: 0 0 50%;
+      }
     }
   }
 }
