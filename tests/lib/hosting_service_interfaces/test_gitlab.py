@@ -1,20 +1,19 @@
+import requests
 from unittest.mock import Mock
 
 from hubgrep.lib.hosting_service_interfaces.gitlab import (
     GitLabSearch,
     GitLabSearchResult,
 )
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 # nice examples for requests mocking:
 # https://realpython.com/python-mock-library/
 
 
 class TestGitlab:
-    def get_mocked_response(self):
-        response_mock = Mock()
-        response_mock.status_code = 200
-        response_mock.ok = True
-        response_mock.json.return_value = [
+    def get_cached_response(self):
+        response_json = [
             dict(
                 name="name",
                 namespace=dict(path="owner_name"),
@@ -26,23 +25,35 @@ class TestGitlab:
                 http_url_to_repo="html_url",
             ),
         ]
-        return response_mock
+        cached_response = CachedResponse(
+            url="api_url",
+            success=True,
+            status_code=200,
+            response_json=response_json,
+            error_msg="",
+        )
+        return cached_response
 
-    def test_search(self, test_app):
+    def test_search(self, test_app, cached_session):
         with test_app.app_context():
-            gitlab_search = GitLabSearch("host_service_id", "api_url", "api_token", timeout=2)
-            gitlab_search.requests = Mock()
-            gitlab_search.requests.get.return_value = self.get_mocked_response()
+            gitlab_search = GitLabSearch(
+                "host_service_id",
+                "api_url",
+                "api_token",
+                cached_session=cached_session,
+                timeout=2,
+            )
+            gitlab_search.cached_session = Mock()
+            gitlab_search.cached_session.get.return_value = self.get_cached_response()
 
-            success, api_url, results_or_error = gitlab_search.search("")
+            cached_response, results = gitlab_search.search("")
 
-            if not success:
-                raise results_or_error
+            if not cached_response.success:
+                raise cached_response.error_msg
 
-            results = results_or_error
             result: GitLabSearchResult = results[0]
 
-            assert success is True
-            assert api_url == "api_url"
+            assert cached_response.success is True
+            assert cached_response.url == "api_url"
             assert result.repo_name == "name"
             assert result.created_at_dt.timestamp() == 0
