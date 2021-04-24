@@ -7,8 +7,11 @@ import requests
 import pytz
 
 from urllib.parse import urljoin
+from typing import Union, List
 
 from flask import current_app
+from hubgrep.lib.cached_session.cached_session import CachedSession
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 logger = logging.getLogger(__name__)
 
@@ -84,25 +87,24 @@ class HostingServiceInterface:
                  host_service_id,
                  api_url,
                  search_path,
+                 cached_session: CachedSession,
                  timeout=None,
-                 requests_session=None,
                  ):
+
+        # add label or model somehow
+
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.request_url = urljoin(self.api_url, search_path)
         self.timeout = timeout
+        self.cached_session = cached_session
+        self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
-        if requests_session:
-            self.requests = requests_session
-        else:
-            self.requests = requests.session()
-        self.requests.headers.update({"referer": current_app.config["REFERER"]})
-
-    def search(self, keywords: list = [], tags: dict = {}):
+    def search(self, keywords: list = [], tags: dict = {}) -> Union[CachedResponse, List]:
         time_before = time.time()
-        result = self._search(keywords, tags)
+        response_result, results = self._search(keywords, tags)
         logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
-        return result
+        return response_result, results
 
     def _search(self, keywords: list, tags: dict):
         raise NotImplementedError

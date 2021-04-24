@@ -4,6 +4,7 @@ from urllib.parse import urljoin
 
 from typing import List, Union
 
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
     SearchResult,
@@ -75,40 +76,37 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id,
             api_url,
             api_token,
+            cached_session,
             timeout=None,
-            requests_session=None,
     ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
             search_path="search",
-            requests_session=requests_session,
+            cached_session=cached_session,
             timeout=timeout,
         )
         self.api_token = api_token
 
     def _search(
             self, keywords: list = [], tags: dict = {}
-    ) -> (bool, str, Union[Exception, List[GitLabSearchResult]],):
+    ) -> (CachedResponse, List[GitLabSearchResult]):
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
-        try:
-            response = self.requests.get(
-                self.request_url,
-                params=params,
-                headers={"PRIVATE-TOKEN": self.api_token},
-                timeout=self.timeout,
-            )
-            if not response.ok:
-                return False, self.api_url, response.text
-            result = response.json()
+
+        response_result = self.cached_session.get(
+            self.request_url,
+            params=params,
+            headers={"PRIVATE-TOKEN": self.api_token},
+            timeout=self.timeout,
+        )
+        if response_result.success:
             results = [
-                GitLabSearchResult(item, self.host_service_id) for item in result
+                GitLabSearchResult(item, self.host_service_id) for item in response_result.response_json
             ]
-        except Exception as e:
-            logger.error(e, exc_info=True)
-            return False, self.api_url, e
-        return True, self.api_url, results
+        else:
+            results = []
+        return response_result, results
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
