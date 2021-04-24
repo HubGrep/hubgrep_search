@@ -34,7 +34,7 @@ class UnknownBackendException(Exception):
 def _get_cache_backend():
     cache_backend_str = app.config["CACHE_BACKEND"]
     if cache_backend_str == None or cache_backend_str.lower() == "none":
-        cache_backend = NoCache
+        cache_backend = NoCache()
 
     elif cache_backend_str == "redis":
         redis_url = app.config["REDIS_URL"]
