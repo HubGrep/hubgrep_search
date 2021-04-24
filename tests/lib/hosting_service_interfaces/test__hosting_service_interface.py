@@ -19,6 +19,6 @@ class TestHostingServiceInterface:
                 cached_session=cached_session,
                 timeout=2,
             )
-            headers = base_hosting_service_interface.requests.headers
+            headers = base_hosting_service_interface.cached_session.headers
             assert "referer" in headers.keys()
             assert headers["referer"].startswith("HubGrep v")

@@ -1,20 +1,21 @@
+import requests
 from unittest.mock import Mock
 
 from hubgrep.lib.hosting_service_interfaces.github import (
     GitHubSearch,
     GitHubSearchResult,
 )
+from hubgrep.lib.cached_session.cached_session import CachedSession
+from hubgrep.lib.cached_session.caches.no_cache import NoCache
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 # nice examples for requests mocking:
 # https://realpython.com/python-mock-library/
 
 
 class TestGithub:
-    def get_mocked_response(self):
-        response_mock = Mock()
-        response_mock.status_code = 200
-        response_mock.ok = True
-        response_mock.json.return_value = dict(
+    def get_cached_response(self):
+        response_json = dict(
             items=[
                 dict(
                     name="name",
@@ -31,27 +32,36 @@ class TestGithub:
                 ),
             ]
         )
-        return response_mock
+
+        cached_response = CachedResponse(
+            url="api_url",
+            success=True,
+            status_code=200,
+            response_json=response_json,
+            error_msg="",
+        )
+        return cached_response
 
     def test_search(self, test_app):
         with test_app.app_context():
+            cached_session = CachedSession(session=requests.Session(), cache=NoCache())
             github_search = GitHubSearch(
                 "host_service_id",
                 "api_url",
+                cached_session=cached_session,
                 timeout=2
             )
-            github_search.requests = Mock()
-            github_search.requests.get.return_value = self.get_mocked_response()
+            github_search.cached_session = Mock()
+            github_search.cached_session.get.return_value = self.get_cached_response()
 
-            success, api_url, results_or_error = github_search.search("")
+            cached_response, results = github_search.search("")
 
-            if not success:
-                raise results_or_error
+            if not cached_response.success:
+                raise cached_response.error_msg
 
-            results = results_or_error
             result: GitHubSearchResult = results[0]
 
-            assert success is True
-            assert api_url == "api_url"
+            assert cached_response.success is True
+            assert cached_response.url == "api_url"
             assert result.repo_name == "name"
             assert result.created_at_dt.timestamp() == 0

@@ -1,17 +1,14 @@
+import requests
 from unittest.mock import Mock
 
 from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch, GiteaSearchResult
-
-# nice examples for requests mocking:
-# https://realpython.com/python-mock-library/
-
+from hubgrep.lib.cached_session.cached_session import CachedSession
+from hubgrep.lib.cached_session.caches.no_cache import NoCache
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 class TestGitea:
-    def get_mocked_response(self):
-        response_mock = Mock()
-        response_mock.status_code = 200
-        response_mock.ok = True
-        response_mock.json.return_value = dict(
+    def get_cached_response(self):
+        response_json = dict(
             data=[
                 dict(
                     name="name",
@@ -28,23 +25,33 @@ class TestGitea:
                 ),
             ]
         )
-        return response_mock
+
+        cached_response = CachedResponse(
+            url="api_url",
+            success=True,
+            status_code=200,
+            response_json=response_json,
+            error_msg="",
+        )
+        return cached_response
 
     def test_search(self, test_app):
         with test_app.app_context():
-            gitea_search = GiteaSearch("host_service_id", "api_url", timeout=2)
-            gitea_search.requests = Mock()
-            gitea_search.requests.get.return_value = self.get_mocked_response()
+            cached_session = CachedSession(session=requests.Session(), cache=NoCache())
+            gitea_search = GiteaSearch(
+                "host_service_id", "api_url", cached_session=cached_session, timeout=2
+            )
+            gitea_search.cached_session.get = Mock()
+            gitea_search.cached_session.get.return_value = self.get_cached_response()
 
-            success, api_url, results_or_error = gitea_search.search("")
+            cached_response, results = gitea_search.search("")
 
-            if not success:
-                raise results_or_error
+            if not cached_response.success:
+                raise cached_response.error_msg
 
-            results = results_or_error
             result: GiteaSearchResult = results[0]
 
-            assert success is True
-            assert api_url == "api_url"
+            assert cached_response.success is True
+            assert cached_response.url == "api_url"
             assert result.repo_name == "name"
             assert result.created_at_dt.timestamp() == 0
