@@ -33,6 +33,7 @@ def search():
         terms = form.search_phrase.split()
         search_interfaces = get_hosting_service_interfaces()
         results, failed_responses = fetch_concurrently(terms, search_interfaces)
+        external_errors = [response.error_msg for response in failed_responses]
         results = filter_results(results, form)
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))

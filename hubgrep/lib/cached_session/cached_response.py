@@ -4,6 +4,19 @@ import requests
 class CachedResponse:
     """
     wrapper class for cached responses
+
+    url -
+        url this request was made to
+    success -
+        True, if status_code was 2XX
+    status_code -
+        http status code of the response.
+        will be `-1` if an exception was thrown, and we didnt get a status code.
+    response_json -
+        dict from the response json data
+    error_msg -
+        http error message, if we had a response code,
+        otherwise the exception text
     """
     def __init__(self, url, success, status_code, response_json, error_msg):
         self.url = url
@@ -13,6 +26,9 @@ class CachedResponse:
         self.error_msg = error_msg
 
     def serialize(self) -> str:
+        """
+        get serialized version to put in cache
+        """
         d = dict(
             url=self.url,
             success=self.success,
@@ -24,6 +40,9 @@ class CachedResponse:
 
     @staticmethod
     def from_serialized(data: str):
+        """
+        make CachedResponse object from serialized CachedResponse
+        """
         d = json.loads(data)
 
         url = d["url"]

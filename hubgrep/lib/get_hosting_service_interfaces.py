@@ -66,6 +66,7 @@ def get_hosting_service_interfaces():
             api_url=service.api_url,
             **config,
             cached_session=session,
+            timeout=app.config['HOSTING_SERVICE_REQUEST_TIMEOUT']
         )
 
         hosting_service_interfaces[service.api_url] = SearchClass(**args)

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class CachedSession:
     """
     wrapper class for request session,
-    caching results and exceptions
+    caches results and exceptions
     """
     def __init__(self, session: requests.Session, cache: Union[NoCache, RedisCache]):
 
@@ -43,6 +43,7 @@ class CachedSession:
         response_result_str = self.cache.get(key)
         if not response_result_str:
             try:
+                logger.debug(f'request {method}, {url}, {args}, {kwargs}')
                 response = self.session.request(method, url, *args, **kwargs)
                 response_result = CachedResponse.from_response(response)
 
