@@ -1,9 +1,7 @@
-import requests
 from unittest.mock import Mock
 
 from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch, GiteaSearchResult
-from hubgrep.lib.cached_session.cached_session import CachedSession
-from hubgrep.lib.cached_session.caches.no_cache import NoCache
+
 from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 class TestGitea:
@@ -35,9 +33,8 @@ class TestGitea:
         )
         return cached_response
 
-    def test_search(self, test_app):
+    def test_search(self, test_app, cached_session):
         with test_app.app_context():
-            cached_session = CachedSession(session=requests.Session(), cache=NoCache())
             gitea_search = GiteaSearch(
                 "host_service_id", "api_url", cached_session=cached_session, timeout=2
             )

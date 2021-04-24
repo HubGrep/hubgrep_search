@@ -5,8 +5,6 @@ from hubgrep.lib.hosting_service_interfaces.github import (
     GitHubSearch,
     GitHubSearchResult,
 )
-from hubgrep.lib.cached_session.cached_session import CachedSession
-from hubgrep.lib.cached_session.caches.no_cache import NoCache
 from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 # nice examples for requests mocking:
@@ -42,9 +40,8 @@ class TestGithub:
         )
         return cached_response
 
-    def test_search(self, test_app):
+    def test_search(self, test_app, cached_session):
         with test_app.app_context():
-            cached_session = CachedSession(session=requests.Session(), cache=NoCache())
             github_search = GitHubSearch(
                 "host_service_id",
                 "api_url",

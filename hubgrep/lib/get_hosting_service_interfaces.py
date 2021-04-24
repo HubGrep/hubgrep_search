@@ -58,7 +58,7 @@ def get_hosting_service_interfaces():
 
         SearchClass = hosting_service_interfaces_by_name[service.type]
         cache_backend = _get_cache_backend()
-        logger.debug(f"using cache cache backend: {cache_backend}")
+        logger.debug(f"using cache backend: {cache_backend}")
         session = CachedSession(session=requests.Session(), cache=cache_backend)
 
         args = dict(
