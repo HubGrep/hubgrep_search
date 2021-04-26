@@ -10,6 +10,8 @@ from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     SearchResult,
 )
 
+from hubgrep.lib.cached_session.cached_response import CachedResponse
+
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +52,7 @@ def _normalize(results):
 
 def fetch_concurrently(
     keywords, hosting_service_interfaces: List[HostingServiceInterface]
-):
+) -> (List[SearchResult], (HostingServiceInterface, CachedResponse)):
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
@@ -72,13 +74,13 @@ def fetch_concurrently(
         future_timeout = (app.config["HOSTING_SERVICE_REQUEST_TIMEOUT"] * 2) + 1
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
-                cached_response, _results = future.result()
+                hosting_service_interface, cached_response, _results = future.result()
                 if cached_response.success:
                     if _results:
                         _normalize(_results)
                         results += _results
                 else:
-                    failed_responses.append(cached_response)
+                    failed_responses.append((hosting_service_interface, cached_response))
         except futures._base.TimeoutError as e:
             logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)

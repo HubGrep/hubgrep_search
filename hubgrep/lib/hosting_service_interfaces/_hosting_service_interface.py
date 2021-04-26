@@ -13,6 +13,7 @@ from flask import current_app
 from hubgrep.lib.cached_session.cached_session import CachedSession
 from hubgrep.lib.cached_session.cached_response import CachedResponse
 
+
 logger = logging.getLogger(__name__)
 
 utc = pytz.UTC
@@ -20,20 +21,20 @@ utc = pytz.UTC
 
 class SearchResult:
     def __init__(
-            self,
-            host_service_id,
-            repo_name,
-            repo_description,
-            html_url,
-            owner_name,
-            last_commit_dt,
-            created_at_dt,
-            forks,
-            stars,
-            is_fork,
-            is_archived,
-            language=None,
-            license=None,
+        self,
+        host_service_id,
+        repo_name,
+        repo_description,
+        html_url,
+        owner_name,
+        last_commit_dt,
+        created_at_dt,
+        forks,
+        stars,
+        is_fork,
+        is_archived,
+        language=None,
+        license=None,
     ):
         self.host_service_id = host_service_id
         self.repo_name = repo_name
@@ -83,28 +84,33 @@ class SearchResult:
 class HostingServiceInterface:
     name = ""
 
-    def __init__(self,
-                 host_service_id,
-                 api_url,
-                 search_path,
-                 cached_session: CachedSession,
-                 timeout=None,
-                 ):
-
-        # add label or model somehow
+    def __init__(
+        self,
+        host_service_id,
+        api_url,
+        label,
+        search_path,
+        cached_session: CachedSession,
+        timeout=None,
+    ):
 
         self.host_service_id = host_service_id
         self.api_url = api_url
+        self.label = label
         self.request_url = urljoin(self.api_url, search_path)
         self.timeout = timeout
         self.cached_session = cached_session
         self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
-    def search(self, keywords: list = [], tags: dict = {}) -> Union[CachedResponse, List]:
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> ("HostingServiceInterface", CachedResponse, List):
         time_before = time.time()
-        response_result, results = self._search(keywords, tags)
+        hosting_service_interface, response_result, results = self._search(
+            keywords, tags
+        )
         logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
-        return response_result, results
+        return hosting_service_interface, response_result, results
 
     def _search(self, keywords: list, tags: dict):
         raise NotImplementedError

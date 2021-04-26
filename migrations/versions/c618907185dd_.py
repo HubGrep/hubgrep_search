@@ -23,7 +23,7 @@ def upgrade():
     # ### end Alembic commands ###
     session = Session(bind=op.get_bind())
     for service in session.query(HostingService).all():
-        service.label = get_service_label_from_url(service.landingpage_url)
+        service.set_service_label()
     session.commit()
 
 

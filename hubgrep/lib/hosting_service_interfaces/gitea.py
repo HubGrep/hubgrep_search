@@ -127,12 +127,15 @@ class GiteaSearch(HostingServiceInterface):
         self,
         host_service_id,
         api_url,
+        label,
+        config_dict,
         cached_session,
         timeout=None,
     ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
+            label=label,
             search_path="repos/search",
             cached_session=cached_session,
             timeout=timeout,
@@ -140,24 +143,24 @@ class GiteaSearch(HostingServiceInterface):
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> (CachedResponse, List[GiteaSearchResult]):
+    ) -> ("GiteaSearch", CachedResponse, List[GiteaSearchResult]):
 
         params = dict(q="+".join(keywords), **tags)
-        response_result = self.cached_session.get(
+        cached_response = self.cached_session.get(
             self.request_url,
             params=params,
             timeout=self.timeout,
         )
 
-        if response_result.success:
+        if cached_response.success:
             results = [
                 GiteaSearchResult(item, self.host_service_id)
-                for item in response_result.response_json["data"]
+                for item in cached_response.response_json["data"]
             ]
         else:
             results = []
 
-        return response_result, results
+        return self, cached_response, results
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

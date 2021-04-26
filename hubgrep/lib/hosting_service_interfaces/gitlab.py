@@ -72,25 +72,27 @@ class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
     def __init__(
-            self,
-            host_service_id,
-            api_url,
-            api_token,
-            cached_session,
-            timeout=None,
+        self,
+        host_service_id,
+        api_url,
+        label,
+        config_dict,
+        cached_session,
+        timeout=None,
     ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
+            label=label,
             search_path="search",
             cached_session=cached_session,
             timeout=timeout,
         )
-        self.api_token = api_token
+        self.api_token = config_dict["api_token"]
 
     def _search(
-            self, keywords: list = [], tags: dict = {}
-    ) -> (CachedResponse, List[GitLabSearchResult]):
+        self, keywords: list = [], tags: dict = {}
+    ) -> ("GitLabSearch", CachedResponse, List[GitLabSearchResult]):
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
 
@@ -102,11 +104,12 @@ class GitLabSearch(HostingServiceInterface):
         )
         if response_result.success:
             results = [
-                GitLabSearchResult(item, self.host_service_id) for item in response_result.response_json
+                GitLabSearchResult(item, self.host_service_id)
+                for item in response_result.response_json
             ]
         else:
             results = []
-        return response_result, results
+        return self, response_result, results
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

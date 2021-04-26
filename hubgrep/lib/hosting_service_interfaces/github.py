@@ -97,12 +97,15 @@ class GitHubSearch(HostingServiceInterface):
         self,
         host_service_id,
         api_url,
+        label,
+        config_dict,
         cached_session,
         timeout=None,
     ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
+            label=label,
             search_path="search/repositories",
             cached_session=cached_session,
             timeout=timeout,
@@ -110,7 +113,7 @@ class GitHubSearch(HostingServiceInterface):
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> (CachedResponse, List[GitHubSearchResult]):
+    ) -> ("GitHubSearch", CachedResponse, List[GitHubSearchResult]):
 
         params = dict(q="+".join(keywords), **tags)
         response_result = self.cached_session.get(
@@ -125,7 +128,7 @@ class GitHubSearch(HostingServiceInterface):
             ]
         else:
             results = []
-        return response_result, results
+        return self, response_result, results
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

@@ -6,7 +6,7 @@ from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE
 from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.fetch_results import fetch_concurrently
 from hubgrep.lib.filter_results import filter_results
-from hubgrep.lib.get_hosting_service_interfaces import get_hosting_service_interfaces
+from hubgrep.lib.hosting_service_interfaces.get_hosting_service_interfaces import get_hosting_service_interfaces
 from hubgrep.lib.search_form import SearchForm
 from hubgrep.frontend_blueprint import frontend
 
@@ -32,8 +32,7 @@ def search():
     if form.search_phrase:
         terms = form.search_phrase.split()
         search_interfaces = get_hosting_service_interfaces()
-        results, failed_responses = fetch_concurrently(terms, search_interfaces)
-        external_errors = [response.error_msg for response in failed_responses]
+        results, external_errors = fetch_concurrently(terms, search_interfaces)
         results = filter_results(results, form)
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
