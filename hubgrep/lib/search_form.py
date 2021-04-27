@@ -1,7 +1,7 @@
 """
 Value-object for HubGreps main search form.
 
-Note: Not the actual HTML form, which is can be found in -
+Note: Not the actual HTML form, which can be found in -
 'hubgrep/frontend_blueprint/templates/components/search_form/search_form.html'
 """
 import pytz
