@@ -1,3 +1,5 @@
+""" Manage page route. """
+
 from flask import render_template
 from flask import abort
 from flask import flash

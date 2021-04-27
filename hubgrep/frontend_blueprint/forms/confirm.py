@@ -1,3 +1,5 @@
+""" Generic confirm form intended for use by other forms. """
+
 import logging
 from flask_wtf import FlaskForm
 
