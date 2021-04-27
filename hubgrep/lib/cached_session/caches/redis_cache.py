@@ -4,9 +4,7 @@ import redis
 
 
 class RedisCache:
-    """
-    redis cache for CachedSession
-    """
+    """ Redis cache for CachedSession. """
     def __init__(self, redis_url, expire_after):
         self.cache_time = expire_after
         self.redis_client = redis.from_url(redis_url)

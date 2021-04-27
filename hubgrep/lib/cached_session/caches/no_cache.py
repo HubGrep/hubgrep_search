@@ -1,8 +1,6 @@
 
 class NoCache:
-    """
-    dummy cache for CachedSession, doing nothing
-    """
+    """ Dummy cache for CachedSession, doing nothing. """
     def __init__(self):
         pass
 
