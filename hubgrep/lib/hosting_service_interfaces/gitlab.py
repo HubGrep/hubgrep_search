@@ -70,13 +70,13 @@ class GitLabSearch(HostingServiceInterface):
     name = "GitLab"
 
     def __init__(
-            self,
-            host_service_id,
-            api_url,
-            label,
-            config_dict,
-            cached_session,
-            timeout=None,
+        self,
+        host_service_id,
+        api_url,
+        label,
+        config_dict,
+        cached_session,
+        timeout=None,
     ):
         super().__init__(
             host_service_id=host_service_id,

@@ -52,7 +52,7 @@ def _normalize(results):
 
 
 def fetch_concurrently(
-        keywords, hosting_service_interfaces: List[HostingServiceInterface]
+    keywords, hosting_service_interfaces: List[HostingServiceInterface]
 ) -> "AggregatedSearchResults":
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:

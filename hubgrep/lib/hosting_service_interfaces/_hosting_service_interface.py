@@ -20,20 +20,20 @@ utc = pytz.UTC
 
 class SearchResult:
     def __init__(
-            self,
-            host_service_id,
-            repo_name,
-            repo_description,
-            html_url,
-            owner_name,
-            last_commit_dt,
-            created_at_dt,
-            forks,
-            stars,
-            is_fork,
-            is_archived,
-            language=None,
-            license=None,
+        self,
+        host_service_id,
+        repo_name,
+        repo_description,
+        html_url,
+        owner_name,
+        last_commit_dt,
+        created_at_dt,
+        forks,
+        stars,
+        is_fork,
+        is_archived,
+        language=None,
+        license=None,
     ):
         self.host_service_id = host_service_id
         self.repo_name = repo_name
@@ -84,14 +84,14 @@ class HostingServiceInterface:
     name = ""
 
     def __init__(
-            self,
-            host_service_id,
-            api_url,
-            search_path,
-            label,
-            config_dict,
-            cached_session: CachedSession,
-            timeout=None,
+        self,
+        host_service_id,
+        api_url,
+        search_path,
+        label,
+        config_dict,
+        cached_session: CachedSession,
+        timeout=None,
     ):
         self.host_service_id = host_service_id
         self.api_url = api_url
