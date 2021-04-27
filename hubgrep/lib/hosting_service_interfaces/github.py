@@ -1,3 +1,7 @@
+"""
+Hosting-service interface and result-class for Github.
+"""
+
 import logging
 
 from iso8601 import iso8601
@@ -17,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitHubSearchResult(SearchResult):
-    """
+    """ GitHub search result - example response from Github API:
         {
       "id": 3081286,
       "node_id": "MDEwOlJlcG9zaXRvcnkzMDgxMjg2",
@@ -89,6 +93,7 @@ class GitHubSearchResult(SearchResult):
 
 
 class GitHubSearch(HostingServiceInterface):
+    """ Interface for searching via GitHub. """
     name = "GitHub"
 
     # https://developer.github.com/v3/search/#search-repositories

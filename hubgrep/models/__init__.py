@@ -1,3 +1,7 @@
+"""
+HubGrep database models
+"""
+
 from flask_security.models import fsqla_v2 as fsqla
 import enum
 import re

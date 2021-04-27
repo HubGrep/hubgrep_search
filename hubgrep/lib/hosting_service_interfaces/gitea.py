@@ -1,3 +1,7 @@
+"""
+Hosting-service interface and result-class for Gitea.
+"""
+
 import logging
 from typing import List, Union
 from iso8601 import iso8601
@@ -17,7 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 class GiteaSearchResult(SearchResult):
-    """
+    """ Gitea search result - example response from Gitea API:
     {
       "allow_merge_commits": true,
       "allow_rebase": true,
@@ -121,6 +125,7 @@ class GiteaSearchResult(SearchResult):
 
 
 class GiteaSearch(HostingServiceInterface):
+    """ Interface for searching via Gitea. """
     name = "Gitea"
 
     def __init__(

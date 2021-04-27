@@ -1,3 +1,9 @@
+"""
+Value-object for HubGreps main search form.
+
+Note: Not the actual HTML form, which is can be found in -
+'hubgrep/frontend_blueprint/templates/components/search_form/search_form.html'
+"""
 import pytz
 from collections import namedtuple
 from datetime import datetime
@@ -10,6 +16,7 @@ utc = pytz.UTC
 
 
 class SearchForm:
+    """ All Input-fields relate to either a repository property or a hosting-service where they a found. """
     search_phrase: str
     exclude_service_checkboxes: [Checkbox]
     exclude_forks: bool
@@ -31,6 +38,18 @@ class SearchForm:
                  created_after_dt: datetime = None,
                  created_before_dt: datetime = None,
                  updated_after_dt: datetime = None):
+        """
+        :param search_phrase:
+        :param exclude_service_checkboxes:
+        :param exclude_forks:
+        :param exclude_archived:
+        :param created_after:
+        :param created_before:
+        :param updated_after:
+        :param created_after_dt:
+        :param created_before_dt:
+        :param updated_after_dt:
+        """
         self.search_phrase = search_phrase
         self.exclude_service_checkboxes = exclude_service_checkboxes
         self.exclude_forks = exclude_forks
@@ -50,6 +69,7 @@ class SearchForm:
 
     @staticmethod
     def get_request_service_checkboxes() -> {}:
+        """ Create a checkbox for each hosting-service registered on the current HubGrep instance. """
         exclude_service_checkboxes = dict()
         for service in app.config["CACHED_HOSTING_SERVICES"]:
             is_checked = request.args.get("xs{}".format(service.id), False) == "on"
@@ -59,4 +79,5 @@ class SearchForm:
 
     @staticmethod
     def get_form_datetime_in_utc(date: str, date_format: str = DATE_FORMAT):
+        """ Normalize dates to UTC. """
         return utc.localize(datetime.strptime(date, date_format))
