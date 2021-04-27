@@ -1,8 +1,12 @@
+"""
+HubGrep environment configurations.
+"""
 import os
 from hubgrep.constants import HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT
 
 
 class Config:
+    """ Base configuration. """
     # hardcoded config
     DEBUG = False
     TESTING = False
@@ -88,15 +92,18 @@ class _EnvironmentConfig:
 
 
 class ProductionConfig(Config, _EnvironmentConfig):
+    """ Production Configuration. """
     DEBUG = False
 
 
 class DevelopmentConfig(Config, _EnvironmentConfig):
+    """ Development configuration. """
     DEBUG = True
     WATCH_SCSS = True
 
 
 class BuildConfig(Config):
+    """ Build configuration, in bundling and preparation for deployment. """
     TESTING = True
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
@@ -113,6 +120,7 @@ class BuildConfig(Config):
 
 
 class TestingConfig(Config):
+    """ Test configuration, as used by tests. """
     TESTING = True
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
