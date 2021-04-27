@@ -1,12 +1,11 @@
 import pytest
-from hubgrep.lib.get_hosting_service_interfaces import (
+from hubgrep.lib.hosting_service_interfaces.get_hosting_service_interfaces import (
     get_hosting_service_interfaces,
     _get_cache_backend,
     UnknownBackendException,
 )
 
 from hubgrep.lib.cached_session.caches.no_cache import NoCache
-from hubgrep.lib.cached_session.caches.redis_cache import RedisCache
 
 
 class TestGetHostingServices:

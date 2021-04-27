@@ -2,11 +2,9 @@ import logging
 
 from iso8601 import iso8601
 
-from typing import List, Union
-
-from hubgrep.lib.cached_session.cached_response import CachedResponse
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResult,
     SearchResult,
 )
 
@@ -106,6 +104,7 @@ class GitHubSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
+            config_dict=config_dict,
             search_path="search/repositories",
             cached_session=cached_session,
             timeout=timeout,
@@ -113,22 +112,23 @@ class GitHubSearch(HostingServiceInterface):
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> ("GitHubSearch", CachedResponse, List[GitHubSearchResult]):
+    ) -> HostingServiceInterfaceResult:
 
         params = dict(q="+".join(keywords), **tags)
-        response_result = self.cached_session.get(
+        response = self.cached_session.get(
             self.request_url,
             params=params,
+            headers=self._get_request_headers(),
             timeout=self.timeout,
         )
-        if response_result.success:
+        if response.success:
             results = [
                 GitHubSearchResult(item, self.host_service_id)
-                for item in response_result.response_json["items"]
+                for item in response.response_json["items"]
             ]
         else:
             results = []
-        return self, response_result, results
+        return HostingServiceInterfaceResult(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

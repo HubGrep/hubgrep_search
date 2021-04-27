@@ -13,6 +13,8 @@ class TestHostingServiceInterface:
                 "host_service_id",
                 "base_url",
                 "search_path",
+                "a label",
+                dict(),
                 cached_session=cached_session,
                 timeout=2,
             )

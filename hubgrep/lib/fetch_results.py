@@ -7,11 +7,11 @@ from flask import current_app as app
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResult,
     SearchResult,
 )
 
 from hubgrep.lib.cached_session.cached_response import CachedResponse
-
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,7 @@ def final_sort(keywords, results):
     """
     order results based on normalized score and best text match
     """
+
     # https://stackoverflow.com/questions/17903706/how-to-sort-list-of-strings-by-best-match-difflib-ratio
     def _key(result: SearchResult):
         key = result.repo_name + " " + result.repo_description
@@ -51,8 +52,8 @@ def _normalize(results):
 
 
 def fetch_concurrently(
-    keywords, hosting_service_interfaces: List[HostingServiceInterface]
-) -> (List[SearchResult], (HostingServiceInterface, CachedResponse)):
+        keywords, hosting_service_interfaces: List[HostingServiceInterface]
+) -> "AggregatedSearchResults":
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
@@ -74,17 +75,35 @@ def fetch_concurrently(
         future_timeout = (app.config["HOSTING_SERVICE_REQUEST_TIMEOUT"] * 2) + 1
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
-                hosting_service_interface, cached_response, _results = future.result()
-                if cached_response.success:
-                    if _results:
-                        _normalize(_results)
-                        results += _results
+                interface_result = future.result()
+                if interface_result.response.success:
+                    if len(interface_result.search_results) > 0:
+                        _normalize(interface_result.search_results)
+                        results += interface_result.search_results
                 else:
-                    failed_responses.append((hosting_service_interface, cached_response))
+                    failed_responses.append(FailedSearchResult(hosting_service_interface, interface_result.response))
         except futures._base.TimeoutError as e:
             logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
         if failed_responses:
-            logger.warn(f"got some errors: {failed_responses}")
+            logger.warning(f"got some errors: {failed_responses}")
         results = final_sort(keywords, results)
-        return results, failed_responses
+        return AggregatedSearchResults(results, failed_responses)
+
+
+class FailedSearchResult:
+    hosting_service_interface: HostingServiceInterface
+    response: CachedResponse
+
+    def __init__(self, hosting_service_interface: HostingServiceInterface, response: CachedResponse):
+        self.hosting_service_interface = hosting_service_interface
+        self.response = response
+
+
+class AggregatedSearchResults:
+    search_results: List[SearchResult]
+    failed_responses: List[FailedSearchResult]
+
+    def __init__(self, search_results: List[SearchResult], failed_responses: List[FailedSearchResult]):
+        self.search_results = search_results
+        self.failed_responses = failed_responses
