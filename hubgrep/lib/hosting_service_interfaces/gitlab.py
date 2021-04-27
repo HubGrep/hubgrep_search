@@ -1,3 +1,7 @@
+"""
+Hosting-service interface and result-class for Gitlab.
+"""
+
 import logging
 from iso8601 import iso8601
 from urllib.parse import urljoin
@@ -12,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitLabSearchResult(SearchResult):
-    """
+    """ GitLab search result - example response from GitLab API:
     {
       "id": 6,
       "description": "Nobis sed ipsam vero quod cupiditate veritatis hic.",
@@ -67,6 +71,7 @@ class GitLabSearchResult(SearchResult):
 
 
 class GitLabSearch(HostingServiceInterface):
+    """ Interface for searching via GitLab. """
     name = "GitLab"
 
     def __init__(

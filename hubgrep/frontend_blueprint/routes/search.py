@@ -1,3 +1,5 @@
+""" Search page route. """
+
 from flask import render_template
 from flask import current_app as app
 from flask import request

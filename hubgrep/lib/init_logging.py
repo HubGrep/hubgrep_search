@@ -1,3 +1,5 @@
+""" Logging initialization with defaults. """
+
 from logging.config import dictConfig
 
 

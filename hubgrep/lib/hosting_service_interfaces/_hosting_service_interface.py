@@ -1,3 +1,7 @@
+"""
+Base-classes for search results and hosting-service interfaces.
+"""
+
 import logging
 import time
 
@@ -19,6 +23,7 @@ utc = pytz.UTC
 
 
 class SearchResult:
+    """ A single repository result as retrieved by all hosting-service interfaces """
     def __init__(
         self,
         host_service_id,
@@ -81,6 +86,7 @@ class SearchResult:
 
 
 class HostingServiceInterface:
+    """ Hosting-service interface base-class. """
     name = ""
 
     def __init__(

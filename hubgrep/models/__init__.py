@@ -1,4 +1,11 @@
+"""
+HubGrep database models
+"""
+
 import json
+
+from flask_security.models import fsqla_v2 as fsqla
+
 import enum
 import re
 import logging
