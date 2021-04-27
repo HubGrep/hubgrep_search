@@ -115,8 +115,9 @@ class GitLabSearch(HostingServiceInterface):
 
     def _get_request_headers(self):
         headers = super()._get_request_headers()
-        if "api_token" in self.config_dict:
+        if "api_token" in self.config_dict.keys():
             headers["PRIVATE-TOKEN"] = self.config_dict["api_token"]
         else:
             logger.warning(
                 f"setting GITLAB headers without PRIVATE-TOKEN - Config: {self.config_dict} - Headers: {headers}")
+        return headers
