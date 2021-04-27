@@ -1,3 +1,4 @@
+""" HubGrep constants """
 
 # app
 APP_ENV_BUILD = "build"

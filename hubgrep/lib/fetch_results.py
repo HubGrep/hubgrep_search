@@ -1,3 +1,7 @@
+"""
+Retrieve and aggregate repository results.
+"""
+
 import logging
 import difflib
 from concurrent import futures
@@ -15,9 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def final_sort(keywords, results):
-    """
-    order results based on normalized score and best text match
-    """
+    """ Order results based on normalized score and best text match. """
     # https://stackoverflow.com/questions/17903706/how-to-sort-list-of-strings-by-best-match-difflib-ratio
     def _key(result: SearchResult):
         key = result.repo_name + " " + result.repo_description
@@ -31,7 +33,7 @@ def final_sort(keywords, results):
 
 def _normalize(results):
     """
-    normalize fork count of the results of a service
+    Normalize fork count of the results of a service.
 
     # todo: last commit, age, stars...?
     # what about a "group" of forks?
@@ -51,6 +53,7 @@ def _normalize(results):
 def fetch_concurrently(
     keywords, hosting_service_interfaces: List[HostingServiceInterface]
 ):
+    """ Asynchronously retrieve and aggregate results from external hosting-services. """
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []

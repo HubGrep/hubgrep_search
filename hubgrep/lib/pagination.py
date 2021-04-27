@@ -1,3 +1,4 @@
+""" Create pagination objects (PageLink) used in templating. """
 import math
 from typing import List
 from collections import namedtuple

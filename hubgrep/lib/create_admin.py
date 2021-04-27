@@ -4,6 +4,7 @@ from flask_security import hash_password
 from hubgrep import db
 
 def create_admin(admin_email, admin_password):
+    """ Create a database admin user with username (from email) and password. """
     admin = security.datastore.find_user(email=admin_email)
     if not admin:
         admin = security.datastore.create_user(

@@ -1,9 +1,11 @@
+""" Form value-object classes and validation functions for editing hosting services. """
+
 import json
 import logging
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextField, TextAreaField
+from wtforms import StringField, SelectField, TextAreaField
 from wtforms.widgets.html5 import URLInput
-from wtforms.validators import DataRequired, ValidationError, URL
+from wtforms.validators import ValidationError, URL
 from wtforms.validators import InputRequired
 
 from hubgrep.lib.get_hosting_service_interfaces import hosting_service_interfaces_by_name
@@ -13,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 def validate_config(form, field):
+    """ Validate the config field to adhere to JSON syntax. """
     if not field.data:
         field.data = "{}"
     try:
@@ -28,6 +31,7 @@ def validate_config(form, field):
             )
 
 def validate_url(form, field):
+    """ Validate URLs. """
     HostingServiceInterface = hosting_service_interfaces_by_name.get(form.type.data, False)
     if not HostingServiceInterface:
         raise ValidationError("invalid hosting service interface!")
@@ -35,10 +39,7 @@ def validate_url(form, field):
 
 
 class HostingServiceFirstStep(FlaskForm):
-    """
-    only get type and landingpage from user,
-    we want to figure out the rest to prefill step 2
-    """
+    """ Only get type and landingpage from the user, the rest we automatically resolve to pre-fill in step 2. """
     type = SelectField(
         u"Type",
         [InputRequired()],
@@ -59,10 +60,7 @@ class HostingServiceFirstStep(FlaskForm):
     )
 
 class HostingServiceForm(HostingServiceFirstStep):
-    """
-    final step in adding new hosters,
-    also form for editing hosters
-    """
+    """ Final step when adding a new hosting-service, doubling as the form used for editing hosting-services. """
     api_url = StringField("Api Url", [InputRequired(), URL(), validate_url], widget=URLInput())
     config = TextAreaField("Config", [validate_config])
 
