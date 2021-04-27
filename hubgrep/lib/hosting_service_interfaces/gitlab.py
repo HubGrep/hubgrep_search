@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
-    HostingServiceInterfaceResult,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
@@ -90,7 +90,7 @@ class GitLabSearch(HostingServiceInterface):
 
     def _search(
             self, keywords: list = [], tags: dict = {}
-    ) -> HostingServiceInterfaceResult:
+    ) -> HostingServiceInterfaceResponse:
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
 
@@ -107,7 +107,7 @@ class GitLabSearch(HostingServiceInterface):
             ]
         else:
             results = []
-        return HostingServiceInterfaceResult(self, response, results)
+        return HostingServiceInterfaceResponse(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

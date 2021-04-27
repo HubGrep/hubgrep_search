@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import HostingServiceInterfaceResult
+from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import HostingServiceInterfaceResponse
 from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch, GiteaSearchResult
 
 from hubgrep.lib.cached_session.cached_response import CachedResponse

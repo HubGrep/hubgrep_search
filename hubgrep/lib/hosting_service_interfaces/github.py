@@ -4,7 +4,7 @@ from iso8601 import iso8601
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
-    HostingServiceInterfaceResult,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
@@ -112,7 +112,7 @@ class GitHubSearch(HostingServiceInterface):
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> HostingServiceInterfaceResult:
+    ) -> HostingServiceInterfaceResponse:
 
         params = dict(q="+".join(keywords), **tags)
         response = self.cached_session.get(
@@ -128,7 +128,7 @@ class GitHubSearch(HostingServiceInterface):
             ]
         else:
             results = []
-        return HostingServiceInterfaceResult(self, response, results)
+        return HostingServiceInterfaceResponse(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

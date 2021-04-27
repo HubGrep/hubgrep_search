@@ -7,7 +7,7 @@ from flask import current_app as app
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
-    HostingServiceInterfaceResult,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
@@ -76,14 +76,12 @@ def fetch_concurrently(
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
                 interface_result = future.result()
-                if interface_result.response.success:
+                if interface_result.succeeded:
                     if len(interface_result.search_results) > 0:
                         _normalize(interface_result.search_results)
                         results += interface_result.search_results
                 else:
-                    failed_responses.append(
-                        FailedSearchResult(interface_result.hosting_service_interface, interface_result.response)
-                    )
+                    failed_responses.append(interface_result)
         except futures._base.TimeoutError as e:
             logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
@@ -93,19 +91,11 @@ def fetch_concurrently(
         return AggregatedSearchResults(results, failed_responses)
 
 
-class FailedSearchResult:
-    hosting_service_interface: HostingServiceInterface
-    response: CachedResponse
-
-    def __init__(self, hosting_service_interface: HostingServiceInterface, response: CachedResponse):
-        self.hosting_service_interface = hosting_service_interface
-        self.response = response
-
 
 class AggregatedSearchResults:
     search_results: List[SearchResult]
-    failed_requests: List[FailedSearchResult]
+    failed_requests: List[HostingServiceInterfaceResponse]
 
-    def __init__(self, search_results: List[SearchResult], failed_requests: List[FailedSearchResult]):
+    def __init__(self, search_results: List[SearchResult], failed_requests: List[HostingServiceInterfaceResponse]):
         self.search_results = search_results
         self.failed_requests = failed_requests

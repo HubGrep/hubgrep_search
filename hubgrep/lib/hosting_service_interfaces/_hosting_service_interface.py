@@ -128,7 +128,7 @@ class HostingServiceInterface:
         return response.url
 
 
-class HostingServiceInterfaceResult:
+class HostingServiceInterfaceResponse:
     hosting_service_interface: HostingServiceInterface
     response: CachedResponse
     search_results: List[SearchResult]
@@ -137,6 +137,10 @@ class HostingServiceInterfaceResult:
                  hosting_service_interface: HostingServiceInterface,
                  response: CachedResponse,
                  search_results: List[SearchResult]):
-        self.hosting_service = hosting_service_interface
+        self.hosting_service_interface = hosting_service_interface
         self.response = response
         self.search_results = search_results
+
+    @property
+    def succeeded(self):
+        return self.response.success
