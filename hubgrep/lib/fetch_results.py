@@ -81,7 +81,9 @@ def fetch_concurrently(
                         _normalize(interface_result.search_results)
                         results += interface_result.search_results
                 else:
-                    failed_responses.append(FailedSearchResult(hosting_service_interface, interface_result.response))
+                    failed_responses.append(
+                        FailedSearchResult(interface_result.hosting_service_interface, interface_result.response)
+                    )
         except futures._base.TimeoutError as e:
             logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
