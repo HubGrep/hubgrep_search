@@ -27,14 +27,14 @@ def search():
                       created_before=request.args.get("cb", ""),
                       updated_after=request.args.get("ua", ""))
     search_feedback = ""
-    failed_responses = []
+    failed_requests = []
     pagination_links = []
     if form.search_phrase:
         terms = form.search_phrase.split()
         search_interfaces = get_hosting_service_interfaces()
         aggregated_result = fetch_concurrently(terms, search_interfaces)
         results = filter_results(aggregated_result.search_results, form)
-        failed_responses = aggregated_result.failed_responses
+        failed_requests = aggregated_result.failed_requests
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
         search_feedback = get_search_feedback(len(results))
@@ -45,7 +45,7 @@ def search():
                            search_results=results_paginated,
                            search_feedback=search_feedback,
                            pagination_links=pagination_links,  # [PageLink] namedtuples
-                           failed_responses=failed_responses)  # TODO these errors should be formatted to text that is useful for a enduser
+                           failed_requests=failed_requests)  # TODO these errors should be formatted to text that is useful for a enduser
 
 
 def get_search_feedback(results_total: int) -> str:

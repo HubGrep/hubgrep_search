@@ -102,8 +102,8 @@ class FailedSearchResult:
 
 class AggregatedSearchResults:
     search_results: List[SearchResult]
-    failed_responses: List[FailedSearchResult]
+    failed_requests: List[FailedSearchResult]
 
-    def __init__(self, search_results: List[SearchResult], failed_responses: List[FailedSearchResult]):
+    def __init__(self, search_results: List[SearchResult], failed_requests: List[FailedSearchResult]):
         self.search_results = search_results
-        self.failed_responses = failed_responses
+        self.failed_requests = failed_requests
