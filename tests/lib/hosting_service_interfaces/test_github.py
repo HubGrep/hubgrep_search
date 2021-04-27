@@ -45,20 +45,22 @@ class TestGithub:
             github_search = GitHubSearch(
                 "host_service_id",
                 "api_url",
+                "a label",
+                dict(),
                 cached_session=cached_session,
                 timeout=2
             )
             github_search.cached_session = Mock()
             github_search.cached_session.get.return_value = self.get_cached_response()
 
-            cached_response, results = github_search.search("")
+            interface_result = github_search.search("")
 
-            if not cached_response.success:
-                raise cached_response.error_msg
+            if not interface_result.response.success:
+                raise Exception(interface_result.response.error_msg)
 
-            result: GitHubSearchResult = results[0]
+            result = interface_result.search_results[0]
 
-            assert cached_response.success is True
-            assert cached_response.url == "api_url"
+            assert interface_result.response.success is True
+            assert interface_result.response.url == "api_url"
             assert result.repo_name == "name"
             assert result.created_at_dt.timestamp() == 0

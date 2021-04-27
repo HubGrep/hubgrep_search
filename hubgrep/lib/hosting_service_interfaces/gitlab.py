@@ -2,11 +2,9 @@ import logging
 from iso8601 import iso8601
 from urllib.parse import urljoin
 
-from typing import List, Union
-
-from hubgrep.lib.cached_session.cached_response import CachedResponse
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResult,
     SearchResult,
 )
 
@@ -84,33 +82,41 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
+            config_dict=config_dict,
             search_path="search",
             cached_session=cached_session,
             timeout=timeout,
         )
-        self.api_token = config_dict["api_token"]
 
     def _search(
-        self, keywords: list = [], tags: dict = {}
-    ) -> ("GitLabSearch", CachedResponse, List[GitLabSearchResult]):
+            self, keywords: list = [], tags: dict = {}
+    ) -> HostingServiceInterfaceResult:
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
 
-        response_result = self.cached_session.get(
+        response = self.cached_session.get(
             self.request_url,
             params=params,
-            headers={"PRIVATE-TOKEN": self.api_token},
+            headers=self._get_request_headers(),
             timeout=self.timeout,
         )
-        if response_result.success:
+        if response.success:
             results = [
                 GitLabSearchResult(item, self.host_service_id)
-                for item in response_result.response_json
+                for item in response.response_json
             ]
         else:
             results = []
-        return self, response_result, results
+        return HostingServiceInterfaceResult(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
         return urljoin(landingpage_url, "/api/v4/")
+
+    def _get_request_headers(self):
+        headers = super()._get_request_headers()
+        if "api_token" in self.config_dict:
+            headers["PRIVATE-TOKEN"] = self.config_dict["api_token"]
+        else:
+            logger.warning(
+                f"setting GITLAB headers without PRIVATE-TOKEN - Config: {self.config_dict} - Headers: {headers}")

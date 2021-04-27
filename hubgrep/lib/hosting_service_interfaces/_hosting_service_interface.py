@@ -7,12 +7,11 @@ import requests
 import pytz
 
 from urllib.parse import urljoin
-from typing import Union, List
+from typing import List
 
 from flask import current_app
 from hubgrep.lib.cached_session.cached_session import CachedSession
 from hubgrep.lib.cached_session.cached_response import CachedResponse
-
 
 logger = logging.getLogger(__name__)
 
@@ -88,32 +87,36 @@ class HostingServiceInterface:
         self,
         host_service_id,
         api_url,
-        label,
         search_path,
+        label,
+        config_dict,
         cached_session: CachedSession,
         timeout=None,
     ):
-
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.label = label
+        self.config_dict = config_dict
         self.request_url = urljoin(self.api_url, search_path)
         self.timeout = timeout
         self.cached_session = cached_session
         self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
     def search(
-        self, keywords: list = [], tags: dict = {}
-    ) -> ("HostingServiceInterface", CachedResponse, List):
+            self, keywords: list = [], tags: dict = {}
+    ) -> "HostingServiceInterfaceResult":
         time_before = time.time()
-        hosting_service_interface, response_result, results = self._search(
+        hosting_service_interface_result = self._search(
             keywords, tags
         )
         logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
-        return hosting_service_interface, response_result, results
+        return hosting_service_interface_result
 
-    def _search(self, keywords: list, tags: dict):
+    def _search(self, keywords: list, tags: dict) -> "HostingServiceInterfaceResult":
         raise NotImplementedError
+
+    def _get_request_headers(self) -> dict:
+        return dict()
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
@@ -123,3 +126,17 @@ class HostingServiceInterface:
     def normalize_url(url):
         response = requests.head(url)
         return response.url
+
+
+class HostingServiceInterfaceResult:
+    hosting_service_interface: HostingServiceInterface
+    response: CachedResponse
+    search_results: List[SearchResult]
+
+    def __init__(self,
+                 hosting_service_interface: HostingServiceInterface,
+                 response: CachedResponse,
+                 search_results: List[SearchResult]):
+        self.hosting_service = hosting_service_interface
+        self.response = response
+        self.search_results = search_results
