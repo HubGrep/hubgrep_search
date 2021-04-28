@@ -17,7 +17,16 @@
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
                 {% for failure in failed_requests %}
-                    {{ status.message("warn", failure.hosting_service_interface.label ~ ": " ~ failure.response.error_msg , "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
+                    {% if failure.response.status_code == -1 %}
+                        {% set status_code = "took too long" %}
+                    {% else %}
+                        {% set status_code = failure.response.status_code %}
+                    {% endif %}
+                    {% set suffix = "." %}
+                    {% if current_user.has_role('admin') %}
+                        {% set suffix = " " ~ failure.response.error_msg %}
+                    {% endif %}
+                    {{ status.message("warn", "There was a problem retrieving results from " ~ failure.hosting_service_interface.label ~ " - " ~ status_code ~ suffix) }}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>
