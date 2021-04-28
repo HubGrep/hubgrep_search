@@ -32,6 +32,8 @@ function bumpversion() {
         "--dry-run")
             dry_run="--dry-run --allow-dirty"
             ;;
+        "")
+            ;;
         *)
             echo "unknown argument $dry_run_arg"
             exit 1
