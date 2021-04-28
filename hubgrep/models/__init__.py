@@ -61,7 +61,7 @@ class HostingService(db.Model):
     label = db.Column(db.String(80))
 
     def set_service_label(self):
-        self.label = re.split("//", self.api_url)[1].rstrip("/")
+        self.label = re.split("//", self.landingpage_url)[1].rstrip("/")
 
     def get_hosting_service_interface(self, cached_session: 'CachedSession', timeout: int) -> "HostingServiceInterface":
         config_str = self.config
