@@ -3,14 +3,12 @@ Hosting-service interface and result-class for Gitea.
 """
 
 import logging
-from typing import List, Union
 from iso8601 import iso8601
 from urllib.parse import urljoin
 
-
-from hubgrep.lib.cached_session.cached_response import CachedResponse
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
@@ -132,12 +130,16 @@ class GiteaSearch(HostingServiceInterface):
         self,
         host_service_id,
         api_url,
+        label,
+        config_dict,
         cached_session,
         timeout=None,
     ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
+            label=label,
+            config_dict=config_dict,
             search_path="repos/search",
             cached_session=cached_session,
             timeout=timeout,
@@ -145,24 +147,25 @@ class GiteaSearch(HostingServiceInterface):
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> (CachedResponse, List[GiteaSearchResult]):
+    ) -> HostingServiceInterfaceResponse:
 
         params = dict(q="+".join(keywords), **tags)
-        response_result = self.cached_session.get(
+        response = self.cached_session.get(
             self.request_url,
             params=params,
+            headers=self._get_request_headers(),
             timeout=self.timeout,
         )
 
-        if response_result.success:
+        if response.success:
             results = [
                 GiteaSearchResult(item, self.host_service_id)
-                for item in response_result.response_json["data"]
+                for item in response.response_json["data"]
             ]
         else:
             results = []
 
-        return response_result, results
+        return HostingServiceInterfaceResponse(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

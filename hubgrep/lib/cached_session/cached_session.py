@@ -58,7 +58,7 @@ class CachedSession:
             response_result = CachedResponse.from_serialized(response_result_str)
             return response_result
 
-    def get(self, url, *args, **kwargs):
+    def get(self, url, *args, **kwargs) -> CachedResponse:
         return self.request('get', url, *args, **kwargs)
 
     @property

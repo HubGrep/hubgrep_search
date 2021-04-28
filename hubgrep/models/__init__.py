@@ -2,21 +2,34 @@
 HubGrep database models
 """
 
+import json
+
 from flask_security.models import fsqla_v2 as fsqla
+
 import enum
 import re
+import logging
+
+from flask_security.models import fsqla_v2 as fsqla
+from requests import Session
+
 from hubgrep import db
+from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
+from hubgrep.lib.cached_session.cached_session import CachedSession
+
+logger = logging.getLogger(__name__)
 
 
 # Define models
 fsqla.FsModels.set_db_info(db)
 
+
 class Role(db.Model, fsqla.FsRoleMixin):
     pass
 
+
 class User(db.Model, fsqla.FsUserMixin):
     pass
-
 
 
 # todo
@@ -26,16 +39,11 @@ class HosterType(enum.Enum):
     gitea = 2
 
 
-def get_service_label_from_url(url):
-    return re.split("//", url)[1].rstrip('/')
-
 class HostingService(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
-        nullable=False)
-    user = db.relationship('User',
-        backref=db.backref('hosting_services', lazy=True))
+
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
+    user = db.relationship("User", backref=db.backref("hosting_services", lazy=True))
 
     type = db.Column(db.String(80), nullable=False)
 
@@ -46,8 +54,27 @@ class HostingService(db.Model):
     # api keys for a backend?
     api_url = db.Column(db.String(500), unique=True, nullable=False)
 
+    # individual config for a specific service (eg. api-key)
     # could be json, but thats only supported for postgres
     config = db.Column(db.Text)
 
     # frontend label
     label = db.Column(db.String(80))
+
+    def set_service_label(self):
+        self.label = re.split("//", self.api_url)[1].rstrip("/")
+
+    def get_hosting_service_interface(self, cached_session: 'CachedSession', timeout: int):
+        config_str = self.config
+        config = json.loads(config_str)
+
+        HostingInterfaceClass = hosting_service_interface_mapping[self.type]
+        hosting_service_interface = HostingInterfaceClass(
+            self.id,
+            self.api_url,
+            self.label,
+            config,
+            cached_session,
+            timeout,
+        )
+        return hosting_service_interface

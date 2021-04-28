@@ -39,21 +39,22 @@ class TestGitlab:
             gitlab_search = GitLabSearch(
                 "host_service_id",
                 "api_url",
-                "api_token",
+                "a label",
+                dict(),
                 cached_session=cached_session,
                 timeout=2,
             )
             gitlab_search.cached_session = Mock()
             gitlab_search.cached_session.get.return_value = self.get_cached_response()
 
-            cached_response, results = gitlab_search.search("")
+            interface_result = gitlab_search.search("")
 
-            if not cached_response.success:
-                raise cached_response.error_msg
+            if not interface_result.response.success:
+                raise Exception(interface_result.response.error_msg)
 
-            result: GitLabSearchResult = results[0]
+            result = interface_result.search_results[0]
 
-            assert cached_response.success is True
-            assert cached_response.url == "api_url"
+            assert interface_result.response.success is True
+            assert interface_result.response.url == "api_url"
             assert result.repo_name == "name"
             assert result.created_at_dt.timestamp() == 0

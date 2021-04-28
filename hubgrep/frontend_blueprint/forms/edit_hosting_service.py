@@ -8,8 +8,7 @@ from wtforms.widgets.html5 import URLInput
 from wtforms.validators import ValidationError, URL
 from wtforms.validators import InputRequired
 
-from hubgrep.lib.get_hosting_service_interfaces import hosting_service_interfaces_by_name
-
+from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 
 logger = logging.getLogger(__name__)
 
@@ -31,8 +30,8 @@ def validate_config(form, field):
             )
 
 def validate_url(form, field):
+    HostingServiceInterface = hosting_service_interface_mapping.get(form.type.data, False)
     """ Validate URLs. """
-    HostingServiceInterface = hosting_service_interfaces_by_name.get(form.type.data, False)
     if not HostingServiceInterface:
         raise ValidationError("invalid hosting service interface!")
     field.data = HostingServiceInterface.normalize_url(field.data)
@@ -65,7 +64,7 @@ class HostingServiceForm(HostingServiceFirstStep):
     config = TextAreaField("Config", [validate_config])
 
     def populate_api_url(self):
-        HostingServiceInterface = hosting_service_interfaces_by_name.get(self.type.data, False)
+        HostingServiceInterface = hosting_service_interface_mapping.get(self.type.data, False)
         if not HostingServiceInterface:
             logger.error('hosting interface for "{form.type.data}" not found!')
             return

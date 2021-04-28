@@ -4,7 +4,7 @@ import json
 from hubgrep.cli_blueprint import cli_bp
 
 from hubgrep import db, security
-from hubgrep.models import HostingService, get_service_label_from_url
+from hubgrep.models import HostingService
 
 @cli_bp.cli.command()
 @click.argument("type", type=click.STRING)
@@ -25,8 +25,8 @@ def add_hoster(type, api_url, landingpage_url, config):
     # todo: validate
     h.api_url = api_url
     h.landingpage_url = landingpage_url
-    h.label = get_service_label_from_url(landingpage_url)
     h.config = config
+    h.set_service_label()
 
     print(f"adding {h.api_url}")
 

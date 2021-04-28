@@ -11,9 +11,11 @@ from flask import current_app as app
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +54,7 @@ def _normalize(results):
 
 def fetch_concurrently(
     keywords, hosting_service_interfaces: List[HostingServiceInterface]
-):
+) -> "AggregatedSearchResults":
     """ Asynchronously retrieve and aggregate results from external hosting-services. """
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
@@ -75,17 +77,27 @@ def fetch_concurrently(
         future_timeout = (app.config["HOSTING_SERVICE_REQUEST_TIMEOUT"] * 2) + 1
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
-                cached_response, _results = future.result()
-                if cached_response.success:
-                    if _results:
-                        _normalize(_results)
-                        results += _results
+                interface_result = future.result()
+                if interface_result.succeeded:
+                    if len(interface_result.search_results) > 0:
+                        _normalize(interface_result.search_results)
+                        results += interface_result.search_results
                 else:
-                    failed_responses.append(cached_response)
+                    failed_responses.append(interface_result)
         except futures._base.TimeoutError as e:
             logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
         if failed_responses:
-            logger.warn(f"got some errors: {failed_responses}")
+            logger.warning(f"got some errors: {failed_responses}")
         results = final_sort(keywords, results)
-        return results, failed_responses
+        return AggregatedSearchResults(results, failed_responses)
+
+
+
+class AggregatedSearchResults:
+    search_results: List[SearchResult]
+    failed_requests: List[HostingServiceInterfaceResponse]
+
+    def __init__(self, search_results: List[SearchResult], failed_requests: List[HostingServiceInterfaceResponse]):
+        self.search_results = search_results
+        self.failed_requests = failed_requests
