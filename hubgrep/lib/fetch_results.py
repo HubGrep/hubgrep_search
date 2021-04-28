@@ -95,6 +95,7 @@ def fetch_concurrently(
 
 
 class AggregatedSearchResults:
+    """ Aggregated search results and failures from hosting-service interfaces. """
     search_results: List[SearchResult]
     failed_requests: List[HostingServiceInterfaceResponse]
 

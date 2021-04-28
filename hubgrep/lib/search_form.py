@@ -44,7 +44,7 @@ class SearchForm:
         :param search_phrase: free text used for searching
         :param exclude_service_checkboxes: a list of "Checkbox" tuples
         :param exclude_forks: bool - removes forks form results
-        :param exclude_archived: bool -removes archived repositories from results
+        :param exclude_archived: bool - removes archived repositories from results
         :param created_after: string - results have to be created after this date
         :param created_before: string - results have to be created before this date
         :param updated_after: string - only include results that have been updated after this date

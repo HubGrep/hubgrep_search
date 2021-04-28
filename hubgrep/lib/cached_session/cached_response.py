@@ -1,10 +1,13 @@
-import json
+"""
+A CachedResponse is a wrapper for requests.Response, for serialization and caching.
+"""
 
+import json
 import requests
 
 class CachedResponse:
     """
-    wrapper class for cached responses
+    Wrapper class for cached responses.
 
     url -
         url this request was made to
@@ -27,9 +30,7 @@ class CachedResponse:
         self.error_msg = error_msg
 
     def serialize(self) -> str:
-        """
-        get serialized version to put in cache
-        """
+        """ Serialize this CachedResponse. """
         d = dict(
             url=self.url,
             success=self.success,
@@ -40,10 +41,8 @@ class CachedResponse:
         return json.dumps(d)
 
     @staticmethod
-    def from_serialized(data: str):
-        """
-        make CachedResponse object from serialized CachedResponse
-        """
+    def from_serialized(data: str) -> "CachedResponse":
+        """ Create a CachedResponse object from serialized CachedResponse. """
         d = json.loads(data)
 
         url = d["url"]
@@ -61,7 +60,8 @@ class CachedResponse:
         return result
 
     @staticmethod
-    def from_response(response: requests.Response):
+    def from_response(response: requests.Response) -> "CachedResponse":
+        """ Create a CachedResponse object from a request.Response. """
         url = response.url
         status_code = response.status_code
         response_json = response.json()
@@ -82,7 +82,8 @@ class CachedResponse:
         return result
 
     @staticmethod
-    def from_exception(url, exception_str):
+    def from_exception(url, exception_str) -> "CachedResponse":
+        """ Create a CachedResponse object from an exception message. """
         return CachedResponse(
             url=url,
             success=False,

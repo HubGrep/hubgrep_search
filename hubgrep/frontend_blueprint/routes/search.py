@@ -46,11 +46,12 @@ def search():
                            form=form,
                            search_results=results_paginated,
                            search_feedback=search_feedback,
-                           pagination_links=pagination_links,  # [PageLink] namedtuples
-                           failed_requests=failed_requests)  # TODO these errors should be formatted to text that is useful for a enduser
+                           pagination_links=pagination_links,
+                           failed_requests=failed_requests)
 
 
 def get_search_feedback(results_total: int) -> str:
+    """ Get a readable message for how a search performed. """
     if results_total > 0:
         return "Found {} matching repositories.".format(results_total)
     else:
