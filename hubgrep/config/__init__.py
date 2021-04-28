@@ -135,3 +135,8 @@ class TestingConfig(Config):
     SECRET_KEY = ""
     CACHE_BACKEND = None
     ABOUT_MARKDOWN_FILE = "hubgrep_about.md"
+
+    CONTACT_DESCRIPTION = None
+    CONTACT_ADDRESS = None
+    CONTACT_EMAIL = None
+    CONTACT_PHONE = None
