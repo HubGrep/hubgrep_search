@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% import "components/hosting_service_list/hosting_service_list.html" as hosting_service_list %}
+{% import "components/contact/contact.html" as contact %}
 
 {% block styles %}
     <link href="{{ url_for('static', filename='css/about/about.css') }}"
@@ -10,4 +11,6 @@
     <div class="about">
         {{ about_html | safe }}
     </div>
+
+    {{ contact.address(contact_description, contact_address, contact_phone, contact_email) }}
 {% endblock %}

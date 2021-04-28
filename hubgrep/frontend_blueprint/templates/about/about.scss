@@ -1,8 +1,9 @@
 @import "../shared_bundle";
+@import "../components/contact/contact";
 
 // .hubgrep-fund-logos is only specifically intended for hubgrep_about.md - feel free to discard!
 .hubgrep-fund-logos {
-  margin-top: 5rem;
+  margin: 4rem 0;
   @include cardify();
 
   p:first-child {

@@ -4,12 +4,16 @@ import markdown
 from flask import render_template
 from flask import current_app as app
 from flask import render_template_string
-from hubgrep.constants import SITE_TITLE
 from hubgrep.frontend_blueprint import frontend
 
 
 @frontend.route("/about")
 def about():
+    contact_description = app.config["CONTACT_DESCRIPTION"]
+    contact_address = app.config["CONTACT_ADDRESS"]
+    contact_email = app.config["CONTACT_EMAIL"]
+    contact_phone = app.config["CONTACT_PHONE"]
+
     # read external markdown file
     markdown_file = app.config.get("ABOUT_MARKDOWN_FILE")
     if markdown_file:
@@ -26,5 +30,9 @@ def about():
     return render_template(
         "about/about.html",
         hosting_instances=app.config["CACHED_HOSTING_SERVICES"],
+        contact_description=contact_description,
+        contact_address=contact_address,
+        contact_email=contact_email,
+        contact_phone=contact_phone,
         about_html=about_html,
     )

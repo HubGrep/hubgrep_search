@@ -1,0 +1,29 @@
+{% macro address(description=None, address=None, phone=None, email=None, class_name="contact") %}
+    <div class="contact {{ class_name }}">
+        {% if description or address or email or phone %}
+            <h2>Contact</h2>
+            <address>
+                {% if description %}
+                    <p>
+                        <span class="description">{{ description }}</span>
+                    </p>
+                {% endif %}
+                {% if address %}
+                    <p>
+                        <span>{{ address }}</span>
+                    </p>
+                {% endif %}
+                {% if phone %}
+                    <p>
+                        <span class="phone">tel: <a href="tel:{{ phone }}">{{ phone }}</a></span>
+                    </p>
+                {% endif %}
+                {% if email %}
+                    <p>
+                        <span class="email">email: <a href="mailto:{{ email }}">{{ email }}</a>.</span>
+                    </p>
+                {% endif %}
+            </address>
+        {% endif %}
+    </div>
+{% endmacro %}
