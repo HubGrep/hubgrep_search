@@ -16,12 +16,8 @@
         <div class="search-result">
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
-                {% for error in external_errors %}
-                    {% if current_user.has_role("admin") %}
-                        {{ status.message("warn", error, "(ADMIN) Hosting-service failure: ") }}
-                    {% else %}
-                        {{ status.message("warn", "There was a problem getting results from " + get_service_label_from_url(error[0]) + ".") }}
-                    {% endif %}
+                {% for failure in failed_requests %}
+                    {{ status.message("warn", failure.hosting_service_interface.label ~ ": " ~ failure.response.error_msg , "TODO FORMAT ERROR TEXTS FOR ENDUSER: ") }}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>

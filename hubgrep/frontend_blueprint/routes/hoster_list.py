@@ -1,3 +1,5 @@
+""" Hosters list page route. """
+
 from flask import render_template, current_app as app
 from hubgrep.frontend_blueprint import frontend
 

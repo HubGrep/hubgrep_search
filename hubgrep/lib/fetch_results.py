@@ -1,3 +1,7 @@
+"""
+Retrieve and aggregate repository results.
+"""
+
 import logging
 import difflib
 from concurrent import futures
@@ -7,17 +11,17 @@ from flask import current_app as app
 
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
+from hubgrep.lib.cached_session.cached_response import CachedResponse
 
 logger = logging.getLogger(__name__)
 
 
 def final_sort(keywords, results):
-    """
-    order results based on normalized score and best text match
-    """
+    """ Order results based on normalized score and best text match. """
     # https://stackoverflow.com/questions/17903706/how-to-sort-list-of-strings-by-best-match-difflib-ratio
     def _key(result: SearchResult):
         key = result.repo_name + " " + result.repo_description
@@ -31,7 +35,7 @@ def final_sort(keywords, results):
 
 def _normalize(results):
     """
-    normalize fork count of the results of a service
+    Normalize fork count of the results of a service.
 
     # todo: last commit, age, stars...?
     # what about a "group" of forks?
@@ -48,7 +52,10 @@ def _normalize(results):
             result.forks_normalized = 0
 
 
-def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingServiceInterface]):
+def fetch_concurrently(
+    keywords, hosting_service_interfaces: List[HostingServiceInterface]
+) -> "AggregatedSearchResults":
+    """ Asynchronously retrieve and aggregate results from external hosting-services. """
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
@@ -57,22 +64,40 @@ def fetch_concurrently(keywords, hosting_service_interfaces: List[HostingService
             to_do.append(future)
 
         results = []
-        errors = []
+        failed_responses = []
 
-        future_timeout = app.config['HOSTING_SERVICE_REQUEST_TIMEOUT'] + 2
+        # HOSTING_SERVICE_REQUEST_TIMEOUT is used in the hosting service classes.
+        # its used as a limit to the first connect,
+        # and then again for reading. (see https://docs.python-requests.org/en/master/user/advanced/#timeouts)
+        # that means, the requests can take up to
+        # two times the "HOSTING_SERVICE_REQUEST_TIMEOUT" time
+        # before cancelling.
+        # so we take this as a reference here, and add another second before
+        # we actually break, throwing an error to the user
+        future_timeout = (app.config["HOSTING_SERVICE_REQUEST_TIMEOUT"] * 2) + 1
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
-                success, base_url, _results = future.result()
-                if success:
-                    if _results:
-                        _normalize(_results)
-                        results += _results
+                interface_result = future.result()
+                if interface_result.succeeded:
+                    if len(interface_result.search_results) > 0:
+                        _normalize(interface_result.search_results)
+                        results += interface_result.search_results
                 else:
-                    errors.append((base_url, _results))
+                    failed_responses.append(interface_result)
         except futures._base.TimeoutError as e:
-            logger.error('something went wrong with the requests')
+            logger.error("something went wrong with the requests")
             logger.error(e, exc_info=True)
-        if errors:
-            logger.warn(f"got some errors: {errors}")
+        if failed_responses:
+            logger.warning(f"got some errors: {failed_responses}")
         results = final_sort(keywords, results)
-        return results, errors
+        return AggregatedSearchResults(results, failed_responses)
+
+
+
+class AggregatedSearchResults:
+    search_results: List[SearchResult]
+    failed_requests: List[HostingServiceInterfaceResponse]
+
+    def __init__(self, search_results: List[SearchResult], failed_requests: List[HostingServiceInterfaceResponse]):
+        self.search_results = search_results
+        self.failed_requests = failed_requests

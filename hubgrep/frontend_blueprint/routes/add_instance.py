@@ -1,3 +1,5 @@
+""" Add instance page routes. """
+
 from flask import render_template
 from flask import request
 from flask import abort
@@ -14,10 +16,8 @@ from hubgrep.frontend_blueprint.forms.edit_hosting_service import (
     HostingServiceForm,
     HostingServiceFirstStep,
 )
-from hubgrep.lib.get_hosting_service_interfaces import (
-    hosting_service_interfaces_by_name,
-)
-from hubgrep.models import HostingService, get_service_label_from_url
+from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
+from hubgrep.models import HostingService
 
 
 @frontend.route("/add_instance/step_1", methods=["GET", "POST"])
@@ -56,7 +56,7 @@ def add_instance_step_2():
         form.populate_api_url()
 
     if form.validate_on_submit():
-        HostingServiceInterface = hosting_service_interfaces_by_name.get(
+        HostingServiceInterface = hosting_service_interface_mapping.get(
             form.type.data, False
         )
         if not HostingServiceInterface:
@@ -75,7 +75,7 @@ def add_instance_step_2():
         h.landingpage_url = form.landingpage_url.data
         h.type = form.type.data
         h.config = form.config.data
-        h.label = get_service_label_from_url(form.landingpage_url.data)
+        h.set_service_label()
 
         db.session.add(h)
         db.session.commit()

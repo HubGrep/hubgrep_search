@@ -1,3 +1,6 @@
+"""
+HubGrep Flask-app initialization script
+"""
 import logging
 import os
 from flask import Flask, request
@@ -32,6 +35,7 @@ WSGIRequestHandler.protocol_version = "HTTP/1.1"
 
 
 def create_app():
+    """ Create a HubGrep Flask-app. """
     app = Flask(__name__, static_url_path="/static", static_folder="static")
     assets = Environment(app)
 
@@ -99,7 +103,7 @@ def create_app():
 
 
 def set_app_cache():
-    # used to avoid calling the db on every request for common almost-static models
+    """ Set common cache properties for the app, used to avoid calling the db for almost-static models. """
     from flask import current_app as app
     from hubgrep.models import HostingService
     app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()

@@ -1,3 +1,5 @@
+""" About page route. """
+
 import markdown
 from flask import render_template
 from flask import current_app as app

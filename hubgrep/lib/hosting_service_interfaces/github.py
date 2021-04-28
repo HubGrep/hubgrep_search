@@ -1,11 +1,14 @@
+"""
+Hosting-service interface and result-class for Github.
+"""
+
 import logging
 
 from iso8601 import iso8601
 
-from typing import List, Union
-
 from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import (
     HostingServiceInterface,
+    HostingServiceInterfaceResponse,
     SearchResult,
 )
 
@@ -16,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitHubSearchResult(SearchResult):
-    """
+    """ GitHub search result - example response from Github API:
         {
       "id": 3081286,
       "node_id": "MDEwOlJlcG9zaXRvcnkzMDgxMjg2",
@@ -88,47 +91,49 @@ class GitHubSearchResult(SearchResult):
 
 
 class GitHubSearch(HostingServiceInterface):
+    """ Interface for searching via GitHub. """
     name = "GitHub"
 
     # https://developer.github.com/v3/search/#search-repositories
 
-    def __init__(self,
-                 host_service_id,
-                 api_url,
-                 timeout=None,
-                 requests_session=None,
-                 ):
+    def __init__(
+        self,
+        host_service_id,
+        api_url,
+        label,
+        config_dict,
+        cached_session,
+        timeout=None,
+    ):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
+            label=label,
+            config_dict=config_dict,
             search_path="search/repositories",
-            requests_session=requests_session,
+            cached_session=cached_session,
             timeout=timeout,
         )
 
     def _search(
         self, keywords: list = [], tags: dict = {}
-    ) -> (bool, str, Union[Exception, List[GitHubSearchResult]],):
+    ) -> HostingServiceInterfaceResponse:
+
         params = dict(q="+".join(keywords), **tags)
-        try:
-            response = self.requests.get(
-                self.request_url,
-                params=params,
-                timeout=self.timeout,
-            )
-            if not response.ok:
-                return False, self.api_url, response.text
-            result = response.json()
+        response = self.cached_session.get(
+            self.request_url,
+            params=params,
+            headers=self._get_request_headers(),
+            timeout=self.timeout,
+        )
+        if response.success:
             results = [
                 GitHubSearchResult(item, self.host_service_id)
-                for item in result["items"]
+                for item in response.response_json["items"]
             ]
-
-        except Exception as e:
-            logger.error(e, exc_info=True)
-            return False, self.api_url, e
-
-        return True, self.api_url, results
+        else:
+            results = []
+        return HostingServiceInterfaceResponse(self, response, results)
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

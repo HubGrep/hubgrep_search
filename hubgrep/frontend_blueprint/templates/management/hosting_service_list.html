@@ -9,7 +9,9 @@
         <div class="hosting-service-list-users">
             {% for user, instances in hosting_services.items() %}
                 <div class="user">
-                    {% if is_admin %}<h2>{{ user }}</h2>{% endif %}
+                    {% if current_user.has_role("admin") %}
+                        <h2>{{ user }}</h2>
+                    {% endif %}
                     {% for instance in instances %}
                         <p class="hosting-service">
                             <span>{{ instance.landingpage_url }}</span>
