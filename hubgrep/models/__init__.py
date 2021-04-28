@@ -3,19 +3,18 @@ HubGrep database models
 """
 
 import json
-
-from flask_security.models import fsqla_v2 as fsqla
-
 import enum
 import re
 import logging
 
+from typing import TYPE_CHECKING
 from flask_security.models import fsqla_v2 as fsqla
-from requests import Session
-
 from hubgrep import db
 from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.lib.cached_session.cached_session import CachedSession
+
+if TYPE_CHECKING:
+    from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import HostingServiceInterface
 
 logger = logging.getLogger(__name__)
 
@@ -64,7 +63,7 @@ class HostingService(db.Model):
     def set_service_label(self):
         self.label = re.split("//", self.api_url)[1].rstrip("/")
 
-    def get_hosting_service_interface(self, cached_session: 'CachedSession', timeout: int):
+    def get_hosting_service_interface(self, cached_session: 'CachedSession', timeout: int) -> "HostingServiceInterface":
         config_str = self.config
         config = json.loads(config_str)
 

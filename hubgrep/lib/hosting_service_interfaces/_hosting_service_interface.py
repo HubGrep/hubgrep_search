@@ -4,16 +4,15 @@ Base-classes for search results and hosting-service interfaces.
 
 import logging
 import time
-
 import click
 import humanize
 import requests
 import pytz
 
-from urllib.parse import urljoin
 from typing import List
-
+from urllib.parse import urljoin
 from flask import current_app
+
 from hubgrep.lib.cached_session.cached_session import CachedSession
 from hubgrep.lib.cached_session.cached_response import CachedResponse
 
@@ -65,7 +64,8 @@ class SearchResult:
         self.text += click.style(key, bold=True)
         self.text += f"{value}\n"
 
-    def get_cli_formatted(self):
+    def get_cli_formatted(self) -> str:
+        """ Format output for a CLI as a target. """
         self.last_commit = self.last_commit_dt.replace(tzinfo=None)
         self.created_at = self.created_at_dt.replace(tzinfo=None)
         last_commit = humanize.naturaltime(self.last_commit)
@@ -108,9 +108,8 @@ class HostingServiceInterface:
         self.cached_session = cached_session
         self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
-    def search(
-            self, keywords: list = [], tags: dict = {}
-    ) -> "HostingServiceInterfaceResult":
+    def search(self, keywords: list = [], tags: dict = {}) -> "HostingServiceInterfaceResult":
+        """ Send a request to an external hosting-service to retrieve search results. """
         time_before = time.time()
         hosting_service_interface_result = self._search(
             keywords, tags
@@ -126,15 +125,17 @@ class HostingServiceInterface:
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
+        """ Define a default api_url as derived from a landingpage_url - for autocomplete convenience."""
         return NotImplementedError
 
     @staticmethod
-    def normalize_url(url):
+    def normalize_url(url) -> str:
         response = requests.head(url)
         return response.url
 
 
 class HostingServiceInterfaceResponse:
+    """ Wrapper class containing data and references from a hosting-service response. """
     hosting_service_interface: HostingServiceInterface
     response: CachedResponse
     search_results: List[SearchResult]
@@ -148,5 +149,5 @@ class HostingServiceInterfaceResponse:
         self.search_results = search_results
 
     @property
-    def succeeded(self):
+    def succeeded(self) -> bool:
         return self.response.success

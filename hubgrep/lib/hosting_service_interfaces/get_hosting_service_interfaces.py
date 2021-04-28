@@ -1,26 +1,22 @@
-import json
-import logging
+"""
+Get registered hosting-service interfaces on this HubGrep instance.
+"""
 
-import redis
+import logging
 import requests
 
-from typing import Union
-
-from requests import Session
+from typing import TYPE_CHECKING, Dict
 from flask import current_app as app
-
-from hubgrep.lib.hosting_service_interfaces.github import GitHubSearch
-from hubgrep.lib.hosting_service_interfaces.gitea import GiteaSearch
-from hubgrep.lib.hosting_service_interfaces.gitlab import GitLabSearch
 
 from hubgrep.lib.cached_session.caches.no_cache import NoCache
 from hubgrep.lib.cached_session.caches.redis_cache import RedisCache
 from hubgrep.lib.cached_session.cached_session import CachedSession
-
 from hubgrep.models import HostingService
 
-logger = logging.getLogger(__name__)
+if TYPE_CHECKING:
+    from hubgrep.lib.hosting_service_interfaces._hosting_service_interface import HostingServiceInterface
 
+logger = logging.getLogger(__name__)
 
 
 class UnknownBackendException(Exception):
@@ -43,7 +39,8 @@ def _get_cache_backend():
     return cache_backend
 
 
-def get_hosting_service_interfaces():
+def get_hosting_service_interfaces() -> Dict[str, "HostingServiceInterface"]:
+    """ Get registered hosting-service interfaces using the current cache-session. """
     hosting_service_interfaces = {}
 
     for service in app.config["CACHED_HOSTING_SERVICES"]:
