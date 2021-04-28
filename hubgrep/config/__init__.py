@@ -65,8 +65,9 @@ class Config:
 
 class _EnvironmentConfig:
     # user defined config
+    CACHE_BACKEND = os.environ.get("HUBGREP_CACHE_BACKEND", None)
     CACHE_TIME = os.environ.get("HUBGREP_CACHE_TIME", 3600)
-    REDIS_URL = os.environ.get("HUBGREP_REDIS_URL", False)
+    REDIS_URL = os.environ.get("HUBGREP_REDIS_URL", None)
 
     MAIL_DEBUG = os.environ.get("HUBGREP_MAIL_DEBUG", False)
 
@@ -79,16 +80,16 @@ class _EnvironmentConfig:
     MAIL_DEFAULT_SENDER = os.environ.get("HUBGREP_MAIL_DEFAULT_SENDER", None)
     MAIL_MAX_EMAILS = os.environ.get("HUBGREP_MAIL_MAX_EMAILS", None)
 
-    ABOUT_MARKDOWN_FILE = os.environ.get(
-        "HUBGREP_ABOUT_MARKDOWN_FILE", "hubgrep_about.md"
-    )
+    ABOUT_MARKDOWN_FILE = os.environ.get("HUBGREP_ABOUT_MARKDOWN_FILE", "hubgrep_about.md")
+
+    CONTACT_DESCRIPTION = os.environ.get("HUBGREP_CONTACT_DESCRIPTION", None)
+    CONTACT_ADDRESS = os.environ.get("HUBGREP_CONTACT_ADDRESS", None)
+    CONTACT_EMAIL = os.environ.get("HUBGREP_CONTACT_EMAIL", None)
+    CONTACT_PHONE = os.environ.get("HUBGREP_CONTACT_PHONE", None)
 
     SQLALCHEMY_DATABASE_URI = os.environ.get("HUBGREP_SQLALCHEMY_DATABASE_URI", False)
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
-
-    CACHE_BACKEND = os.environ.get("HUBGREP_CACHE_BACKEND", None)
-    REDIS_URL = os.environ.get("HUBGREP_REDIS_URL", None)
 
 
 class ProductionConfig(Config, _EnvironmentConfig):
@@ -134,3 +135,8 @@ class TestingConfig(Config):
     SECRET_KEY = ""
     CACHE_BACKEND = None
     ABOUT_MARKDOWN_FILE = "hubgrep_about.md"
+
+    CONTACT_DESCRIPTION = None
+    CONTACT_ADDRESS = None
+    CONTACT_EMAIL = None
+    CONTACT_PHONE = None
