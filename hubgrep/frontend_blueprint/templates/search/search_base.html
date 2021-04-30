@@ -17,14 +17,10 @@
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
                 {% for failure in failed_requests %}
-                    {% if failure.response.status_code == -1 %}
-                        {% set status_code = "took too long" %}
-                    {% else %}
-                        {% set status_code = failure.response.status_code %}
-                    {% endif %}
+                    {% set status_code = failure.get_user_error_message() %}
                     {% set suffix = "." %}
                     {% if current_user.has_role('admin') %}
-                        {% set suffix = " " ~ failure.response.error_msg %}
+                        {% set suffix = " " ~ failure.get_admin_error_message() %}
                     {% endif %}
                     {{ status.message("warn", "There was a problem retrieving results from " ~ failure.hosting_service_interface.label ~ " - " ~ status_code ~ suffix) }}
                 {% endfor %}

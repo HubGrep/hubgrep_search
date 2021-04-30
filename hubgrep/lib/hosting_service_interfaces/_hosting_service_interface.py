@@ -23,6 +23,7 @@ utc = pytz.UTC
 
 class SearchResult:
     """ A single repository result as retrieved by all hosting-service interfaces """
+
     def __init__(
         self,
         host_service_id,
@@ -87,6 +88,7 @@ class SearchResult:
 
 class HostingServiceInterface:
     """ Hosting-service interface base-class. """
+
     name = ""
 
     def __init__(
@@ -108,16 +110,16 @@ class HostingServiceInterface:
         self.cached_session = cached_session
         self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
-    def search(self, keywords: list = [], tags: dict = {}) -> "HostingServiceInterfaceResult":
+    def search(
+        self, keywords: list = [], tags: dict = {}
+    ) -> "HostingServiceInterfaceResponse":
         """ Send a request to an external hosting-service to retrieve search results. """
         time_before = time.time()
-        hosting_service_interface_result = self._search(
-            keywords, tags
-        )
+        hosting_service_interface_result = self._search(keywords, tags)
         logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
         return hosting_service_interface_result
 
-    def _search(self, keywords: list, tags: dict) -> "HostingServiceInterfaceResult":
+    def _search(self, keywords: list, tags: dict) -> "HostingServiceInterfaceResponse":
         raise NotImplementedError
 
     def _get_request_headers(self) -> dict:
@@ -135,15 +137,23 @@ class HostingServiceInterface:
 
 
 class HostingServiceInterfaceResponse:
-    """ Wrapper class containing data and references from a hosting-service response. """
+    """
+    Wrapper class containing a hosting_interface,
+    the interfaces response and potential search results.
+
+    Used in the search jinja templates.
+    """
+
     hosting_service_interface: HostingServiceInterface
     response: CachedResponse
     search_results: List[SearchResult]
 
-    def __init__(self,
-                 hosting_service_interface: HostingServiceInterface,
-                 response: CachedResponse,
-                 search_results: List[SearchResult]):
+    def __init__(
+        self,
+        hosting_service_interface: HostingServiceInterface,
+        response: CachedResponse,
+        search_results: List[SearchResult],
+    ):
         self.hosting_service_interface = hosting_service_interface
         self.response = response
         self.search_results = search_results
@@ -151,3 +161,19 @@ class HostingServiceInterfaceResponse:
     @property
     def succeeded(self) -> bool:
         return self.response.success
+
+    def get_admin_error_message(self):
+        return self.response.error_msg
+
+    def get_user_error_message(self):
+        """
+        get an error message to display to a user.
+        """
+        if self.response.status_code == -1:
+            return "Request took to long (or other connection error)"
+        elif 400 <= self.response.status_code <= 499:
+            return "Client error"
+        elif 500 <= self.response.status_code <= 599:
+            return "Server error"
+        else:
+            return "Unknown error"
