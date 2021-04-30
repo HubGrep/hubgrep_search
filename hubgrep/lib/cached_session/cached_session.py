@@ -15,6 +15,7 @@ from hubgrep.lib.cached_session.cached_response import CachedResponse
 from hubgrep.lib.cached_session.caches.no_cache import NoCache
 from hubgrep.lib.cached_session.caches.redis_cache import RedisCache
 
+
 logger = logging.getLogger(__name__)
 
 class CachedSession:
@@ -41,10 +42,9 @@ class CachedSession:
                 logger.debug(f'request {method}, {url}, {args}, {kwargs}')
                 response = self.session.request(method, url, *args, **kwargs)
                 response_result = CachedResponse.from_response(response)
-
             except Exception as e:
                 response_result = CachedResponse.from_exception(
-                    url, exception_str=str(e)
+                        url, exception=e
                 )
             self.cache.set(key, response_result.serialize())
             return response_result
