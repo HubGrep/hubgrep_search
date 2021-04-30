@@ -181,11 +181,11 @@ class HostingServiceInterfaceResponse:
         elif self.response.status_code == TIMEOUT_ERROR:
             return f"{prefix} Took too long"
         elif self.response.status_code == UNKNOWN_ERROR:
-            return f"{prefix} Unknown error"
+            return f"{prefix}"
 
         elif 400 <= self.response.status_code <= 499:
             return f"{prefix} Client error"
         elif 500 <= self.response.status_code <= 599:
             return f"{prefix} Server error"
         else:
-            return f"{prefix} Unknown error"
+            return f"{prefix}"
