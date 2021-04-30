@@ -5,6 +5,9 @@ A CachedResponse is a wrapper for requests.Response, for serialization and cachi
 import json
 import requests
 
+from requests.exceptions import Timeout, ConnectionError, TooManyRedirects
+from hubgrep.constants import UNKNOWN_ERROR, CONNECTION_ERROR, TIMEOUT_ERROR, TOO_MANY_REDIRECTS_ERROR
+
 class CachedResponse:
     """
     Wrapper class for cached responses.
@@ -79,16 +82,26 @@ class CachedResponse:
             response_json=response_json,
             error_msg=error_msg,
         )
-        return result
+        return result 
 
     @staticmethod
-    def from_exception(url, exception_str) -> "CachedResponse":
+    def from_exception(url, exception) -> "CachedResponse":
         """ Create a CachedResponse object from an exception message. """
+        if type(exception) is Timeout:
+            status_code = TIMEOUT_ERROR
+        elif type(exception) is ConnectionError:
+            status_code = CONNECTION_ERROR
+        elif type(exception) is TooManyRedirects:
+            status_code = TOO_MANY_REDIRECTS_ERROR
+        else:
+            status_code = UNKNOWN_ERROR
+
+
         return CachedResponse(
             url=url,
             success=False,
-            status_code=-1,
+            status_code=status_code,
             response_json=None,
-            error_msg=exception_str,
+            error_msg=str(exception),
         )
 

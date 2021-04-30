@@ -15,6 +15,7 @@ from flask import current_app
 
 from hubgrep.lib.cached_session.cached_session import CachedSession
 from hubgrep.lib.cached_session.cached_response import CachedResponse
+from hubgrep.constants import UNKNOWN_ERROR, CONNECTION_ERROR, TIMEOUT_ERROR, TOO_MANY_REDIRECTS_ERROR
 
 logger = logging.getLogger(__name__)
 
@@ -163,17 +164,28 @@ class HostingServiceInterfaceResponse:
         return self.response.success
 
     def get_admin_error_message(self):
-        return self.response.error_msg
+        prefix = f"There was a problem retrieving results from {self.hosting_service_interface.label} ({self.response.status_code}):"
+        return f"{prefix} {self.response.error_msg}"
 
     def get_user_error_message(self):
         """
         get an error message to display to a user.
         """
-        if self.response.status_code == -1:
-            return "Request took to long (or other connection error)"
+
+        prefix = f"There was a problem retrieving results from {self.hosting_service_interface.label}:"
+
+        if self.response.status_code == TOO_MANY_REDIRECTS_ERROR:
+            return f"{prefix} Too many redirects"
+        elif self.response.status_code == CONNECTION_ERROR:
+            return f"{prefix} Connection error"
+        elif self.response.status_code == TIMEOUT_ERROR:
+            return f"{prefix} Took too long"
+        elif self.response.status_code == UNKNOWN_ERROR:
+            return f"{prefix} Unknown error"
+
         elif 400 <= self.response.status_code <= 499:
-            return "Client error"
+            return f"{prefix} Client error"
         elif 500 <= self.response.status_code <= 599:
-            return "Server error"
+            return f"{prefix} Server error"
         else:
-            return "Unknown error"
+            return f"{prefix} Unknown error"

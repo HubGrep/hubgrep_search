@@ -17,12 +17,11 @@
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
                 {% for failure in failed_requests %}
-                    {% set status_code = failure.get_user_error_message() %}
-                    {% set suffix = "." %}
+                    {% set error_message = failure.get_user_error_message() %}
                     {% if current_user.has_role('admin') %}
-                        {% set suffix = " " ~ failure.get_admin_error_message() %}
+                        {% set error_message = " " ~ failure.get_admin_error_message() %}
                     {% endif %}
-                    {{ status.message("warn", "There was a problem retrieving results from " ~ failure.hosting_service_interface.label ~ " - " ~ status_code ~ suffix) }}
+                    {{ status.message("warn", error_message) }}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>
