@@ -1,7 +1,6 @@
 # HubGrep
 
-![screenshot of hubgrep](hubgrep/static/images/hubgrep_screenshot.png)
-
+![screenshot of hubgrep](hubgrep/static/images/screenshot_hubgrep.png)
 
 Search for code repositories over many code-hosting services at once. 
 
