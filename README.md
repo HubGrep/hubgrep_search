@@ -7,6 +7,9 @@ Search for code repositories over many code-hosting services at once.
 This means you don't have to mentally filter non-repo results as in regular search engines, but perhaps more importantly, 
 one service does not get prioritized over another in non-transparent ways - they're all equal to one another with HubGrep.
 
+Try it out on [hubgrep.io](https://hubgrep.io/)!
+
+
 ## Documentation
 
 [![Documentation Status](https://readthedocs.org/projects/hubgrep-documentation/badge/?version=latest)](https://docs.hubgrep.io/en/latest/?badge=latest)
