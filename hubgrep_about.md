@@ -6,7 +6,7 @@ With HubGrep it is less important where projects are hosted - all sources are tr
 
 HubGrep is free software - we encourage you to host your own search instance, with your own set of code hosters!
 
-You can find our open-source code [here](https://github.com/HubGrep/hubgrep_search).
+You can find the source code [here](https://github.com/HubGrep/hubgrep_search).
   
 If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - HubGrep currently support Gitea, Gitlab, and Github! 
 

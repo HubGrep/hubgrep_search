@@ -28,3 +28,10 @@ REPO_MODIFIED = "modified"
 
 # search form
 DATE_FORMAT = "%Y-%m-%d"
+
+# hoster errors
+UNKNOWN_ERROR = -1
+CONNECTION_ERROR = -2
+TIMEOUT_ERROR = -3
+TOO_MANY_REDIRECTS_ERROR = -4
+

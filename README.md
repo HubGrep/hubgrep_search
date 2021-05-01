@@ -9,7 +9,6 @@ one service does not get prioritized over another in non-transparent ways - they
 
 Try it out on [hubgrep.io](https://hubgrep.io/)!
 
-
 ## Documentation
 
 [![Documentation Status](https://readthedocs.org/projects/hubgrep-documentation/badge/?version=latest)](https://docs.hubgrep.io/en/latest/?badge=latest)
