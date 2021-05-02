@@ -11,7 +11,7 @@ class Config:
     DEBUG = False
     TESTING = False
     LOGLEVEL = "debug"
-    VERSION = "0.0.3"
+    VERSION = "0.0.4"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
