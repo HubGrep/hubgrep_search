@@ -25,9 +25,12 @@
         }
     }
 }
-
+ 
 .version {
         display: flex;
         flex-direction: row-reverse;
+
+    a, a:active, a:hover, a:visited {
         color: grey;
+    }
 }
