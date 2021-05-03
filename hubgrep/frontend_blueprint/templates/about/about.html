@@ -13,4 +13,9 @@
     </div>
 
     {{ contact.address(contact_description, contact_address, contact_phone, contact_email) }}
+
+    <div class="version">
+        <a href="https://github.com/HubGrep/hubgrep_search">HubGrep v{{ config["VERSION"] }}</a>
+    </div>
 {% endblock %}
+
