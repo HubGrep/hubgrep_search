@@ -13,4 +13,9 @@
     </div>
 
     {{ contact.address(contact_description, contact_address, contact_phone, contact_email) }}
+
+    <div class="version">
+        <p> HubGrep v{{ config["VERSION"] }} </p>
+    </div>
 {% endblock %}
+
