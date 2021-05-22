@@ -94,7 +94,7 @@ class GitLabSearch(HostingServiceInterface):
         )
 
     def _search(
-            self, keywords: list = [], tags: dict = {}
+            self, keywords: list = [], tags: dict = {}, **kwargs
     ) -> HostingServiceInterfaceResponse:
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)

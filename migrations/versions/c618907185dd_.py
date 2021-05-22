@@ -8,7 +8,7 @@ Create Date: 2021-03-28 11:04:40.789755
 from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.orm.session import Session
-from hubgrep.models import HostingService, get_service_label_from_url
+from hubgrep.models import HostingService
 
 # revision identifiers, used by Alembic.
 revision = 'c618907185dd'

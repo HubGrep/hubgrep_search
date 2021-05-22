@@ -59,8 +59,9 @@ def fetch_concurrently(
     # maybe as much executors as interfaces?
     with futures.ThreadPoolExecutor(max_workers=20) as executor:
         to_do = []
+        context = app.app_context()
         for name, hosting_service_interface in hosting_service_interfaces.items():
-            future = executor.submit(hosting_service_interface.search, keywords)
+            future = executor.submit(hosting_service_interface.search, keywords, context=context)
             to_do.append(future)
 
         results = []
@@ -78,6 +79,7 @@ def fetch_concurrently(
         try:
             for future in futures.as_completed(to_do, timeout=future_timeout):
                 interface_result = future.result()
+                print(interface_result)
                 if interface_result.succeeded:
                     if len(interface_result.search_results) > 0:
                         _normalize(interface_result.search_results)

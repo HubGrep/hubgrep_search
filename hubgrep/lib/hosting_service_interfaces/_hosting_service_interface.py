@@ -112,11 +112,11 @@ class HostingServiceInterface:
         self.cached_session.headers.update({"referer": current_app.config["REFERER"]})
 
     def search(
-        self, keywords: list = [], tags: dict = {}
+        self, keywords: list = [], tags: dict = {}, **kwargs
     ) -> "HostingServiceInterfaceResponse":
         """ Send a request to an external hosting-service to retrieve search results. """
         time_before = time.time()
-        hosting_service_interface_result = self._search(keywords, tags)
+        hosting_service_interface_result = self._search(keywords, tags, **kwargs)
         logger.debug(f"search on {self.api_url} took {time.time() - time_before}s")
         return hosting_service_interface_result
 

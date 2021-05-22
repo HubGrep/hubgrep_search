@@ -116,7 +116,7 @@ class GitHubSearch(HostingServiceInterface):
         )
 
     def _search(
-        self, keywords: list = [], tags: dict = {}
+        self, keywords: list = [], tags: dict = {}, **kwargs
     ) -> HostingServiceInterfaceResponse:
 
         params = dict(q="+".join(keywords), **tags)
