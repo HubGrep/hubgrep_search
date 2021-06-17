@@ -42,6 +42,16 @@ def add_instance_step_1():
     return render_template("management/add_hosting_service_1.html", form=form)
 
 
+
+def _add_instance_from_form(form):
+    h = form.to_hosting_service()
+    if current_user:
+        h.user_id = current_user.id
+    db.session.add(h)
+    db.session.commit()
+    set_app_cache()
+
+
 @frontend.route("/add_instance/step_2/", methods=["GET", "POST"])
 def add_instance_step_2():
     hoster_type = request.args.get("type", "")
@@ -49,7 +59,7 @@ def add_instance_step_2():
         form = HostingServiceForm.from_hosting_service_type(hoster_type)
     except NoHostingServiceFormException:
         flash("unknown hoster type!")
-        return redirect("frontend.manage_instances")
+        return redirect(url_for("frontend.manage_instances"))
 
     form.landingpage_url.data = request.args.get("landingpage_url", "")
     form.type.data = request.args.get("type", "")
@@ -57,17 +67,12 @@ def add_instance_step_2():
     if not form.api_url.data:
         form.populate_api_url()
 
-    if form.validate_on_submit():
+    # gitea is easy, we are basically finished here :)
+    if form.validate_on_submit() or hoster_type == "gitea":
         if HostingService.query.filter_by(api_url=form.api_url.data).first():
             flash(f'hoster "{form.api_url.data}" already exists!', "error")
-            return render_template("management/add_hosting_service_2.html", form=form)
-
-        h = form.to_hosting_service()
-        if current_user:
-            h.user_id = current_user.id
-        db.session.add(h)
-        db.session.commit()
-        set_app_cache()
+            return redirect(url_for('frontend.manage_instances'))
+        _add_instance_from_form(form)
 
         flash("new hoster added!", "success")
 

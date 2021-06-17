@@ -114,10 +114,6 @@ class GitLabSearch(HostingServiceInterface):
             results = []
         return HostingServiceInterfaceResponse(self, response, results)
 
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return urljoin(landingpage_url, "/api/v4/")
-
     def _get_request_headers(self):
         headers = super()._get_request_headers()
         headers["PRIVATE-TOKEN"] = self.api_key

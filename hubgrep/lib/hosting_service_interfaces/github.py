@@ -135,6 +135,4 @@ class GitHubSearch(HostingServiceInterface):
             results = []
         return HostingServiceInterfaceResponse(self, response, results)
 
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return ""
+

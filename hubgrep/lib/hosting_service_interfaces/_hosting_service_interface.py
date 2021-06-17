@@ -127,11 +127,6 @@ class HostingServiceInterface:
         return dict()
 
     @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        """ Define a default api_url as derived from a landingpage_url - for autocomplete convenience."""
-        return NotImplementedError
-
-    @staticmethod
     def normalize_url(url) -> str:
         response = requests.head(url)
         return response.url

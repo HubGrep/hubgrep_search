@@ -167,6 +167,3 @@ class GiteaSearch(HostingServiceInterface):
 
         return HostingServiceInterfaceResponse(self, response, results)
 
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return urljoin(landingpage_url, "/api/v1/")

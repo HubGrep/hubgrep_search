@@ -1,5 +1,5 @@
 {% extends 'management/management_base.html' %}
-
+{% import "components/hoster_form/hoster_form_macro.html" as hoster_form_macro %}
 
 {% block content %}
     <h1>Edit Hosting Service</h1>
@@ -7,29 +7,6 @@
     {% if current_user.has_role('admin') %}
         <p>(admin) managed by: {{ owner }}</p>
     {% endif %}
+    {{ hoster_form_macro.render_hoster_form(form) }}
 
-    <form method="POST" action="" class="hosting-service-form">
-        {{ form.csrf_token }}
-        <div class="form-fields">
-            <p>
-                {{ form.type.label }}
-                {{ form.type() }}
-            </p>
-            <p>
-                {{ form.landingpage_url.label }}
-                {{ form.landingpage_url() }}
-            </p>
-            <p>
-                {{ form.api_url.label }}
-                {{ form.api_url() }}
-            </p>
-            <p>
-                {{ form.custom_config.label }}
-                {{ form.custom_config(rows=4) }}
-            </p>
-        </div>
-        <div class="form-submit">
-            <input type="submit" value="submit">
-        </div>
-    </form>
 {% endblock %}
