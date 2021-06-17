@@ -123,6 +123,12 @@ class HostingServiceInterface:
     def _search(self, keywords: list, tags: dict) -> "HostingServiceInterfaceResponse":
         raise NotImplementedError
 
+    def test_validity(self):
+        """
+        test if this api_url really leady to a hoster
+        """
+        raise NotImplementedError
+
     def _get_request_headers(self) -> dict:
         return dict()
 

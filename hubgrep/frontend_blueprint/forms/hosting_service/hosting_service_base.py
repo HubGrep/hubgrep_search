@@ -94,6 +94,29 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         h.set_service_label()
         return h
 
+    def validate(self):
+        """
+        add a check for the hosting service on top of just the form check
+        """
+        print("validating......")
+        if super().validate():
+            return self.test_validity()
+        return False
+
+
+    def test_validity(self):
+        from hubgrep.lib.cached_session.caches.no_cache import NoCache
+        from hubgrep.lib.cached_session.cached_session import CachedSession
+        import requests
+
+        cached_session = CachedSession(requests.Session(), NoCache())
+
+        hosting_service = self.to_hosting_service()
+        hosting_service_interface = hosting_service.get_hosting_service_interface(cached_session, timeout=5)
+        if not hosting_service_interface.test_validity():
+            raise ValidationError("asdfasdf")
+        return True
+
     @classmethod
     def from_hosting_service_type(cls, hoster_type: str):
         hosting_service_forms_mapping = dict(

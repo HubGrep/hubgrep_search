@@ -145,6 +145,14 @@ class GiteaSearch(HostingServiceInterface):
             timeout=timeout,
         )
 
+    def test_validity(self):
+        response = self.cached_session.get(self.api_url + "api/v1/version")
+        if response.success:
+            version = response.response_json.get("version", False)
+            if version:
+                return True
+        return False
+
     def _search(
         self, keywords: list = [], tags: dict = {}
     ) -> HostingServiceInterfaceResponse:
