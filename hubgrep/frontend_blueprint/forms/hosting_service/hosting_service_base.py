@@ -1,5 +1,3 @@
-""" Form value-object classes and validation functions for editing hosting services. """
-
 import json
 import logging
 
@@ -38,7 +36,7 @@ def validate_url(form, field):
     field.data = HostingServiceInterface.normalize_url(field.data)
 
 
-class HostingServiceFirstStep(FlaskForm):
+class HostingServiceFormFirstStep(FlaskForm):
     """ Only get type and landingpage from the user, the rest we automatically resolve to pre-fill in step 2. """
 
     type = SelectField(
@@ -57,7 +55,10 @@ class HostingServiceFirstStep(FlaskForm):
     )
 
 
-class HostingServiceForm(HostingServiceFirstStep):
+class NoHostingServiceFormException(Exception):
+    pass
+
+class HostingServiceForm(HostingServiceFormFirstStep):
     """ Final step when adding a new hosting-service, doubling as the form used for editing hosting-services. """
 
     api_url = StringField(
@@ -82,9 +83,9 @@ class HostingServiceForm(HostingServiceFirstStep):
         )
         self.api_url.data = api_url
 
-    def get_hosting_service(self):
+    def to_hosting_service(self):
         """
-        get hosting service (the db model, not the interface) for this form.
+        create hosting service (the db model, not the interface) from form data
         """
         h = HostingService()
 
@@ -94,13 +95,41 @@ class HostingServiceForm(HostingServiceFirstStep):
         h.api_url = self.api_url.data
         h.landingpage_url = self.landingpage_url.data
         h.type = self.type.data
-        if hasattr(self.api_key):
+        if hasattr(self, "api_key"):
             h.api_key = self.api_key.data
         else:
             h.api_key = None
         h.custom_config = self.custom_config.data
         h.set_service_label()
         return h
+
+    @classmethod
+    def from_hosting_service_type(cls, hoster_type: str):
+        hosting_service_forms_mapping = dict(
+            github=GithubHostingServiceForm,
+            gitlab=GitlabHostingServiceForm,
+            gitea=GiteaHostingServiceForm,
+        )
+
+        Form = hosting_service_forms_mapping.get(hoster_type, False)
+        if not Form:
+            raise NoHostingServiceFormException("No form found to edit {hosting_service.type}")
+        return Form()
+
+    @classmethod
+    def from_hosting_service(cls, hosting_service: HostingService):
+        """
+        create new form from hosting_service data
+        """
+        form = cls.from_hosting_service_type(hosting_service.type)
+
+        form.type.data = hosting_service.type
+        form.landingpage_url.data = hosting_service.landingpage_url
+        form.api_url.data = hosting_service.api_url
+        if hasattr(form, "api_key"):
+            form.api_key.data = hosting_service.api_key
+        form.custom_config.data = hosting_service.custom_config
+        return form
 
     @property
     def help_text_html(self):

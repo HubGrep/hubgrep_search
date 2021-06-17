@@ -12,7 +12,7 @@ from hubgrep.models import HostingService
 
 from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.edit_hosting_service import HostingServiceForm
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_base import HostingServiceForm, NoHostingServiceFormException
 from hubgrep.frontend_blueprint.forms.confirm import ConfirmForm
 
 
@@ -41,21 +41,23 @@ def manage_instance(hosting_service_id):
         pass
     else:
         abort(404)
+   
+    try:
+        form = HostingServiceForm.from_hosting_service(h)
+    except NoHostingServiceFormException:
+        flash("unknown hoster type!")
+        return redirect("frontend.manage_instances")
 
-    form = HostingServiceForm()
     if form.validate_on_submit():
         h.api_url = form.api_url.data
         h.landingpage_url = form.landingpage_url.data
         h.type = form.type.data
-        h.config = form.config.data
+        h.api_key = form.api_key.data
+        h.custom_config = form.custom_config.data
         db.session.add(h)
         db.session.commit()
         set_app_cache()
 
-    form.type.data = h.type
-    form.landingpage_url.data = h.landingpage_url
-    form.api_url.data = h.api_url
-    form.config.data = h.config
     if form.errors:
         flash(form.errors, "error")
 

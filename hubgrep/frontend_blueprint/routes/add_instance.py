@@ -12,19 +12,15 @@ from flask_security import login_required
 
 from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.edit_hosting_service import (
-    HostingServiceFirstStep,
-    GithubHostingServiceForm,
-    GiteaHostingServiceForm,
-    GitlabHostingServiceForm,
-)
+from hubgrep.frontend_blueprint.forms.hosting_service import  HostingServiceFormFirstStep
 from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_base import HostingServiceForm, NoHostingServiceFormException
 
 
 @frontend.route("/add_instance/step_1", methods=["GET", "POST"])
 def add_instance_step_1():
-    form = HostingServiceFirstStep()
+    form = HostingServiceFormFirstStep()
     if form.validate_on_submit():
         landingpage_url = form.landingpage_url.data
         _type = form.type.data
@@ -49,16 +45,11 @@ def add_instance_step_1():
 @frontend.route("/add_instance/step_2/", methods=["GET", "POST"])
 def add_instance_step_2():
     hoster_type = request.args.get("type", "")
-    if hoster_type == "github":
-        form = GithubHostingServiceForm()
-    elif hoster_type == "gitlab":
-        form = GitlabHostingServiceForm()
-    elif hoster_type == "gitea":
-        form = GiteaHostingServiceForm()
-
-    else:
-        flash(form.errors, "unknown hoster type!")
-        return redirect("frontend.add_instance_step_1")
+    try:
+        form = HostingServiceForm.from_hosting_service_type(hoster_type)
+    except NoHostingServiceFormException:
+        flash("unknown hoster type!")
+        return redirect("frontend.manage_instances")
 
     form.landingpage_url.data = request.args.get("landingpage_url", "")
     form.type.data = request.args.get("type", "")
@@ -71,7 +62,7 @@ def add_instance_step_2():
             flash(f'hoster "{form.api_url.data}" already exists!', "error")
             return render_template("management/add_hosting_service_2.html", form=form)
 
-        h = form.get_hosting_service()
+        h = form.to_hosting_service()
         if current_user:
             h.user_id = current_user.id
         db.session.add(h)
