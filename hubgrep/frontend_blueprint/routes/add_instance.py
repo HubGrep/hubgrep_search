@@ -13,15 +13,16 @@ from flask_security import login_required
 from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
 from hubgrep.frontend_blueprint.forms.edit_hosting_service import (
-    HostingServiceForm,
     HostingServiceFirstStep,
+    GithubHostingServiceForm,
+    GiteaHostingServiceForm,
+    GitlabHostingServiceForm,
 )
 from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
 
 
 @frontend.route("/add_instance/step_1", methods=["GET", "POST"])
-@login_required
 def add_instance_step_1():
     form = HostingServiceFirstStep()
     if form.validate_on_submit():
@@ -46,9 +47,19 @@ def add_instance_step_1():
 
 
 @frontend.route("/add_instance/step_2/", methods=["GET", "POST"])
-@login_required
 def add_instance_step_2():
-    form = HostingServiceForm()
+    hoster_type = request.args.get("type", "")
+    if hoster_type == "github":
+        form = GithubHostingServiceForm()
+    elif hoster_type == "gitlab":
+        form = GitlabHostingServiceForm()
+    elif hoster_type == "gitea":
+        form = GiteaHostingServiceForm()
+
+    else:
+        flash(form.errors, "unknown hoster type!")
+        return redirect("frontend.add_instance_step_1")
+
     form.landingpage_url.data = request.args.get("landingpage_url", "")
     form.type.data = request.args.get("type", "")
 
@@ -56,34 +67,22 @@ def add_instance_step_2():
         form.populate_api_url()
 
     if form.validate_on_submit():
-        HostingServiceInterface = hosting_service_interface_mapping.get(
-            form.type.data, False
-        )
-        if not HostingServiceInterface:
-            flash(f'hosting interface for "{form.type.data}" not found!', "error")
-            return render_template("management/add_hosting_service_2.html", form=form)
-
         if HostingService.query.filter_by(api_url=form.api_url.data).first():
             flash(f'hoster "{form.api_url.data}" already exists!', "error")
             return render_template("management/add_hosting_service_2.html", form=form)
 
-        h = HostingService()
-
-        h.user_id = current_user.id
-
-        h.api_url = form.api_url.data
-        h.landingpage_url = form.landingpage_url.data
-        h.type = form.type.data
-        h.config = form.config.data
-        h.set_service_label()
-
+        h = form.get_hosting_service()
+        if current_user:
+            h.user_id = current_user.id
         db.session.add(h)
         db.session.commit()
         set_app_cache()
 
         flash("new hoster added!", "success")
 
-        return redirect(url_for("frontend.manage_instances"))
+        if current_user:
+            return redirect(url_for("frontend.manage_instances"))
+        return redirect(url_for("frontend.search"))
 
     if form.errors:
         flash(form.errors, "error")

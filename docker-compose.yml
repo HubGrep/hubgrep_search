@@ -7,6 +7,8 @@ services:
     env_file: .env
     environment:
       POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
 
   redis:
     image: redis

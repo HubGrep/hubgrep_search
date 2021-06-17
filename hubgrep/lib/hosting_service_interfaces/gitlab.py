@@ -79,7 +79,7 @@ class GitLabSearch(HostingServiceInterface):
         host_service_id,
         api_url,
         label,
-        config_dict,
+        api_key,
         cached_session,
         timeout=None,
     ):
@@ -87,8 +87,8 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
-            config_dict=config_dict,
-            search_path="search",
+            api_key=api_key,
+            search_path="api/v4/search",
             cached_session=cached_session,
             timeout=timeout,
         )
@@ -120,9 +120,5 @@ class GitLabSearch(HostingServiceInterface):
 
     def _get_request_headers(self):
         headers = super()._get_request_headers()
-        if "api_token" in self.config_dict.keys():
-            headers["PRIVATE-TOKEN"] = self.config_dict["api_token"]
-        else:
-            logger.warning(
-                f"setting GITLAB headers without PRIVATE-TOKEN - Config: {self.config_dict} - Headers: {headers}")
+        headers["PRIVATE-TOKEN"] = self.api_key
         return headers

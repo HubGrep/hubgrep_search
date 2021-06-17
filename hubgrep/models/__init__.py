@@ -55,7 +55,10 @@ class HostingService(db.Model):
 
     # individual config for a specific service (eg. api-key)
     # could be json, but thats only supported for postgres
-    config = db.Column(db.Text)
+    custom_config = db.Column(db.Text)
+   
+    # we need an api key for github and gitlab
+    api_key = db.Column(db.String(500), nullable=True)
 
     # frontend label
     label = db.Column(db.String(80))
@@ -64,16 +67,18 @@ class HostingService(db.Model):
         self.label = re.split("//", self.landingpage_url)[1].rstrip("/")
 
     def get_hosting_service_interface(self, cached_session: 'CachedSession', timeout: int) -> "HostingServiceInterface":
-        config_str = self.config
-        config = json.loads(config_str)
+        # todo: add this, when we know what to do with it :P
+        #custom_config_str = self.custom_config
+        #custom_config = json.loads(custom_config_str)
 
         HostingInterfaceClass = hosting_service_interface_mapping[self.type]
         hosting_service_interface = HostingInterfaceClass(
             self.id,
             self.api_url,
             self.label,
-            config,
+            self.api_key,
             cached_session,
             timeout,
         )
         return hosting_service_interface
+

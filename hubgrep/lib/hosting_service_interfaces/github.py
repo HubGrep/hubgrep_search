@@ -101,7 +101,7 @@ class GitHubSearch(HostingServiceInterface):
         host_service_id,
         api_url,
         label,
-        config_dict,
+        api_key,
         cached_session,
         timeout=None,
     ):
@@ -109,7 +109,7 @@ class GitHubSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
-            config_dict=config_dict,
+            api_key=api_key,
             search_path="search/repositories",
             cached_session=cached_session,
             timeout=timeout,
