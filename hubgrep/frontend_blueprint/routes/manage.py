@@ -28,7 +28,10 @@ def manage_instances():
     hosting_service_instances_by_user = {}
     if current_user.has_role("admin"):
         for instance in HostingService.query.all():
-            email = instance.user.email
+            if instance.user:
+                email = instance.user.email
+            else:
+                email = "anonymous user"
             if not hosting_service_instances_by_user.get(email):
                 hosting_service_instances_by_user[email] = []
             hosting_service_instances_by_user[email].append(instance)
@@ -43,13 +46,7 @@ def manage_instances():
     )
 
 
-@frontend.route(
-    "/manage/<hosting_service_id>",
-    methods=[
-        "GET",
-        "POST",
-    ],
-)
+@frontend.route("/manage/<hosting_service_id>", methods=["GET", "POST"])
 @login_required
 def manage_instance(hosting_service_id):
     h: HostingService = HostingService.query.get(hosting_service_id)
