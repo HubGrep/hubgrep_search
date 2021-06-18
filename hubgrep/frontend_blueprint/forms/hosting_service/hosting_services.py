@@ -12,28 +12,18 @@ from wtforms.validators import InputRequired
 from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
 
+from hubgrep.frontend_blueprint.forms.hosting_service.validators import (
+    validate_custom_config,
+    validate_url,
+    validate_api_url,
+)
+
+
 logger = logging.getLogger(__name__)
 
 
-def validate_custom_config(form, field):
-    """ Validate the config field to adhere to JSON syntax. """
-    if not field.data:
-        field.data = "{}"
-    try:
-        config = json.loads(field.data)
-        field.data = json.dumps(config, sort_keys=True)
-    except Exception:
-        raise ValidationError("Config must be valid json")
-
-
-def validate_url(form, field):
-    HostingServiceInterface = hosting_service_interface_mapping.get(
-        form.type.data, False
-    )
-    """ Validate URLs. """
-    if not HostingServiceInterface:
-        raise ValidationError("invalid hosting service interface!")
-    field.data = HostingServiceInterface.normalize_url(field.data)
+class NoHostingServiceFormException(Exception):
+    pass
 
 
 class HostingServiceFormFirstStep(FlaskForm):
@@ -52,22 +42,24 @@ class HostingServiceFormFirstStep(FlaskForm):
         "Landingpage Url",
         [InputRequired(), URL(), validate_url],
         widget=URLInput(),
+        description="the landingpage for this hoster"
     )
 
-
-class NoHostingServiceFormException(Exception):
-    pass
 
 class HostingServiceForm(HostingServiceFormFirstStep):
     """ Final step when adding a new hosting-service, doubling as the form used for editing hosting-services. """
 
+    # validate_url sanitizes url before validate_api_url makes a call to it
     api_url = StringField(
-        "Api Url", [InputRequired(), URL(), validate_url], widget=URLInput()
+        "Api Url",
+        [InputRequired(), URL(), validate_url, validate_api_url],
+        widget=URLInput(),
+        description="should be the same as the landing page in most cases"
     )
     custom_config = TextAreaField(
         "Custom config",
         [validate_custom_config],
-        description="Custom config json. If you dont know what to put in, just leave it empty. :)",
+        description="Custom config json. If you dont know what to put in, just leave it empty.",
     )
     help_text_md = ""
 
@@ -94,31 +86,11 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         h.set_service_label()
         return h
 
-    def validate(self):
-        """
-        add a check for the hosting service on top of just the form check
-        """
-        print("validating......")
-        if super().validate():
-            return self.test_validity()
-        return False
-
-
-    def test_validity(self):
-        from hubgrep.lib.cached_session.caches.no_cache import NoCache
-        from hubgrep.lib.cached_session.cached_session import CachedSession
-        import requests
-
-        cached_session = CachedSession(requests.Session(), NoCache())
-
-        hosting_service = self.to_hosting_service()
-        hosting_service_interface = hosting_service.get_hosting_service_interface(cached_session, timeout=5)
-        if not hosting_service_interface.test_validity():
-            raise ValidationError("asdfasdf")
-        return True
-
     @classmethod
     def from_hosting_service_type(cls, hoster_type: str):
+        """
+        make a form for a sepecfic hoster type
+        """
         hosting_service_forms_mapping = dict(
             github=GithubHostingServiceForm,
             gitlab=GitlabHostingServiceForm,
@@ -127,13 +99,16 @@ class HostingServiceForm(HostingServiceFormFirstStep):
 
         Form = hosting_service_forms_mapping.get(hoster_type, False)
         if not Form:
-            raise NoHostingServiceFormException("No form found to edit {hosting_service.type}")
+            raise NoHostingServiceFormException(
+                "No form found to edit {hosting_service.type}"
+            )
         return Form()
 
     @classmethod
     def from_hosting_service(cls, hosting_service: HostingService):
         """
         create new form from hosting_service data
+        (prefills the form data)
         """
         form = cls.from_hosting_service_type(hosting_service.type)
 
@@ -166,8 +141,9 @@ class GitlabHostingServiceForm(ApiKeyHostingServiceForm):
     gitlab detail form.
     gitlab needs an api key, and a help text...
     """
+
     help_text_md = """
-*Gitlab needs an API Key (“token”) to use the api.
+*Gitlab needs an API Key (“token”) to use the search api.
 
 > **! Keep in mind, that with this token, your private repositories can be read as well,**
 > **so its recommended to create a new, empty user account for this !**
@@ -184,6 +160,5 @@ if you ever feel like we should not have this token, you can revoke it there as 
 
 class GiteaHostingServiceForm(HostingServiceForm):
     """
-    gitea detail form. nothing to see here. doesnt need anything. :)
+    gitea detail form.
     """
-    pass

@@ -49,12 +49,10 @@ class HostingService(db.Model):
     # main instance website
     landingpage_url = db.Column(db.String(500))
 
-    # should this be unique, or can we use it to store multiple
-    # api keys for a backend?
     api_url = db.Column(db.String(500), unique=True, nullable=False)
 
-    # individual config for a specific service (eg. api-key)
-    # could be json, but thats only supported for postgres
+    # custom config for a service.
+    # not used, so far (but it used to hold the api_key, which is a separate field now)
     custom_config = db.Column(db.Text)
    
     # we need an api key for github and gitlab

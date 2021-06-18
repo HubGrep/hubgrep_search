@@ -12,10 +12,15 @@ from flask_security import login_required
 
 from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.hosting_service import  HostingServiceFormFirstStep
 from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
-from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_base import HostingServiceForm, NoHostingServiceFormException
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_services import (
+    HostingServiceForm,
+    NoHostingServiceFormException,
+)
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_first_step import (
+    HostingServiceFormFirstStep,
+)
 
 
 @frontend.route("/add_instance/step_1", methods=["GET", "POST"])

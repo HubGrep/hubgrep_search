@@ -12,7 +12,13 @@ from hubgrep.models import HostingService
 
 from hubgrep import db, set_app_cache
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_base import HostingServiceForm, NoHostingServiceFormException
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_services import (
+    HostingServiceForm,
+    NoHostingServiceFormException,
+)
+from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_first_step import (
+    HostingServiceFormFirstStep,
+)
 from hubgrep.frontend_blueprint.forms.confirm import ConfirmForm
 
 
@@ -27,21 +33,31 @@ def manage_instances():
                 hosting_service_instances_by_user[email] = []
             hosting_service_instances_by_user[email].append(instance)
     else:
-        hosting_service_instances_by_user[current_user.email] = current_user.hosting_services
+        hosting_service_instances_by_user[
+            current_user.email
+        ] = current_user.hosting_services
 
-    return render_template("management/hosting_service_list.html",
-                           hosting_services=hosting_service_instances_by_user)
+    return render_template(
+        "management/hosting_service_list.html",
+        hosting_services=hosting_service_instances_by_user,
+    )
 
 
-@frontend.route("/manage/<hosting_service_id>", methods=['GET', 'POST', ], )
+@frontend.route(
+    "/manage/<hosting_service_id>",
+    methods=[
+        "GET",
+        "POST",
+    ],
+)
 @login_required
 def manage_instance(hosting_service_id):
     h: HostingService = HostingService.query.get(hosting_service_id)
-    if h.user == current_user or current_user.has_role('admin'):
+    if h.user == current_user or current_user.has_role("admin"):
         pass
     else:
         abort(404)
-   
+
     try:
         form = HostingServiceForm.from_hosting_service(h)
     except NoHostingServiceFormException:
@@ -61,16 +77,16 @@ def manage_instance(hosting_service_id):
     if form.errors:
         flash(form.errors, "error")
 
-    return render_template("management/edit_hosting_service.html",
-                           form=form,
-                           owner=h.user.email)
+    return render_template(
+        "management/edit_hosting_service.html", form=form, owner=h.user.email
+    )
 
 
-@frontend.route("/manage/<hosting_service_id>/delete", methods=['GET', 'POST'])
+@frontend.route("/manage/<hosting_service_id>/delete", methods=["GET", "POST"])
 @login_required
 def delete_instance(hosting_service_id):
     h: HostingService = HostingService.query.get(hosting_service_id)
-    if h.user == current_user or current_user.has_role('admin'):
+    if h.user == current_user or current_user.has_role("admin"):
         pass
     else:
         abort(404)
@@ -86,11 +102,15 @@ def delete_instance(hosting_service_id):
     if form.errors:
         flash(form.errors, "error")
 
-    confirm_question = f"Do you really want to delete \"{h.label}\" for user \"{h.user.email}\"?"
+    confirm_question = (
+        f'Do you really want to delete "{h.label}" for user "{h.user.email}"?'
+    )
     confirm_button_text = f"confirm"
 
-    return render_template("management/confirm.html",
-                           form=form,
-                           owner=h.user.email,
-                           confirm_question=confirm_question,
-                           confirm_button_text=confirm_button_text)
+    return render_template(
+        "management/confirm.html",
+        form=form,
+        owner=h.user.email,
+        confirm_question=confirm_question,
+        confirm_button_text=confirm_button_text,
+    )

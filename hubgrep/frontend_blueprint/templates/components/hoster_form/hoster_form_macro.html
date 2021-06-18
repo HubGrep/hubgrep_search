@@ -9,10 +9,16 @@
             <p>
                 {{ form.landingpage_url.label }}
                 {{ form.landingpage_url() }}
+                <span class="field-description">
+                    {{ form.landingpage_url.description }}
+                </span>
             </p>
             <p>
                 {{ form.api_url.label }}
                 {{ form.api_url() }}
+                <span class="field-description">
+                    {{ form.api_url.description }}
+                </span>
             </p>
             <p>
                 {% if form.api_key %}
@@ -23,13 +29,15 @@
             <p>
                 {{ form.custom_config.label }}
                 {{ form.custom_config(rows=4) }}
-                {{ form.custom_config.description }}
+                <span class="field-description">
+                    {{ form.custom_config.description }}
+                </span>
             </p>
-            <p>
+            <div class="form-help-important">
                 {% if form.help_text_html %}
                     {{ form.help_text_html | safe }}
                 {% endif %}
-            </p>
+            </div>
         </div>
         <div class="form-submit">
             <input type="submit" value="submit">
