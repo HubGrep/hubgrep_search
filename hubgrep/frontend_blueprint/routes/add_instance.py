@@ -80,7 +80,7 @@ def add_instance_step_2():
 
         flash("new hoster added!", "success")
 
-        if current_user:
+        if not current_user.is_anonymous:
             return redirect(url_for("frontend.manage_instances"))
         return redirect(url_for("frontend.search"))
 
