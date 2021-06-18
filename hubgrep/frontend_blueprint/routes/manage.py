@@ -74,8 +74,13 @@ def manage_instance(hosting_service_id):
     if form.errors:
         flash(form.errors, "error")
 
+    if h.user:
+        owner = h.user.email
+    else:
+        owner = "anonymous user"
+
     return render_template(
-        "management/edit_hosting_service.html", form=form, owner=h.user.email
+        "management/edit_hosting_service.html", form=form, owner=owner
     )
 
 
