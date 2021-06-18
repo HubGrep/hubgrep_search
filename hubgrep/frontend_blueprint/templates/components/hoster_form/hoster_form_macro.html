@@ -33,11 +33,11 @@
                     {{ form.custom_config.description }}
                 </span>
             </p>
-            <div class="form-help-important">
-                {% if form.help_text_html %}
+            {% if form.help_text_html %}
+                <div class="form-help-important">
                     {{ form.help_text_html | safe }}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
         </div>
         <div class="form-submit">
             <input type="submit" value="submit">
