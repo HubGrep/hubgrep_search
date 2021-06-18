@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitLabSearchResult(SearchResult):
-    """ GitLab search result - example response from GitLab API:
+    """GitLab search result - example response from GitLab API:
     {
       "id": 6,
       "description": "Nobis sed ipsam vero quod cupiditate veritatis hic.",
@@ -72,6 +72,7 @@ class GitLabSearchResult(SearchResult):
 
 class GitLabSearch(HostingServiceInterface):
     """ Interface for searching via GitLab. """
+
     name = "GitLab"
 
     def __init__(
@@ -94,7 +95,10 @@ class GitLabSearch(HostingServiceInterface):
         )
 
     def test_validity(self):
-        response = self.cached_session.get(self.api_url + "api/v4/version")
+        response = self.cached_session.get(
+            self.api_url + "api/v4/version",
+            headers=self._get_request_headers(),
+        )
         if response.success:
             version = response.response_json.get("version", False)
             if version:
@@ -102,7 +106,7 @@ class GitLabSearch(HostingServiceInterface):
         return False
 
     def _search(
-            self, keywords: list = [], tags: dict = {}
+        self, keywords: list = [], tags: dict = {}
     ) -> HostingServiceInterfaceResponse:
         tags = {**tags, **dict(scope="projects")}
         params = dict(search="+".join(keywords), **tags)
