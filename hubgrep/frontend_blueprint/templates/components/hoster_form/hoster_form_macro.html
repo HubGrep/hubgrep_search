@@ -33,9 +33,9 @@
                     {{ form.custom_config.description }}
                 </span>
             </p>
-            {% if form.help_text_html %}
+            {% if form.important_notes_html %}
                 <div class="form-help-important">
-                    {{ form.help_text_html | safe }}
+                    {{ form.important_notes_html | safe }}
                 </div>
             {% endif %}
         </div>

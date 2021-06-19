@@ -41,7 +41,7 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         [validate_custom_config],
         description="Custom config json. If you dont know what to put in, just leave it empty.",
     )
-    help_text_md = ""
+    important_notes_md = ""
 
     def populate_api_url(self):
         self.api_url.data = self.landingpage_url.data
@@ -101,19 +101,17 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         return form
 
     @property
-    def help_text_html(self):
-        return markdown.markdown(self.help_text_md)
+    def important_notes_html(self):
+        return markdown.markdown(self.important_notes_md)
 
 
 class ApiKeyHostingServiceForm(HostingServiceForm):
     api_key = StringField("Api Key*")
-    help_text_md = ""
+    important_notes_md = ""
 
 
 class GithubHostingServiceForm(ApiKeyHostingServiceForm):
-    help_text_md = """
-> todo: how to get a gh api key
-    """
+    important_notes_md = ""
 
 
 class GitlabHostingServiceForm(ApiKeyHostingServiceForm):
@@ -122,7 +120,7 @@ class GitlabHostingServiceForm(ApiKeyHostingServiceForm):
     gitlab needs an api key, and a help text...
     """
 
-    help_text_md = """
+    important_notes_md = """
 *Gitlab needs an API Key (“token”) to use the search api.
 
 > **! Keep in mind, that with this token, your private repositories can be read as well,**

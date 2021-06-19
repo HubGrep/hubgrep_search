@@ -80,3 +80,11 @@ class HostingService(db.Model):
         )
         return hosting_service_interface
 
+    def to_dict(self):
+        return dict(
+                    type=self.type,
+                    landingpage_url=self.landingpage_url,
+                    api_url=self.api_url,
+                )
+
+

@@ -16,7 +16,7 @@ services:
   maildev:
     image: maildev/maildev
     ports:
-      - 8081:80
+      - 8090:80
 
   service:
     build: .
