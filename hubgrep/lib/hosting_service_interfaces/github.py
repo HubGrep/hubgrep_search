@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitHubSearchResult(SearchResult):
-    """ GitHub search result - example response from Github API:
+    """GitHub search result - example response from Github API:
         {
       "id": 3081286,
       "node_id": "MDEwOlJlcG9zaXRvcnkzMDgxMjg2",
@@ -92,6 +92,7 @@ class GitHubSearchResult(SearchResult):
 
 class GitHubSearch(HostingServiceInterface):
     """ Interface for searching via GitHub. """
+
     name = "GitHub"
 
     # https://developer.github.com/v3/search/#search-repositories
@@ -101,7 +102,7 @@ class GitHubSearch(HostingServiceInterface):
         host_service_id,
         api_url,
         label,
-        config_dict,
+        api_key,
         cached_session,
         timeout=None,
     ):
@@ -109,11 +110,21 @@ class GitHubSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
-            config_dict=config_dict,
+            api_key=api_key,
             search_path="search/repositories",
             cached_session=cached_session,
             timeout=timeout,
         )
+
+    def test_validity(self):
+        """
+        no good way to test the github api?
+        # https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api
+        """
+        response = self.cached_session.get(self.api_url + "zen")
+        if response.success:
+            return True
+        return False
 
     def _search(
         self, keywords: list = [], tags: dict = {}
@@ -134,7 +145,3 @@ class GitHubSearch(HostingServiceInterface):
         else:
             results = []
         return HostingServiceInterfaceResponse(self, response, results)
-
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return ""

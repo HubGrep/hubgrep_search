@@ -131,7 +131,7 @@ class GiteaSearch(HostingServiceInterface):
         host_service_id,
         api_url,
         label,
-        config_dict,
+        api_key,
         cached_session,
         timeout=None,
     ):
@@ -139,11 +139,19 @@ class GiteaSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
-            config_dict=config_dict,
-            search_path="repos/search",
+            api_key=api_key,
+            search_path="api/v1/repos/search",
             cached_session=cached_session,
             timeout=timeout,
         )
+
+    def test_validity(self):
+        response = self.cached_session.get(self.api_url + "api/v1/version")
+        if response.success:
+            version = response.response_json.get("version", False)
+            if version:
+                return True
+        return False
 
     def _search(
         self, keywords: list = [], tags: dict = {}
@@ -167,6 +175,3 @@ class GiteaSearch(HostingServiceInterface):
 
         return HostingServiceInterfaceResponse(self, response, results)
 
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return urljoin(landingpage_url, "/api/v1/")

@@ -98,14 +98,14 @@ class HostingServiceInterface:
         api_url,
         search_path,
         label,
-        config_dict,
+        api_key,
         cached_session: CachedSession,
         timeout=None,
     ):
         self.host_service_id = host_service_id
         self.api_url = api_url
         self.label = label
-        self.config_dict = config_dict
+        self.api_key = api_key
         self.request_url = urljoin(self.api_url, search_path)
         self.timeout = timeout
         self.cached_session = cached_session
@@ -123,13 +123,14 @@ class HostingServiceInterface:
     def _search(self, keywords: list, tags: dict) -> "HostingServiceInterfaceResponse":
         raise NotImplementedError
 
+    def test_validity(self):
+        """
+        test if this api_url really leady to a hoster
+        """
+        raise NotImplementedError
+
     def _get_request_headers(self) -> dict:
         return dict()
-
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        """ Define a default api_url as derived from a landingpage_url - for autocomplete convenience."""
-        return NotImplementedError
 
     @staticmethod
     def normalize_url(url) -> str:
