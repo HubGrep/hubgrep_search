@@ -1,0 +1,92 @@
+[
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.spip.net",
+    "api_url": "https://git.spip.net/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.teknik.io",
+    "api_url": "https://git.teknik.io/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://opendev.org",
+    "api_url": "https://opendev.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.osuv.de",
+    "api_url": "https://git.osuv.de/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.koehlerweb.org",
+    "api_url": "https://git.koehlerweb.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://gitea.vornet.cz",
+    "api_url": "https://gitea.vornet.cz/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.luehne.de",
+    "api_url": "https://git.luehne.de/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://code.antopie.org",
+    "api_url": "https://code.antopie.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.daiko.fr",
+    "api_url": "https://git.daiko.fr/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://gitea.anfuchs.de",
+    "api_url": "https://gitea.anfuchs.de/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.sablun.org",
+    "api_url": "https://git.sablun.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://git.jcg.re/",
+    "api_url": "https://git.jcg.re/"
+  },
+  {
+    "type": "gitlab",
+    "landingpage_url": "https://gitlab.freedesktop.org/",
+    "api_url": "https://gitlab.freedesktop.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://dev.sum7.eu/",
+    "api_url": "https://dev.sum7.eu/"
+  },
+  {
+    "type": "gitlab",
+    "landingpage_url": "https://framagit.org/",
+    "api_url": "https://framagit.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://codeberg.org/",
+    "api_url": "https://codeberg.org/"
+  },
+  {
+    "type": "gitea",
+    "landingpage_url": "https://gitea.com/",
+    "api_url": "https://gitea.com/"
+  },
+  {
+    "type": "gitlab",
+    "landingpage_url": "https://gitlab.com/",
+    "api_url": "https://gitlab.com/"
+  }
+]

@@ -91,6 +91,7 @@ class _EnvironmentConfig:
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
+    INDEXER = os.environ.get('HUBGREP_INDEXER_URL', None)
 
 class ProductionConfig(Config, _EnvironmentConfig):
     """ Production Configuration. """
