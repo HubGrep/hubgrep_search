@@ -33,5 +33,3 @@ def add_hoster(type, api_url, landingpage_url, config):
     db.session.add(h)
     db.session.commit()
 
-
-

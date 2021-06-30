@@ -5,18 +5,24 @@ services:
   postgres:
     image: postgres:13
     env_file: .env
-    ports:
-      - 5432:5432
     environment:
       POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    networks:
+      - hubgrep_search
 
   redis:
     image: redis
+    networks:
+      - hubgrep_search
 
   maildev:
     image: maildev/maildev
     ports:
-      - 8081:80
+      - 8090:80
+    networks:
+      - hubgrep_search
 
   service:
     build: .
@@ -40,6 +46,9 @@ services:
             flask run --host 0.0.0.0 --port 8080
             "
     tty: true
+    networks:
+      - hubgrep_search
+      - hubgrep
   
   sphinx:
     image: macbre/sphinxsearch:3.3.1
@@ -54,6 +63,11 @@ services:
     # before first start: docker-compose run sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate
     # (needs postgres running)
 
+    networks:
+      - hubgrep_search
 
-volumes:
-  pgdata:
+
+networks:
+  hubgrep_search:
+  hubgrep:
+    name: hubgrep

@@ -7,7 +7,6 @@ import re
 import logging
 
 from typing import TYPE_CHECKING
-from flask_security.models import fsqla_v2 as fsqla
 from hubgrep import db
 
 if TYPE_CHECKING:
@@ -48,6 +47,8 @@ class HostingService(db.Model):
 
     # frontend label
     label = db.Column(db.String(80))
+    
+    has_local_index = db.Column(db.Boolean, default=False)
 
     def set_service_label(self):
         self.label = re.split("//", self.landingpage_url)[1].rstrip("/")

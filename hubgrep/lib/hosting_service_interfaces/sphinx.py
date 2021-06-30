@@ -62,7 +62,7 @@ class FakeResponse:
 
 
 class SphinxSearch(HostingServiceInterface):
-    """ Interface for searching via Gitea. """
+    """ Interface for searching via Sphinx. """
 
     name = "Sphinx"
 

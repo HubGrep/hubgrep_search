@@ -39,6 +39,9 @@ def init_logging(loglevel="info"):
                 "passlib.registry": {
                     "level": "INFO",
                 },
+                "faker.factory": {
+                    "level": "WARNING"
+                    }
             },
         }
     )

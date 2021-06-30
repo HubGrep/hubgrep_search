@@ -45,14 +45,16 @@ def get_hosting_service_interfaces() -> Dict[str, "HostingServiceInterface"]:
 
     for service in app.config["CACHED_HOSTING_SERVICES"]:
         service: HostingService
+        if not service.has_local_index:
+            cache_backend = _get_cache_backend()
+            logger.debug(f"using cache backend: {cache_backend}")
+            cached_session = CachedSession(session=requests.Session(), cache=cache_backend)
 
-        cache_backend = _get_cache_backend()
-        logger.debug(f"using cache backend: {cache_backend}")
-        cached_session = CachedSession(session=requests.Session(), cache=cache_backend)
+            timeout = app.config['HOSTING_SERVICE_REQUEST_TIMEOUT']
 
-        timeout = app.config['HOSTING_SERVICE_REQUEST_TIMEOUT']
-
-        hosting_service_interface = service.get_hosting_service_interface(cached_session, timeout)
-        hosting_service_interfaces[service.api_url] = hosting_service_interface
+            hosting_service_interface = service.get_hosting_service_interface(cached_session, timeout)
+            hosting_service_interfaces[service.api_url] = hosting_service_interface
+        else:
+            logger.debug(f"hoster {service.label} has local index")
 
     return hosting_service_interfaces

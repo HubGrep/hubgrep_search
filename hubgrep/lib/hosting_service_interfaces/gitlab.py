@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class GitLabSearchResult(SearchResult):
-    """ GitLab search result - example response from GitLab API:
+    """GitLab search result - example response from GitLab API:
     {
       "id": 6,
       "description": "Nobis sed ipsam vero quod cupiditate veritatis hic.",
@@ -72,6 +72,7 @@ class GitLabSearchResult(SearchResult):
 
 class GitLabSearch(HostingServiceInterface):
     """ Interface for searching via GitLab. """
+
     name = "GitLab"
 
     def __init__(
@@ -79,7 +80,7 @@ class GitLabSearch(HostingServiceInterface):
         host_service_id,
         api_url,
         label,
-        config_dict,
+        api_key,
         cached_session,
         timeout=None,
     ):
@@ -87,11 +88,22 @@ class GitLabSearch(HostingServiceInterface):
             host_service_id=host_service_id,
             api_url=api_url,
             label=label,
-            config_dict=config_dict,
-            search_path="search",
+            api_key=api_key,
+            search_path="api/v4/search",
             cached_session=cached_session,
             timeout=timeout,
         )
+
+    def test_validity(self):
+        response = self.cached_session.get(
+            self.api_url + "api/v4/version",
+            headers=self._get_request_headers(),
+        )
+        if response.success:
+            version = response.response_json.get("version", False)
+            if version:
+                return True
+        return False
 
     def _search(
             self, keywords: list = [], tags: dict = {}, **kwargs
@@ -114,15 +126,7 @@ class GitLabSearch(HostingServiceInterface):
             results = []
         return HostingServiceInterfaceResponse(self, response, results)
 
-    @staticmethod
-    def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
-        return urljoin(landingpage_url, "/api/v4/")
-
     def _get_request_headers(self):
         headers = super()._get_request_headers()
-        if "api_token" in self.config_dict.keys():
-            headers["PRIVATE-TOKEN"] = self.config_dict["api_token"]
-        else:
-            logger.warning(
-                f"setting GITLAB headers without PRIVATE-TOKEN - Config: {self.config_dict} - Headers: {headers}")
+        headers["PRIVATE-TOKEN"] = self.api_key
         return headers

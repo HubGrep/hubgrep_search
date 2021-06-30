@@ -1,0 +1,47 @@
+{% macro render_hoster_form(form) %}
+<form method="POST" action="" class="hosting-service-form">
+        {{ form.csrf_token }}
+        <div class="form-fields">
+            <p>
+                {{ form.type.label }}
+                {{ form.type() }}
+            </p>
+            <p>
+                {{ form.landingpage_url.label }}
+                {{ form.landingpage_url() }}
+                <span class="field-description">
+                    {{ form.landingpage_url.description }}
+                </span>
+            </p>
+            <p>
+                {{ form.api_url.label }}
+                {{ form.api_url() }}
+                <span class="field-description">
+                    {{ form.api_url.description }}
+                </span>
+            </p>
+            <p>
+                {% if form.api_key %}
+                    {{ form.api_key.label }}
+                    {{ form.api_key() }}
+                {% endif %}
+            </p>
+            <p>
+                {{ form.custom_config.label }}
+                {{ form.custom_config(rows=4) }}
+                <span class="field-description">
+                    {{ form.custom_config.description }}
+                </span>
+            </p>
+            {% if form.important_notes_html %}
+                <div class="form-help-important">
+                    {{ form.important_notes_html | safe }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="form-submit">
+            <input type="submit" value="submit">
+        </div>
+    </form>
+
+{% endmacro %}
