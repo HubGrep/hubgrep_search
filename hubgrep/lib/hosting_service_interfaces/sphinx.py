@@ -38,7 +38,7 @@ class SphinxSearchResult(SearchResult):
         forks = search_result_item.forks_count
         is_fork = search_result_item.is_fork
         is_archived = search_result_item.is_archived
-        html_url = f"https://fake.com/{owner_name}/{repo_name}"
+        html_url = search_result_item.html_url
 
         super().__init__(
             host_service_id=host_service_id,
@@ -78,9 +78,9 @@ class SphinxSearch(HostingServiceInterface):
         super().__init__(
             host_service_id=host_service_id,
             api_url=api_url,
-            label=label,
-            config_dict=config_dict,
             search_path="repos/search",
+            label=label,
+            api_key=None,
             cached_session=cached_session,
             timeout=timeout,
         )
@@ -94,7 +94,7 @@ class SphinxSearch(HostingServiceInterface):
 
         with connection:
             with connection.cursor() as cursor:
-                sql = "select * from repos where match(%s)"
+                sql = "select * from repos where match(%s) limit 1000"
                 cursor.execute(sql, (" ".join(keywords)))
                 result_dicts = cursor.fetchall()
         result_ids = [d["id"] for d in result_dicts]

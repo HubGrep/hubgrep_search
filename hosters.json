@@ -88,5 +88,10 @@
     "type": "gitlab",
     "landingpage_url": "https://gitlab.com/",
     "api_url": "https://gitlab.com/"
+  },
+  {
+    "type": "sphinx",
+    "landingpage_url": "https://hubgrep.io",
+    "api_url": "https://hubgrep.io/"
   }
 ]

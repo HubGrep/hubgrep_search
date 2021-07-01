@@ -16,6 +16,13 @@ Try it out on [hubgrep.io](https://hubgrep.io/)!
 You can find the **supported services, documentation for deployments and development setup** over at [docs.hubgrep.io](https://docs.hubgrep.io/en/latest/)
 
 
+## sphinx setup
+
+- add sphinx to the hosters: `flask cli add-hoster sphinx "https://hubgrep.io/" "https://hubgrep.io/" "{}"`
+- import repos from the indexer: `flask cli import-repos`
+- update search index: `docker-compose exec sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate`
+
+
 ## Funded from March 2021 until August 2021 by
 
 <p align="center">
