@@ -28,12 +28,12 @@ class DateTimeDecoder(json.JSONDecoder):
 
 
 def add_hoster(hoster_dict: dict):
-    hoster_name = hoster_dict['hoster_name']
-    hosting_service = HostingService.query.filter_by(label=hoster_name).first()
+    api_url = hoster_dict['api_url']
+    hosting_service = HostingService.query.filter_by(api_url=api_url).first()
     if not hosting_service:
         hosting_service = HostingService()
 
-    hosting_service.label = hoster_name
+    hosting_service.label = api_url
     hosting_service.api_url = hoster_dict['api_url']
     hosting_service.landingpage_url = hoster_dict['landingpage_url']
     hosting_service.type = hoster_dict['type']
@@ -57,12 +57,13 @@ def fetch_hoster_repos(export_url, hoster):
         chunk_size = 0
         for repo in repos:
             chunk_size += 1
-            r = Repository.from_dict(repo, hoster)
-            db.session.add(r)
-            if chunk_size >= 1000:
-                logger.info('commiting chunk...')
-                db.session.commit()
-                chunk_size = 0
+            if repo:
+                r = Repository.from_dict(repo, hoster)
+                db.session.add(r)
+                if chunk_size >= 1000:
+                    logger.info('commiting chunk...')
+                    db.session.commit()
+                    chunk_size = 0
         logger.info('commiting chunk...')
         db.session.commit()
 
@@ -81,15 +82,16 @@ def fetch_hoster_repos(export_url, hoster):
 def import_repos():
     db.engine.dialect.psycopg2_batch_mode = True
     indexer_url = current_app.config['INDEXER']
-    hosters_url = urllib.parse.urljoin(indexer_url, 'api/v1/hosters')
+    hosters_url = urllib.parse.urljoin(indexer_url, 'api/v1/export_hosters')
     response = requests.get(hosters_url)
     print(response.text)
     hosters = response.json()
 
     for hoster_dict in hosters:
         hoster = add_hoster(hoster_dict)
-        export_url = hoster_dict['latest_export_json_gz']
-        if export_url:
+        exports = hoster_dict.get('exports')
+        if exports:
+            export_url = exports[0]['url']
             fetch_hoster_repos(export_url, hoster)
 
 

@@ -36,22 +36,24 @@ class Repository(db.Model):
     # url to the repo!
     html_url = db.Column(db.String(500), nullable=True)
     language = db.Column(db.String(500), nullable=True)
-    forks_count = db.Column(db.Integer(), nullable=False)
-    stars_count = db.Column(db.Integer(), nullable=False)
-    size = db.Column(db.Integer(), nullable=False)
-    open_issues_count = db.Column(db.Integer(), nullable=False)
+    forks_count = db.Column(db.Integer(), nullable=True)
+    stars_count = db.Column(db.Integer(), nullable=True)
+    size = db.Column(db.Integer(), nullable=True)
+    open_issues_count = db.Column(db.Integer(), nullable=True)
     is_archived = db.Column(db.Boolean())
     is_disabled = db.Column(db.Boolean())
     pushed_at = db.Column(db.DateTime())
     created_at = db.Column(db.DateTime())
     updated_at = db.Column(db.DateTime())
-    subscribers_count = db.Column(db.Integer(), nullable=False)
+    subscribers_count = db.Column(db.Integer(), nullable=True)
     license_name = db.Column(db.String(500), nullable=True)
 
     @classmethod
     def from_dict(cls, d, hosting_service: 'HostingService'):
         if hosting_service.type == "gitea":
             return cls.from_gitea_dict(d, hosting_service)
+        elif hosting_service.type == "github":
+            return cls.from_github_dict(d, hosting_service)
 
     @classmethod
     def from_gitea_dict(cls, d, hosting_service):
@@ -68,7 +70,6 @@ class Repository(db.Model):
         r.description = d["description"]
         r.subscribers_count = d['watchers_count']
         # r.is_empty = d["empty"]
-        # d["private"] = self.private
         r.is_fork = d["fork"]
         # r.is_mirror = d["mirror"] = self.mirror
         r.size = d["size"]
@@ -85,45 +86,32 @@ class Repository(db.Model):
         return r
 
     @classmethod
-    def from_fake(cls, fake, hosting_service: "HostingService"):
-        import faker
-        from faker import Faker
-        from faker.providers import lorem
-
-        fake: Faker
-
-        r = cls()
-        r.hosting_service_id = hosting_service.id
-        r.namespace = fake.name().replace(" ", "-")
-        r.name = fake.sentence().replace(" ", "-")
-        r.description = fake.sentence()
-        r.is_fork = fake.random_element([True, False])
-        r.homepage = ""
-        r.html_url = ""
-        r.language = fake.random_element(
-            [
-                "java",
-                "pyhon",
-                "c",
-                "cpp",
-                "javascript",
-                "fortran",
-                "html",
-                "css",
-                "scss",
-                "bash",
-            ]
-        )
-        r.forks_count = fake.random_int()
-        r.stars_count = fake.random_int()
-        r.watchers_count = fake.random_int()
-        r.size = fake.random_int()
-        r.open_issues_count = fake.random_int()
-        r.is_archived = fake.random_element([True, False])
-        r.is_disabled = fake.random_element([True, False])
-        r.pushed_at = fake.date_time()
-        r.created_at = fake.date_time()
-        r.updated_at = fake.date_time()
-        r.subscribers_count = fake.random_int()
-        r.license_name = fake.random_element(["mit", "agpl", "gpl", "apache"])
+    def from_github_dict(cls, d, hosting_service):
+        foreign_id = d["github_id"]
+        r = cls.query.filter_by(
+            hosting_service_id=hosting_service.id, foreign_id=foreign_id
+        ).first()
+        if not r:
+            r = cls()
+            r.hosting_service_id = hosting_service.id
+            r.foreign_id = foreign_id
+        r.name = d["name"]
+        r.namespace = d["owner_login"]
+        r.description = d["description"]
+        r.is_empty = d["is_empty"]
+        r.is_fork = d["is_fork"]
+        # r.is_mirror = d["mirror"] = self.mirror
+        r.size = d["disk_usage"]
+        r.homepage = d["homepage_url"]
+        r.html_url = d['url']
+        r.stars_count = d["stargazer_count"]
+        r.forks_count = d["fork_count"]
+        #r.watchers_count = d["watchers_count"]
+        #r.open_issues_count = d["open_issues_count"]
+        #r.default_branch = d["default_branch"]
+        r.created_at = d["created_at"]
+        r.updated_at = d["updated_at"]
+        r.pushed_at = d['pushed_at']
+        r.license_name = d['license_name']
         return r
+

@@ -20,13 +20,6 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 
-# todo
-class HosterType(enum.Enum):
-    github = 0
-    gitlab = 1
-    gitea = 2
-
-
 class HostingService(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
@@ -78,9 +71,3 @@ class HostingService(db.Model):
         )
         return hosting_service_interface
 
-    def to_dict(self):
-        return dict(
-                    type=self.type,
-                    landingpage_url=self.landingpage_url,
-                    api_url=self.api_url,
-                )

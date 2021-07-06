@@ -16,3 +16,4 @@ sync.sh
 restore_backup.sh
 rsync.exclude
 data/
+sync_raspi.sh
