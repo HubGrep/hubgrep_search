@@ -69,7 +69,7 @@ def fetch_hoster_repos(export_url, hoster, import_timestamp):
         chunk_size = 0
         repos_to_add = []
 
-        for repo in ijson.items(gz_file, 'item'):
+        for repo in ijson.items(gz_file, 'item', multiple_values=True):
             chunk_size += 1
             r = Repository.from_dict(repo, hoster, import_timestamp)
             if r:
@@ -110,7 +110,6 @@ def import_repos():
     indexer_url = current_app.config["INDEXER"]
     hosters_url = urllib.parse.urljoin(indexer_url, "api/v1/export_hosters")
     response = requests.get(hosters_url)
-    print(response.text)
     hosters = response.json()
 
     for hoster_dict in hosters:

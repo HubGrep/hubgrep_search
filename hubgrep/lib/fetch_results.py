@@ -91,7 +91,7 @@ def fetch_concurrently(
             logger.error(e, exc_info=True)
         if failed_responses:
             logger.warning(f"got some errors: {failed_responses}")
-        results = final_sort(keywords, results)
+        #results = final_sort(keywords, results)
         return AggregatedSearchResults(results, failed_responses)
 
 

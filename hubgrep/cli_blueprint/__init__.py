@@ -10,3 +10,4 @@ from hubgrep.cli_blueprint.copy_static import copy_static
 from hubgrep.cli_blueprint.fake_data import create_dummydata
 from hubgrep.cli_blueprint.export import export_hosters
 from hubgrep.cli_blueprint.import_data import import_repos
+from hubgrep.cli_blueprint.import_data_2 import import_repos_2
