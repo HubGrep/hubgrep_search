@@ -39,13 +39,14 @@ class SearchResult:
     def __repr__(self):
         return f"{self.username}/{self.name} ({self.weight})"
 
+
 class SphinxSearch:
     """Interface for searching via Sphinx."""
 
     name = "Sphinx"
 
     @classmethod
-    def _search_sphinx(cls, search_phrase):
+    def _search_sphinx(cls, search_phrase) -> Dict[int, Dict]:
         connection = pymysql.connect(
             host=current_app.config["SPHINX_HOST"],
             port=9306,
@@ -69,25 +70,34 @@ class SphinxSearch:
                 result_dicts = cursor.fetchall()
 
         logger.debug(f"found {len(result_dicts)} ids")
-        return result_dicts
+        search_results_by_id = {
+            r["id"]: {
+                "weight": r["weight()"],
+            }
+            for r in result_dicts
+        }
+        return search_results_by_id
 
     @classmethod
-    def _get_from_db(cls, result_dicts: List[Dict]):
-        ids = [result["id"] for result in result_dicts]
+    def _get_from_db(cls, ids: List[int]) -> List[Repository]:
         repos = Repository.query.filter(Repository.id.in_(ids)).all()
-        repos = sorted(repos, key=lambda o: ids.index(o.id))
         return repos
 
     @classmethod
     def search(
         cls, search_phrase: str, tags: dict = {}, context=None, **kwargs
-    ) -> List[Repository]:
-        ids = cls._search_sphinx(search_phrase)
-        results = cls._get_from_db(ids)
+    ) -> List[SearchResult]:
+
+        sphinx_results = cls._search_sphinx(search_phrase)
+
+        db_results = cls._get_from_db(sphinx_results.keys())
+
+        # transform to "SearchResult" for frontend, adding result weights
         search_results = []
-        for i, result in enumerate(results):
-            weight = ids[i]["weight()"]
-            search_result = SearchResult(result, weight=weight)
+        for result in db_results:
+            search_result = SearchResult(
+                result, weight=sphinx_results[result.id]["weight"]
+            )
             search_results.append(search_result)
         return search_results
 
