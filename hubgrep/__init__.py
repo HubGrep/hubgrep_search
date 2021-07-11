@@ -14,15 +14,7 @@ from sassutils.wsgi import SassMiddleware
 from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION, SITE_TITLE
 from hubgrep.lib.init_logging import init_logging
 
-from flask_security import (
-    Security,
-    SQLAlchemyUserDatastore,
-    auth_required,
-    hash_password,
-)
-
 db = SQLAlchemy()
-security = Security()
 migrate = Migrate()
 mail = Mail()
 
@@ -71,11 +63,6 @@ def create_app():
     migrate.init_app(app, db=db)
     mail.init_app(app)
 
-    # import after db is created
-    from hubgrep.models import User, Role
-
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security.init_app(app, user_datastore)
     from hubgrep.frontend_blueprint import frontend
     from hubgrep.cli_blueprint import cli_bp
 
@@ -91,19 +78,9 @@ def create_app():
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
-    @app.before_first_request
-    def post_setup():
-        set_app_cache()
-
     @app.context_processor
     def inject_title():
         return dict(title=SITE_TITLE)  # always expose these in templates
 
     return app
 
-
-def set_app_cache():
-    """ Set common cache properties for the app, used to avoid calling the db for almost-static models. """
-    from flask import current_app as app
-    from hubgrep.models import HostingService
-    app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()

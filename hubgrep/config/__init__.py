@@ -65,10 +65,6 @@ class Config:
 
 class _EnvironmentConfig:
     # user defined config
-    CACHE_BACKEND = os.environ.get("HUBGREP_CACHE_BACKEND", None)
-    CACHE_TIME = os.environ.get("HUBGREP_CACHE_TIME", 3600)
-    REDIS_URL = os.environ.get("HUBGREP_REDIS_URL", None)
-
     MAIL_DEBUG = os.environ.get("HUBGREP_MAIL_DEBUG", False)
 
     MAIL_SERVER = os.environ.get("HUBGREP_MAIL_SERVER", False)
@@ -92,6 +88,8 @@ class _EnvironmentConfig:
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
     INDEXER = os.environ.get('HUBGREP_INDEXER_URL', None)
+    SPHINX_HOST = os.environ.get('HUBGREP_SPHINX_HOST', None)
+
 
 class ProductionConfig(Config, _EnvironmentConfig):
     """ Production Configuration. """
@@ -112,13 +110,12 @@ class BuildConfig(Config):
 
     CSS_OUTPUT_STYLE = "compressed"
 
-    CACHE_TIME = 3600
-
     MAIL_DEBUG = False
 
     SQLALCHEMY_DATABASE_URI = ""
     SECURITY_PASSWORD_SALT = ""
     SECRET_KEY = ""
+    SPHINX_HOST = ""
 
 
 class TestingConfig(Config):
@@ -127,17 +124,15 @@ class TestingConfig(Config):
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
 
-    CACHE_TIME = 3600
-
     MAIL_DEBUG = False
 
     SQLALCHEMY_DATABASE_URI = ""
     SECURITY_PASSWORD_SALT = ""
     SECRET_KEY = ""
-    CACHE_BACKEND = None
     ABOUT_MARKDOWN_FILE = "hubgrep_about.md"
 
     CONTACT_DESCRIPTION = None
     CONTACT_ADDRESS = None
     CONTACT_EMAIL = None
     CONTACT_PHONE = None
+    SPHINX_HOST = None

@@ -10,6 +10,7 @@ from collections import namedtuple
 from datetime import datetime
 from flask import request
 from flask import current_app as app
+from hubgrep.models.hosting_service import HostingService
 from hubgrep.constants import DATE_FORMAT
 
 Checkbox = namedtuple("checkbox", "service_id id label is_checked")
@@ -73,7 +74,7 @@ class SearchForm:
     def get_request_service_checkboxes() -> {}:
         """ Create a checkbox for each hosting-service registered on the current HubGrep instance. """
         exclude_service_checkboxes = dict()
-        for service in app.config["CACHED_HOSTING_SERVICES"]:
+        for service in HostingService.query.all():
             is_checked = request.args.get("xs{}".format(service.id), False) == "on"
             exclude_service_checkboxes[service.id] = Checkbox(service_id=service.id, id="xs{}".format(service.id),
                                                               label=service.label, is_checked=is_checked)

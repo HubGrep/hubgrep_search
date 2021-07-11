@@ -1,8 +1,6 @@
 import logging
-import urllib.parse
 from hubgrep import db
 from sqlalchemy import Index
-from sqlalchemy import Sequence
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
@@ -31,8 +29,8 @@ class Repository(db.Model):
         "HostingService", backref=db.backref("repos", lazy=True)
     )
 
-    repo_name = db.Column(db.String(500), nullable=False)
-    namespace = db.Column(db.String(500), nullable=False)
+    name = db.Column(db.String(500), nullable=False)
+    username = db.Column(db.String(500), nullable=False)
     description = db.Column(db.Text(), nullable=True)
 
     created_at = db.Column(db.DateTime(), nullable=True)

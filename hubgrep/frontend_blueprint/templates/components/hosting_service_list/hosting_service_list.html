@@ -3,7 +3,7 @@
         <ul>
             {% for instance in hosting_services %}
                 <li>
-                    <a class="" href="{{ instance.landingpage_url }}">{{ instance.label }} ({{ instance.type }}, {{ "local index" if instance.has_local_index else "" }})</a>
+                    <a class="" href="{{ instance.landingpage_url }}">{{ instance.label }} ({{ instance.type }})</a>
                 </li>
             {% endfor %}
         </ul>

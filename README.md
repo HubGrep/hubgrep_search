@@ -20,8 +20,7 @@ You can find the **supported services, documentation for deployments and develop
 
 - add sphinx to the hosters: `flask cli add-hoster sphinx "https://hubgrep.io/" "https://hubgrep.io/" "{}"`
 - import repos from the indexer: `flask cli import-repos`
-- update search index: `docker-compose exec sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate`
-
+- update search index: `docker-compose exec sphinx indexer --all --config /etc/manticoresearch/manticore.conf --rotate`
 
 ## Funded from March 2021 until August 2021 by
 

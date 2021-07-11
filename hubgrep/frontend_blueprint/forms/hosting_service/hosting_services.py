@@ -3,19 +3,15 @@ import logging
 
 import markdown
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextAreaField
+from wtforms import StringField, TextAreaField
 from wtforms.widgets.html5 import URLInput
-from wtforms.validators import ValidationError, URL
+from wtforms.validators import URL
 from wtforms.validators import InputRequired
 
-from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
 
 from hubgrep.frontend_blueprint.forms.hosting_service.validators import (
     validate_custom_config,
-    validate_url,
-    validate_api_url,
 )
 
 from hubgrep.frontend_blueprint.forms.hosting_service.hosting_service_first_step import HostingServiceFormFirstStep
@@ -32,7 +28,7 @@ class HostingServiceForm(HostingServiceFormFirstStep):
     # validate_url sanitizes url before validate_api_url makes a call to it
     api_url = StringField(
         "Api Url",
-        [InputRequired(), URL(), validate_url, validate_api_url],
+        [InputRequired(), URL()],
         widget=URLInput(),
         description="should be the same as the landing page in most cases"
     )

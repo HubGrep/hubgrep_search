@@ -2,17 +2,14 @@
 
 from flask import render_template
 from flask import request
-from flask import abort
 from flask import flash
 from flask import redirect
 from flask import url_for
 
 from flask_security import current_user
-from flask_security import login_required
 
-from hubgrep import db, set_app_cache
+from hubgrep import db
 from hubgrep.frontend_blueprint import frontend
-from hubgrep.lib.hosting_service_interfaces import hosting_service_interface_mapping
 from hubgrep.models import HostingService
 from hubgrep.frontend_blueprint.forms.hosting_service.hosting_services import (
     HostingServiceForm,
@@ -54,7 +51,6 @@ def _add_instance_from_form(form):
         h.user_id = current_user.id
     db.session.add(h)
     db.session.commit()
-    set_app_cache()
 
 
 @frontend.route("/add_instance/step_2/", methods=["GET", "POST"])

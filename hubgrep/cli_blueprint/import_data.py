@@ -1,32 +1,16 @@
-import ijson
 import gzip
 import tempfile
-import click
 from hubgrep.cli_blueprint import cli_bp
 
-import os
 import time
 from flask import current_app
-from hubgrep.models import HostingService, Repository
-from hubgrep import security
+from hubgrep.models import HostingService
 from hubgrep import db
 import urllib.parse
-import shutil
 import requests
-import json
-import datetime
 import logging
-from sqlalchemy import and_
 
 logger = logging.getLogger(__name__)
-
-
-class DateTimeDecoder(json.JSONDecoder):
-    """
-    json encoder that can dump datetimes
-    """
-
-    pass
 
 
 def add_hoster(hoster_dict: dict):
@@ -45,63 +29,78 @@ def add_hoster(hoster_dict: dict):
     return hosting_service
 
 
-def fetch_hoster_repos(export_url, hoster, import_timestamp):
-    logger.info(f"fetching {export_url}, {hoster}, {import_timestamp}")
+def fetch_hoster_repos(export_url, hoster):
+    logger.info(f"fetching {export_url}, {hoster}")
+
+    table_name = "repositories"
     with tempfile.TemporaryFile(mode="w+b") as f:
         r = requests.get(export_url, stream=True)
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:  # filter out keep-alive new chunks
                 f.write(chunk)
 
-        logger.info(f"done fetching! ({f.tell()})")
+        logger.info(f"done fetching! ({f.tell()}b)")
+
+        # set filepointer to beginning
         f.seek(0)
-
-        # clean up: if we import the same export twice, we need to get rid of the old one first
-        Repository.__table__.delete().where(
-            and_(
-                Repository.hosting_service_id == hoster.id,
-                Repository.import_timestamp == import_timestamp,
-            )
-        )
-
-        gz_file = gzip.GzipFile(fileobj=f)
-
-        chunk_size = 0
-        repos_to_add = []
-
-        for repo in ijson.items(gz_file, 'item', multiple_values=True):
-            chunk_size += 1
-            r = Repository.from_dict(repo, hoster, import_timestamp)
-            if r:
-                repos_to_add.append(r)
-            if chunk_size >= 10000:
-                logger.info("commiting chunk...")
-                before = time.time()
-                db.session.bulk_save_objects(repos_to_add)
-                db.session.commit()
-                logger.info(f'took {time.time() - before}')
-                chunk_size = 0
-                repos_to_add = []
-        
-        logger.info("commiting last chunk...")
-        db.session.bulk_save_objects(repos_to_add)
-        db.session.commit()
-        Repository.__table__.delete().where(
-            and_(
-                Repository.hosting_service_id == hoster.id,
-                Repository.import_timestamp != import_timestamp,
-            )
-        )
-        """
-        # reading in chunks
-        f.seek(0)
-        gz_file = gzip.GzipFile(fileobj=f)
-        import ijson
-
-        parser = ijson.parse(gz_file)
-        for prefix, key, value in parser:
-            print(prefix, key, value)
-        """
+        with gzip.GzipFile(fileobj=f) as gz_file:
+            con = db.engine.raw_connection()
+            try:
+                cur = con.cursor()
+                # import the new data
+                # this still lacks the hosting_service id, and we default to imported=false
+                import_sql = f"""
+                copy {table_name} (
+                        foreign_id,
+                        name,
+                        username,
+                        description,
+                        created_at,
+                        updated_at,
+                        pushed_at,
+                        stars_count,
+                        forks_count,
+                        is_private,
+                        is_fork,
+                        is_archived,
+                        is_disabled,
+                        is_mirror,
+                        homepage_url,
+                        repo_url
+                        ) 
+                FROM STDIN DELIMITER ';' CSV HEADER
+                """
+                cur.copy_expert(import_sql, gz_file)
+                # cleanup the old repos:
+                # we delete everything for this hoster that has imported=true
+                cur.execute(
+                    f"""
+                            delete
+                            from {table_name}
+                            where
+                                imported is true
+                                and
+                                hosting_service_id = %s
+                            """,
+                    (hoster.id,),
+                )
+                # set our new imports to "imported", and add the hoster id
+                cur.execute(
+                    f"""
+                            update {table_name}
+                            set
+                                imported = true,
+                                hosting_service_id = %s
+                            where
+                                imported is null
+                            """,
+                    (hoster.id,),
+                )
+                # commit!
+                con.commit()
+            finally:
+                con.close()
+        logger.info("imported table")
 
 
 @cli_bp.cli.command(help="import repo data")
@@ -114,10 +113,9 @@ def import_repos():
 
     for hoster_dict in hosters:
         hoster = add_hoster(hoster_dict)
-        exports = hoster_dict.get("exports")
+        exports = hoster_dict.get("exports_unified")
         if exports:
             export_url = exports[0]["url"]
-            import_timestamp = datetime.datetime.fromisoformat(
-                exports[0]["created_at"]
-            ).timestamp()
-            fetch_hoster_repos(export_url, hoster, import_timestamp)
+            before = time.time()
+            fetch_hoster_repos(export_url, hoster)
+            logger.info(f"import took {time.time() - before}s")

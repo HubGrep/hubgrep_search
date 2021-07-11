@@ -1,15 +1,7 @@
-{% macro links(items=[], current_user=None, class_name="site-nav") %}
-    {% set is_authenticated = current_user is defined and current_user.is_authenticated %}
+{% macro links(items=[], class_name="site-nav") %}
     {% if items|length == 0 %}
         {# assign default hubgrep links #}
         {% set items = [[url_for('frontend.about'), "about"], [url_for('frontend.hosters'), "hosters"]] %}
-        {% if is_authenticated %}
-            {% set _ = items.append([url_for('frontend.manage_instances'), "manage"]) %}
-            {% set _ = items.append([url_for('security.logout'), current_user.email + " - logout"]) %}
-        {% else %}
-            {% set _ = items.append([url_for('security.login'), "login"]) %}
-            {% set _ = items.append([url_for('security.register'), "register"]) %}
-        {% endif %}
     {% endif %}
 
     <nav class="nav {{ class_name }}">

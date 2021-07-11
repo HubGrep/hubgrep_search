@@ -12,11 +12,6 @@ services:
     networks:
       - hubgrep_search
 
-  redis:
-    image: redis
-    networks:
-      - hubgrep_search
-
   maildev:
     image: maildev/maildev
     ports:

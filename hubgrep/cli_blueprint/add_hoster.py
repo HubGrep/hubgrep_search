@@ -1,10 +1,9 @@
-import os
 import click
-import json
 from hubgrep.cli_blueprint import cli_bp
 
-from hubgrep import db, security
+from hubgrep import db
 from hubgrep.models import HostingService
+
 
 @cli_bp.cli.command()
 @click.argument("type", type=click.STRING)

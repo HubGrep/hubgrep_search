@@ -8,9 +8,6 @@ services:
     environment:
       POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
 
-  redis:
-    image: redis
-
   service:
     build: 
       context: .

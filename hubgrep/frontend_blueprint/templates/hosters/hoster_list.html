@@ -12,11 +12,7 @@
         <p>When searching with this instance of HubGrep, you are searching through the following services:</p>
         {{ hosting_service_list.hosting_services(hosting_instances) }}
         <h2 class="hoster-list-add">
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('frontend.manage_instances') }}">...add your own!</a>
-            {% else %}
-                <a href="{{ url_for('frontend.add_instance_step_1') }}">...add your own!</a>
-            {% endif %}
+            <a href="{{ url_for('frontend.add_instance_step_1') }}">...add your own!</a>
         </h2>
     </div>
 {% endblock %}
