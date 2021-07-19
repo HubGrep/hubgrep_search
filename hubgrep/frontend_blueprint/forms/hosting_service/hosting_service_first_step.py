@@ -1,5 +1,9 @@
 import logging
 
+
+from urllib.parse import urljoin
+from flask import current_app
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, SelectField
 from wtforms.widgets.html5 import URLInput

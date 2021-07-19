@@ -4,10 +4,10 @@ Hosting-service interface and result-class for Gitea.
 
 import logging
 from typing import List, Dict
+from collections import OrderedDict
 
 from flask import current_app
 import pymysql.cursors
-
 
 from urllib.parse import urljoin
 
@@ -56,12 +56,12 @@ class SphinxSearch:
         with connection:
             with connection.cursor() as cursor:
                 sql = """
-                    select id, weight() 
-                    from repos 
+                    select id, weight() as weight
+                    from repos
                     where match(%s) and is_archived = 0
-                    order by weight() desc, updated_at desc
-                    limit 1000 
-                    option 
+                    order by weight desc
+                    limit 1000
+                    option
                         ranker=sph04,
                         field_weights=(repo_name=50, description=20)
                     """
@@ -70,12 +70,11 @@ class SphinxSearch:
                 result_dicts = cursor.fetchall()
 
         logger.debug(f"found {len(result_dicts)} ids")
-        search_results_by_id = {
-            r["id"]: {
-                "weight": r["weight()"],
-            }
-            for r in result_dicts
-        }
+        search_results_by_id = OrderedDict()
+        for result_dict in result_dicts:
+            search_results_by_id[result_dict["id"]] = {
+                    "weight": result_dict["weight"],
+                }
         return search_results_by_id
 
     @classmethod
@@ -95,8 +94,9 @@ class SphinxSearch:
         # transform to "SearchResult" for frontend, adding result weights
         search_results = []
         for result in db_results:
+            weight = sphinx_results[result.id]["weight"]
             search_result = SearchResult(
-                result, weight=sphinx_results[result.id]["weight"]
+                result, weight
             )
             search_results.append(search_result)
         return search_results

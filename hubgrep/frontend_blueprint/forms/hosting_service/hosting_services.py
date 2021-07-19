@@ -48,9 +48,6 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         """
         h = HostingService()
 
-        # set current_user later - this should be request-agnostic :)
-        h.user_id = None
-
         h.api_url = self.api_url.data
         h.landingpage_url = self.landingpage_url.data
         h.type = self.type.data
@@ -59,7 +56,6 @@ class HostingServiceForm(HostingServiceFormFirstStep):
         else:
             h.api_key = None
         h.custom_config = self.custom_config.data
-        h.set_service_label()
         return h
 
     @classmethod
@@ -80,22 +76,6 @@ class HostingServiceForm(HostingServiceFormFirstStep):
             )
         return Form()
 
-    @classmethod
-    def from_hosting_service(cls, hosting_service: HostingService):
-        """
-        create new form from hosting_service data
-        (prefills the form data)
-        """
-        form = cls.from_hosting_service_type(hosting_service.type)
-
-        form.type.data = hosting_service.type
-        form.landingpage_url.data = hosting_service.landingpage_url
-        form.api_url.data = hosting_service.api_url
-        if hasattr(form, "api_key"):
-            form.api_key.data = hosting_service.api_key
-        form.custom_config.data = hosting_service.custom_config
-        return form
-
     @property
     def important_notes_html(self):
         return markdown.markdown(self.important_notes_md)
@@ -107,29 +87,18 @@ class ApiKeyHostingServiceForm(HostingServiceForm):
 
 
 class GithubHostingServiceForm(ApiKeyHostingServiceForm):
+    """
+    github detail form.
+    """
     important_notes_md = ""
 
 
-class GitlabHostingServiceForm(ApiKeyHostingServiceForm):
+class GitlabHostingServiceForm(HostingServiceForm):
     """
     gitlab detail form.
-    gitlab needs an api key, and a help text...
     """
 
-    important_notes_md = """
-*Gitlab needs an API Key (“token”) to use the search api.
-
-> **! Keep in mind, that with this token, your private repositories can be read as well,**
-> **so its recommended to create a new, empty user account for this !**
-
-To create a new token:
-
-- log in to your Gitlab account
-- find “access tokens” in your user settings
-- create a new “personal access token” without an expiration date, and with the `read_api` scope.
-
-if you ever feel like we should not have this token, you can revoke it there as well.
-    """
+    important_notes_md = ""
 
 
 class GiteaHostingServiceForm(HostingServiceForm):

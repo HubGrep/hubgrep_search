@@ -36,7 +36,6 @@ def search():
     pagination_links = []
     if form.search_phrase:
         results = SphinxSearch.search(form.search_phrase)
-        print(results)
         results_paginated = results[
             results_offset:(results_offset + results_per_page)
         ]
