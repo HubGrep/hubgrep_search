@@ -103,11 +103,15 @@ def fetch_hoster_repos(export_url, hoster):
         logger.info("imported table")
 
 
-@cli_bp.cli.command(help="import repo data")
+@cli_bp.cli.command(help="import the latest exports from the indexer")
 def import_repos():
+    """
+    import all indexer exports,
+    delete the old repo data afterwards
+    """
     db.engine.dialect.psycopg2_batch_mode = True
     indexer_url = current_app.config["INDEXER"]
-    hosters_url = urllib.parse.urljoin(indexer_url, "api/v1/export_hosters")
+    hosters_url = urllib.parse.urljoin(indexer_url, "api/v1/hosters")
     response = requests.get(hosters_url)
     hosters = response.json()
 
