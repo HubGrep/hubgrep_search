@@ -110,7 +110,7 @@ def import_repos():
     delete the old repo data afterwards
     """
     db.engine.dialect.psycopg2_batch_mode = True
-    indexer_url = current_app.config["INDEXER"]
+    indexer_url = current_app.config["INDEXER_URL"]
     hosters_url = urllib.parse.urljoin(indexer_url, "api/v1/hosters")
     response = requests.get(hosters_url)
     hosters = response.json()

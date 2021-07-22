@@ -1,5 +1,5 @@
 """
-Hosting-service interface and result-class for Gitea.
+Sphinx interface and result-class for Sphinx.
 """
 
 import logging
@@ -37,7 +37,7 @@ class SearchResult:
         self.weight = weight
 
     def __repr__(self):
-        return f"{self.username}/{self.name} ({self.weight})"
+        return f"<{self.username}/{self.name} ({self.weight})>"
 
 
 class SphinxSearch:
@@ -70,11 +70,11 @@ class SphinxSearch:
                 result_dicts = cursor.fetchall()
 
         logger.debug(f"found {len(result_dicts)} ids")
-        search_results_by_id = OrderedDict()
+        search_results_by_id = dict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
-                    "weight": result_dict["weight"],
-                }
+                "weight": result_dict["weight"],
+            }
         return search_results_by_id
 
     @classmethod
@@ -95,10 +95,13 @@ class SphinxSearch:
         search_results = []
         for result in db_results:
             weight = sphinx_results[result.id]["weight"]
-            search_result = SearchResult(
-                result, weight
-            )
+            search_result = SearchResult(result, weight)
             search_results.append(search_result)
+            search_results = sorted(
+                search_results,
+                key=lambda search_result: search_result.weight,
+                reverse=True,
+            )
         return search_results
 
     @staticmethod

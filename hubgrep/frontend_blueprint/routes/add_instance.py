@@ -72,7 +72,7 @@ def add_instance_step_2():
     if form.validate_on_submit():
         hosting_service = form.to_hosting_service()
         hosting_service_dict = hosting_service.to_dict()
-        indexer_hoster_url = urljoin(current_app.config["INDEXER"], "api/v1/hosters")
+        indexer_hoster_url = urljoin(current_app.config["INDEXER_URL"], "api/v1/hosters")
         response = None
         try:
             # try to add this hoster to the indexer
