@@ -43,6 +43,16 @@
                            {% if form.exclude_archived %}checked{% endif %}>
                     <label for="archived">{{ gettext("exclude archived") | safe }}</label>
                 </div>
+                <div class="misc-disabled">
+                    <input type="checkbox" id="disabled" name="d"
+                           {% if form.exclude_disabled %}checked{% endif %}>
+                    <label for="disabled">{{ gettext("exclude disabled") | safe }}</label>
+                </div>
+                <div class="misc-mirror">
+                    <input type="checkbox" id="mirror" name="m"
+                           {% if form.exclude_mirror %}checked{% endif %}>
+                    <label for="mirror">{{ gettext("exclude mirror") | safe }}</label>
+                </div>
             </div>
         </div>
 

@@ -11,6 +11,8 @@ services:
       - 5432:5432
     networks:
       - hubgrep_search
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
 
   maildev:
     image: maildev/maildev
@@ -54,7 +56,7 @@ services:
     volumes:
     - ./data:/var/lib/sphinx/data  # directory where sphinx will store index data
     - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
-    mem_limit: 1024m # match indexer.value from sphinx.conf
+      #mem_limit: 1024m # match indexer.value from sphinx.conf
     # before first start: docker-compose run sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate
     # (needs postgres running)
 
