@@ -47,8 +47,8 @@ class TestSphinxSearch:
 
     def test_make_sql_time_filter_partially(self):
         sphinx = SphinxSearch()
-        timestamp_before = (datetime.datetime.fromtimestamp(0),)
-        timestamp_after = (datetime.datetime.fromtimestamp(1),)
+        timestamp_before = datetime.datetime.fromtimestamp(0)
+        timestamp_after = datetime.datetime.fromtimestamp(1)
         time_filter_str, time_filter_vars = sphinx._make_sql_time_filter(
             created_after=None,
             created_before=timestamp_before,
@@ -59,7 +59,7 @@ class TestSphinxSearch:
             time_filter_str
             == "and created_at <= %s and (updated_at >= %s or pushed_at >= %s)"
         )
-        assert time_filter_vars == [timestamp_before, timestamp_after, timestamp_after]
+        assert time_filter_vars == [timestamp_before.timestamp(), timestamp_after.timestamp(), timestamp_after.timestamp()]
 
     def test_make_hosting_service_filters_empty(self):
         sphinx = SphinxSearch()
