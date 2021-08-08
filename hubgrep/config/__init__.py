@@ -6,7 +6,8 @@ from hubgrep.constants import HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT
 
 
 class Config:
-    """ Base configuration. """
+    """Base configuration."""
+
     # hardcoded config
     DEBUG = False
     TESTING = False
@@ -76,7 +77,9 @@ class _EnvironmentConfig:
     MAIL_DEFAULT_SENDER = os.environ.get("HUBGREP_MAIL_DEFAULT_SENDER", None)
     MAIL_MAX_EMAILS = os.environ.get("HUBGREP_MAIL_MAX_EMAILS", None)
 
-    ABOUT_MARKDOWN_FILE = os.environ.get("HUBGREP_ABOUT_MARKDOWN_FILE", "hubgrep_about.md")
+    ABOUT_MARKDOWN_FILE = os.environ.get(
+        "HUBGREP_ABOUT_MARKDOWN_FILE", "hubgrep_about.md"
+    )
 
     CONTACT_DESCRIPTION = os.environ.get("HUBGREP_CONTACT_DESCRIPTION", None)
     CONTACT_ADDRESS = os.environ.get("HUBGREP_CONTACT_ADDRESS", None)
@@ -87,23 +90,26 @@ class _EnvironmentConfig:
     SECURITY_PASSWORD_SALT = os.environ.get("HUBGREP_SECURITY_PASSWORD_SALT", False)
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
-    INDEXER_URL = os.environ.get('HUBGREP_INDEXER_URL', None)
-    SPHINX_HOST = os.environ.get('HUBGREP_SPHINX_HOST', None)
+    INDEXER_URL = os.environ.get("HUBGREP_INDEXER_URL", None)
+    SPHINX_HOST = os.environ.get("HUBGREP_SPHINX_HOST", None)
 
 
 class ProductionConfig(Config, _EnvironmentConfig):
-    """ Production Configuration. """
+    """Production Configuration."""
+
     DEBUG = False
 
 
 class DevelopmentConfig(Config, _EnvironmentConfig):
-    """ Development configuration. """
+    """Development configuration."""
+
     DEBUG = True
     WATCH_SCSS = True
 
 
 class BuildConfig(Config):
-    """ Build configuration, in bundling and preparation for deployment. """
+    """Build configuration, in bundling and preparation for deployment."""
+
     TESTING = True
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
@@ -119,7 +125,8 @@ class BuildConfig(Config):
 
 
 class TestingConfig(Config):
-    """ Test configuration, as used by tests. """
+    """Test configuration, as used by tests."""
+
     TESTING = True
     DEBUG = True
     SECURITY_SEND_REGISTER_EMAIL = False
