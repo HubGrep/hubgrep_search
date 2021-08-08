@@ -8,15 +8,25 @@ logger = logging.getLogger(__name__)
 
 
 class TableHelper:
+    """
+    helper class for raw db requests
+
+    use like
+    ```
+    with TableHelper._cursor() as cur:
+        TableHelper.drop_table(cur, "some_table")
+    ```
+
+    commit runs on leaving context
+    """
     @classmethod
     @contextmanager
-    def _cursor(cls, autocommit=True):
+    def _cursor(cls):
         con = db.engine.raw_connection()
         try:
             cur = con.cursor()
             yield cur
-            if autocommit:
-                con.commit()
+            con.commit()
         finally:
             con.close()
 
