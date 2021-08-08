@@ -10,7 +10,8 @@ import pytest
 
 from hubgrep import create_app
 from hubgrep import db
-from hubgrep.models import HostingService
+from hubgrep.models.hosting_service import HostingService
+from hubgrep.models.repository import Repository
 logger = logging.getLogger(__name__)
 
 
@@ -26,18 +27,18 @@ def get_example_hoster():
 @pytest.fixture(scope='class')
 def test_app():
     app = create_app()
-    db_fd, file_path = tempfile.mkstemp()
-    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{file_path}'
 
     with app.app_context():
         db.create_all()
+
+        db.session.query(Repository).delete()
+        db.session.query(HostingService).delete()
+        db.session.commit()
+
         hoster = get_example_hoster()
         db.session.add(hoster)
         db.session.commit()
     yield app
-
-    os.close(db_fd)
-    os.unlink(file_path)
 
 
 @pytest.fixture(scope='class')

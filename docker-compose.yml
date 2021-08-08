@@ -2,6 +2,16 @@ version: "2"
 
 services:
 
+  test_postgres:
+    image: postgres:13
+    env_file: .env
+    environment:
+      POSTGRES_USER: hubgrep
+      POSTGRES_PASSWORD: hubgrep
+      POSTGRES_DB: hubgrep
+    networks:
+      - hubgrep_search
+
   postgres:
     image: postgres:13
     env_file: .env
