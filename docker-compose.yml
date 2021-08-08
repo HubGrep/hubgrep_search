@@ -21,8 +21,6 @@ services:
       - 5432:5432
     networks:
       - hubgrep_search
-    volumes:
-      - ./postgres_data:/var/lib/postgresql/data
 
   maildev:
     image: maildev/maildev
