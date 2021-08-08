@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 
+# everything that needs to be done to update the search index on the fly
+#
+
 set -e
 set -x
 
