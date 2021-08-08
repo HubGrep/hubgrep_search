@@ -10,8 +10,6 @@ services:
       POSTGRES_DB: hubgrep
     ports:
       - 5432:5432
-    networks:
-      - hubgrep_search
 
   service:
     build: .
@@ -30,10 +28,3 @@ services:
             flask run --host 0.0.0.0 --port 8080
             "
     tty: true
-    networks:
-      - hubgrep_search
-  
-networks:
-  hubgrep_search:
-  hubgrep:
-    name: hubgrep
