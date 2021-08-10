@@ -2,6 +2,16 @@ version: "2"
 
 services:
 
+  test_postgres:
+    image: postgres:13
+    env_file: .env
+    environment:
+      POSTGRES_USER: hubgrep
+      POSTGRES_PASSWORD: hubgrep
+      POSTGRES_DB: hubgrep
+    networks:
+      - hubgrep_search
+
   postgres:
     image: postgres:13
     env_file: .env
@@ -52,11 +62,8 @@ services:
     - "127.0.0.1:9312:9312" # bind to local interface only!
     - "127.0.0.1:9306:9306"
     volumes:
-    - ./data:/var/lib/sphinx/data  # directory where sphinx will store index data
+    - ./sphinx_data:/var/lib/sphinx/data  # directory where sphinx will store index data
     - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
-      #mem_limit: 1024m # match indexer.value from sphinx.conf
-    # before first start: docker-compose run sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate
-    # (needs postgres running)
 
     networks:
       - hubgrep_search

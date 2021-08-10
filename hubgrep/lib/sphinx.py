@@ -159,12 +159,12 @@ class SphinxSearch:
         with connection:
             with connection.cursor() as cursor:
                 sql_template = f"""
-                    select id, weight() as weight
+                    select id, weight() as weight, (updated_at - created_at) as age
                     from repos
                     where
                         match(%s)
                     {time_filters} {bool_filters} {hosting_service_filters}
-                    order by weight desc
+                    order by weight desc, age desc
                     limit 1000
                     option
                         ranker=sph04,

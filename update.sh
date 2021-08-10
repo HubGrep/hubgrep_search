@@ -1,17 +1,25 @@
 #!/bin/bash
 
+# 
+# everything that needs to be done to update the search index on the fly
+#
+
 set -e
 set -x
 
 docker_compose=docker-compose  #/usr/local/bin/docker-compose
+temp_table_name=new_repositories
 
 
+$docker_compose up -d sphinx postgres service
 
-#$docker_compose run service flask cli import-repos
+# import new data from indexer
+$docker_compose exec service /bin/bash -ic "flask cli import-repos ${temp_table_name}"
 
-# todo: import to new table, create index from new table, then rotate both, delete old one
-
-$docker_compose up -d sphinx postgres
+# create new search index, rotate search index
+# (todo: table name is hardcoded in sphinx.conf for now...)
 $docker_compose exec sphinx cat /opt/sphinx/conf/sphinx.conf
+# todo: if data is empty: docker-compose run sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate
 $docker_compose exec sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf --rotate
 
+$docker_compose exec service /bin/bash -ic "flask cli rotate-repositories-table ${temp_table_name}"

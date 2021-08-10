@@ -48,6 +48,7 @@ def create_app():
         APP_ENV_TESTING: "hubgrep.config.TestingConfig",
     }
     app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
+    print(f"starting in {app_env} config")
     app.config.from_object(config_mapping[app_env])
 
     if app.config['WATCH_SCSS']:
