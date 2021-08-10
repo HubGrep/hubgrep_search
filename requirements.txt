@@ -31,6 +31,7 @@ pytest==6.2.4
 pytest-cov==2.12.1
 pytest-cover==3.0.0
 pytest-coverage==0.0
+pytest-env==0.6.2
 python-dateutil==2.8.2
 python-dotenv==0.18.0
 python-editor==1.0.4

@@ -35,3 +35,13 @@ CONNECTION_ERROR = -2
 TIMEOUT_ERROR = -3
 TOO_MANY_REDIRECTS_ERROR = -4
 
+
+class FORM_ARGS:
+    search_phrase = "s"
+    exclude_forks = "f"
+    exclude_archived = "a"
+    exclude_disabled = "d"
+    exclude_mirror = "m"
+    created_after = "ca"
+    created_before = "cb"
+    updated_after = "ua"
