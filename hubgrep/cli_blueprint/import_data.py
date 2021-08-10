@@ -37,7 +37,7 @@ def add_hoster(hoster_dict: dict):
 def append_repos(gz_file, hoster, new_table_name):
     with TableHelper._cursor() as cursor:
 
-        temp_table_name = "temp_repos"
+        temp_table_name = "temp_hoster_repositories"
         logger.info("creating temp table...")
         TableHelper.create_empty_temporary_repositories_table(cursor, temp_table_name)
 
@@ -116,8 +116,8 @@ def _get_tmp_table_name(identifier):
 
 
 @cli_bp.cli.command(help="import the latest exports from the indexer")
-@click.argument("temp_table_name")
-def import_repos(temp_table_name):
+@click.argument("new_table_name")
+def import_repos(new_table_name):
     """
     import all indexer exports to a new table,
     creates new HostingServices if neccessary
@@ -130,9 +130,9 @@ def import_repos(temp_table_name):
 
     with TableHelper._cursor() as cursor:
         # cleanup before we start
-        TableHelper.drop_table(cursor, temp_table_name)
+        TableHelper.drop_table(cursor, new_table_name)
         # create new, empty table that looks like repositories
-        TableHelper.create_empty_repositories_table(cursor, temp_table_name)
+        TableHelper.create_empty_repositories_table(cursor, new_table_name)
 
     for hoster_dict in hosters:
         hoster = add_hoster(hoster_dict)
@@ -140,15 +140,15 @@ def import_repos(temp_table_name):
         if exports:
             export_url = exports[0]["url"]
             before = time.time()
-            fetch_hoster_repos(export_url, hoster, temp_table_name)
+            fetch_hoster_repos(export_url, hoster, new_table_name)
             logger.info(f"import took {time.time() - before}s")
 
 
 @cli_bp.cli.command(help="delete old 'repositories' table, replace it with the new one")
-@click.argument("temp_table_name")
-def rotate_repositories_table(temp_table_name):
+@click.argument("new_table_name")
+def rotate_repositories_table(new_table_name):
     logger.info("rotating tables...")
     with TableHelper._cursor() as cursor:
         table_to_replace = "repositories"
-        table_with_new_data = temp_table_name
+        table_with_new_data = new_table_name
         TableHelper.rotate_tables(cursor, table_to_replace, table_with_new_data)

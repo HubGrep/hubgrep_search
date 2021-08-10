@@ -8,7 +8,7 @@ set -e
 set -x
 
 docker_compose=docker-compose  #/usr/local/bin/docker-compose
-temp_table_name=temp_repositories
+temp_table_name=new_repositories
 
 # sphinx doesnt like being started without having an index,
 # so we skip it here and only start postgres and hubgrep
