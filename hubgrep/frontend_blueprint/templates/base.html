@@ -7,7 +7,7 @@
         {% block metas %}
             <meta charset="UTF-8">
             {% block open_graph %}
-                <meta property="og:title" content="{{ title }} - Search for open source projects!">
+                <meta property="og:title" content="{{ constants.SITE_TITLE }} - Search for open source projects!">
                 <meta property="og:type" content="website">
                 <meta property="og:url" content="{{ request.base_url }}">
                 <meta property="og:image" content="{{ request.base_url }}static/images/frog_small.png">
@@ -27,12 +27,12 @@
         {% block header_title %}
             <div class="main-title">
                 <a class="negate" href="{{ url_for('frontend.search') }}">
-                    <h1>{{ title }}</h1>
+                    <h1>{{ constants.SITE_TITLE }}</h1>
                 </a>
             </div>
         {% endblock header_title %}
         {% block header_menu %}
-            {{ nav.links(current_user=current_user) }}
+            {{ nav.links() }}
         {% endblock header_menu %}
     {% endblock header %}
 </header>

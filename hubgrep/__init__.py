@@ -8,23 +8,14 @@ from flask_babel import Babel
 from flask_assets import Environment
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from flask_mail import Mail
 from sassutils.wsgi import SassMiddleware
 
 from hubgrep.constants import APP_ENV_BUILD, APP_ENV_TESTING, APP_ENV_DEVELOPMENT, APP_ENV_PRODUCTION, SITE_TITLE
+from hubgrep import constants
 from hubgrep.lib.init_logging import init_logging
 
-from flask_security import (
-    Security,
-    SQLAlchemyUserDatastore,
-    auth_required,
-    hash_password,
-)
-
 db = SQLAlchemy()
-security = Security()
 migrate = Migrate()
-mail = Mail()
 
 logger = logging.getLogger(__name__)
 
@@ -52,12 +43,13 @@ def create_app():
         return response
 
     config_mapping = {
-        APP_ENV_BUILD: "hubgrep.config.BuildConfig",
-        APP_ENV_DEVELOPMENT: "hubgrep.config.DevelopmentConfig",
-        APP_ENV_PRODUCTION: "hubgrep.config.ProductionConfig",
-        APP_ENV_TESTING: "hubgrep.config.TestingConfig",
+        constants.APP_ENV_BUILD: "hubgrep.config.BuildConfig",
+        constants.APP_ENV_DEVELOPMENT: "hubgrep.config.DevelopmentConfig",
+        constants.APP_ENV_PRODUCTION: "hubgrep.config.ProductionConfig",
+        constants.APP_ENV_TESTING: "hubgrep.config.TestingConfig",
     }
-    app_env = os.environ.get("APP_ENV", APP_ENV_DEVELOPMENT)
+    app_env = os.environ.get("APP_ENV", constants.APP_ENV_DEVELOPMENT)
+    print(f"starting in {app_env} config")
     app.config.from_object(config_mapping[app_env])
 
     if app.config['WATCH_SCSS']:
@@ -69,13 +61,7 @@ def create_app():
 
     db.init_app(app)
     migrate.init_app(app, db=db)
-    mail.init_app(app)
 
-    # import after db is created
-    from hubgrep.models import User, Role
-
-    user_datastore = SQLAlchemyUserDatastore(db, User, Role)
-    security.init_app(app, user_datastore)
     from hubgrep.frontend_blueprint import frontend
     from hubgrep.cli_blueprint import cli_bp
 
@@ -88,22 +74,9 @@ def create_app():
         return lang
 
     app.jinja_env.globals["get_locale"] = get_locale
+    app.jinja_env.globals["constants"] = constants
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 
-    @app.before_first_request
-    def post_setup():
-        set_app_cache()
-
-    @app.context_processor
-    def inject_title():
-        return dict(title=SITE_TITLE)  # always expose these in templates
-
     return app
 
-
-def set_app_cache():
-    """ Set common cache properties for the app, used to avoid calling the db for almost-static models. """
-    from flask import current_app as app
-    from hubgrep.models import HostingService
-    app.config["CACHED_HOSTING_SERVICES"] = HostingService.query.all()

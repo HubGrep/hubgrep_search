@@ -15,3 +15,6 @@ host_static/
 sync.sh
 restore_backup.sh
 rsync.exclude
+sphinx_data/
+sync_raspi.sh
+postgres_data/

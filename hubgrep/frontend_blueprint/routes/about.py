@@ -5,7 +5,7 @@ from flask import render_template
 from flask import current_app as app
 from flask import render_template_string
 from hubgrep.frontend_blueprint import frontend
-
+from hubgrep.models.hosting_service import HostingService
 
 @frontend.route("/about")
 def about():
@@ -29,7 +29,7 @@ def about():
     # in the template, we need to add the "safe" filter, otherwise our html will be escaped
     return render_template(
         "about/about.html",
-        hosting_instances=app.config["CACHED_HOSTING_SERVICES"],
+        hosting_instances=HostingService.query.all(),
         contact_description=contact_description,
         contact_address=contact_address,
         contact_email=contact_email,

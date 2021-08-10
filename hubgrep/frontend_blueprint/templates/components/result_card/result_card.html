@@ -1,16 +1,16 @@
 {% macro card(SearchResult) %}
     <div class="item">
-        <a class="item-signature" href="{{ SearchResult.html_url }}">
+        <a class="item-signature" href="{{ SearchResult.repo_url }}">
             <h2>
-                <span class="item-signature-name">{{ SearchResult.owner_name }} /</span>
-                <span class="item-signature-owner">{{ SearchResult.repo_name }}</span>
+                <span class="item-signature-name">{{ SearchResult.username }} /</span>
+                <span class="item-signature-owner">{{ SearchResult.name }}</span>
             </h2>
             <br>
-            <span class="item-signature-url">{{ SearchResult.html_url }}</span>
+            <span class="item-signature-url">{{ SearchResult.repo_url }}</span>
         </a>
         <div class="item-detail">
             <p class="item-detail-desc">
-                <span>{{ SearchResult.repo_description }}</span>
+                <span>{{ SearchResult.description }}</span>
             </p>
             <p class="item-detail-misc">
                 <span class="item-detail-misc-lang">
@@ -29,12 +29,16 @@
                 </span>
                 <span class="item-detail-date-modified">
                     <span class="label">{{ gettext('updated') | safe }}:</span>
-                    <span>{{ SearchResult.last_commit }}</span>
+                    <span>{{ SearchResult.updated_at }}</span>
+                </span>
+                <span class="item-detail-date-pushed">
+                    <span class="label">{{ gettext('pushed') | safe }}:</span>
+                    <span>{{ SearchResult.pushed_at }}</span>
                 </span>
             </p>
             <p class="item-detail-score">
                 <span class="label">{{ gettext('score') | safe }}:</span>
-                <span>{{ SearchResult.score }}</span>
+                <span>{{ SearchResult.weight }}, {{SearchResult.age}}</span>
             </p>
         </div>
     </div>

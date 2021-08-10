@@ -2,6 +2,16 @@ version: "2"
 
 services:
 
+  test_postgres:
+    image: postgres:13
+    env_file: .env
+    environment:
+      POSTGRES_USER: hubgrep
+      POSTGRES_PASSWORD: hubgrep
+      POSTGRES_DB: hubgrep
+    networks:
+      - hubgrep_search
+
   postgres:
     image: postgres:13
     env_file: .env
@@ -9,14 +19,15 @@ services:
       POSTGRES_PASSWORD: ${HUBGREP_POSTGRES_PASSWORD}
     ports:
       - 5432:5432
-
-  redis:
-    image: redis
+    networks:
+      - hubgrep_search
 
   maildev:
     image: maildev/maildev
     ports:
       - 8090:80
+    networks:
+      - hubgrep_search
 
   service:
     build: .
@@ -40,6 +51,25 @@ services:
             flask run --host 0.0.0.0 --port 8080
             "
     tty: true
+    networks:
+      - hubgrep_search
+      - hubgrep
+  
+  sphinx:
+    image: macbre/sphinxsearch:3.3.1
+    env_file: .env
+    ports:
+    - "127.0.0.1:9312:9312" # bind to local interface only!
+    - "127.0.0.1:9306:9306"
+    volumes:
+    - ./sphinx_data:/var/lib/sphinx/data  # directory where sphinx will store index data
+    - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
 
-volumes:
-  pgdata:
+    networks:
+      - hubgrep_search
+
+
+networks:
+  hubgrep_search:
+  hubgrep:
+    name: hubgrep

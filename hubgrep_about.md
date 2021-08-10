@@ -8,7 +8,7 @@ HubGrep is free software - we encourage you to host your own search instance, wi
 
 You can find the source code [here](https://github.com/HubGrep/hubgrep_search).
   
-If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('security.login') }}) - HubGrep currently support Gitea, Gitlab, and Github! 
+If you are hosting projects yourself, consider [adding your instance to our list]({{ url_for('frontend.add_instance_step_1') }}) - HubGrep currently support Gitea, Gitlab, and Github! 
 
 Something missing? Open a pull request or [create an issue](https://github.com/HubGrep/hubgrep_search/issues/new) for us!
 

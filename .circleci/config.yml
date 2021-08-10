@@ -5,8 +5,8 @@ jobs:
     machine: true
     steps:
       - checkout
-      - run: docker build -f Dockerfile.prod -t hubgrep:test .
-      - run: docker run --rm hubgrep:test /bin/bash -c "./manage.sh test"
+      - run: docker-compose -f docker-compose-ci.yml up -d test_postgres
+      - run: docker-compose -f docker-compose-ci.yml run --rm service bash -c "pip install -r requirements.txt && ./manage.sh test"
    
     
 

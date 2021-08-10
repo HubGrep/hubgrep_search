@@ -5,11 +5,11 @@ Note: Not the actual HTML form, which can be found in -
 'hubgrep/frontend_blueprint/templates/components/search_form/search_form.html'
 """
 import pytz
-from typing import List
+from typing import List, Dict
 from collections import namedtuple
 from datetime import datetime
 from flask import request
-from flask import current_app as app
+from hubgrep.models.hosting_service import HostingService
 from hubgrep.constants import DATE_FORMAT
 
 Checkbox = namedtuple("checkbox", "service_id id label is_checked")
@@ -19,9 +19,11 @@ utc = pytz.UTC
 class SearchForm:
     """ Input-fields relate to either a repository property or a hosting-service where they a found. """
     search_phrase: str
-    exclude_service_checkboxes: [Checkbox]
+    exclude_service_checkboxes: Dict[int, Checkbox]
     exclude_forks: bool
     exclude_archived: bool
+    exclude_disabled: bool
+    exclude_mirror: bool
     created_after: str
     created_before: str
     updated_after: str
@@ -31,9 +33,11 @@ class SearchForm:
 
     def __init__(self,
                  search_phrase: str = None,
-                 exclude_service_checkboxes: List[Checkbox] = None,
+                 exclude_service_checkboxes: Dict[int, Checkbox] = None,
                  exclude_forks: bool = False,
                  exclude_archived: bool = False,
+                 exclude_disabled: bool = False,
+                 exclude_mirror: bool = False,
                  created_after: str = None,
                  created_before: str = None,
                  updated_after: str = None,
@@ -56,6 +60,8 @@ class SearchForm:
         self.exclude_service_checkboxes = exclude_service_checkboxes
         self.exclude_forks = exclude_forks
         self.exclude_archived = exclude_archived
+        self.exclude_disabled = exclude_disabled
+        self.exclude_mirror = exclude_mirror
         self.created_after = created_after
         self.created_before = created_before
         self.updated_after = updated_after
@@ -69,11 +75,18 @@ class SearchForm:
         if not updated_after_dt and self.updated_after:
             self.updated_after_dt = SearchForm.get_form_datetime_in_utc(self.updated_after)
 
+    def get_excluded_hosting_service_ids(self):
+        excluded_ids = []
+        for _, hosting_service_checkbox in self.exclude_service_checkboxes.items():
+            if hosting_service_checkbox.is_checked:
+                excluded_ids.append(hosting_service_checkbox.service_id)
+        return excluded_ids
+
     @staticmethod
     def get_request_service_checkboxes() -> {}:
         """ Create a checkbox for each hosting-service registered on the current HubGrep instance. """
         exclude_service_checkboxes = dict()
-        for service in app.config["CACHED_HOSTING_SERVICES"]:
+        for service in HostingService.query.all():
             is_checked = request.args.get("xs{}".format(service.id), False) == "on"
             exclude_service_checkboxes[service.id] = Checkbox(service_id=service.id, id="xs{}".format(service.id),
                                                               label=service.label, is_checked=is_checked)
