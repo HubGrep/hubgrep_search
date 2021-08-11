@@ -27,11 +27,11 @@ services:
     # to copy static files out of the container
     # set STATIC_PATH in .env, and link 
     # the folder to the host
-    #volumes:
-    #  - "./host_static:${STATIC_PATH}"
+    volumes:
+      - "./static:${STATIC_PATH}"
 
     ports:
-      - 8080:8080
+      - 127.0.0.1:8080:8080
     command:
       - /bin/bash
       - -c
@@ -53,8 +53,6 @@ services:
     - ./sphinx_data:/var/lib/sphinx/data  # directory where sphinx will store index data
     - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
 
-    networks:
-      - hubgrep_search
 
 volumes:
   pgdata:
