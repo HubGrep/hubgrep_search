@@ -16,12 +16,8 @@
         <div class="search-result">
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
-                {% for failure in failed_requests %}
-                    {% set error_message = failure.get_user_error_message() %}
-                    {% if current_user.has_role('admin') %}
-                        {% set error_message = " " ~ failure.get_admin_error_message() %}
-                    {% endif %}
-                    {{ status.message("warn", error_message) }}
+                {% for error in user_errors %}
+                    {{ status.message("warn", error) }}
                 {% endfor %}
                 {{ status.message("info", search_feedback) }}
             </div>

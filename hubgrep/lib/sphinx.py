@@ -4,11 +4,13 @@ Sphinx interface and result-class for Sphinx.
 
 import logging
 import datetime
+
 from typing import List, Dict
 from collections import OrderedDict
 
 from flask import current_app
 import pymysql.cursors
+from pymysql.err import ProgrammingError
 
 from urllib.parse import urljoin
 
@@ -16,6 +18,8 @@ from hubgrep.models import Repository
 
 logger = logging.getLogger(__name__)
 
+class UserError(Exception):
+    pass
 
 class SearchResult:
     def __init__(self, repo: Repository, weight: float):
@@ -204,18 +208,24 @@ class SphinxSearch:
         created_before: datetime.datetime = None,
         updated_after: datetime.datetime = None,
     ) -> List[SearchResult]:
-
-        sphinx_results = cls._search_sphinx(
-            search_phrase,
-            exclude_hosting_service_ids=exclude_hosting_service_ids,
-            exclude_forks=exclude_forks,
-            exclude_archived=exclude_archived,
-            exclude_disabled=exclude_disabled,
-            exclude_mirror=exclude_mirror,
-            created_after=created_after,
-            created_before=created_before,
-            updated_after=updated_after,
-        )
+        try:
+            sphinx_results = cls._search_sphinx(
+                search_phrase,
+                exclude_hosting_service_ids=exclude_hosting_service_ids,
+                exclude_forks=exclude_forks,
+                exclude_archived=exclude_archived,
+                exclude_disabled=exclude_disabled,
+                exclude_mirror=exclude_mirror,
+                created_after=created_after,
+                created_before=created_before,
+                updated_after=updated_after,
+            )
+        except ProgrammingError as e:
+            if len(e.args) == 2:
+                # (1064, index 'repos': query error: no field 'repo_name' found in schema)
+                if e.args[0] == 1064:
+                    raise UserError(e.args[1])
+            raise UserError("unknown error")
 
         db_results = cls._get_from_db(sphinx_results.keys())
 
