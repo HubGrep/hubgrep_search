@@ -20,11 +20,12 @@ class HostingService(db.Model):
 
     api_url = db.Column(db.String(500), unique=True, nullable=False)
    
-    # frontend label
-    label = db.Column(db.String(80))
+    export_timestamp = db.Column(db.DateTime)
+    repo_count = db.Column(db.Integer)
 
-    def set_service_label(self):
-        self.label = re.split("//", self.landingpage_url)[1].rstrip("/")
+    @property
+    def domain(self):
+        return re.split("//", self.landingpage_url)[1].rstrip("/")
 
     def to_dict(self):
         return dict(

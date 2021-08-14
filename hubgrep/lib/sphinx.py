@@ -72,11 +72,9 @@ class SphinxSearch:
             time_filter_vars.append(int(created_before.timestamp()))
         if updated_after:
             # we dont make a difference if its just the project meta or the repo itself that was updated.
-            # since its two times the same var used, we append it twice.
-            time_filters.append("(updated_at >= %s or pushed_at >= %s)")
+            # (also, sphinx doesnt supprt "or", so we have a special attribute...)
+            time_filters.append("pushed_or_updated_at >= %s")
             time_filter_vars.append(int(updated_after.timestamp()))
-            time_filter_vars.append(int(updated_after.timestamp()))
-
         if time_filters:
             # construct "and a and b and c"
             time_filters_str = " and ".join(time_filters)

@@ -18,7 +18,6 @@ def add_hoster(type, api_url, landingpage_url, config):
     h.api_url = api_url
     h.landingpage_url = landingpage_url
     h.config = config
-    h.set_service_label()
 
     print(f"adding {h.api_url}")
 
