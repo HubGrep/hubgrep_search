@@ -19,22 +19,17 @@ logger = logging.getLogger(__name__)
 
 
 def add_hoster(hoster_dict: dict):
-    api_url = hoster_dict["api_url"]
-    hosting_service = HostingService.query.filter_by(api_url=api_url).first()
-    if not hosting_service:
-        hosting_service = HostingService()
-
-    hosting_service.label = api_url
-    hosting_service.api_url = hoster_dict["api_url"]
-    hosting_service.landingpage_url = hoster_dict["landingpage_url"]
-    hosting_service.type = hoster_dict["type"]
-    hosting_service.has_local_index = True
+    hosting_service = HostingService.from_dict(hoster_dict)
     db.session.add(hosting_service)
     db.session.commit()
     return hosting_service
 
 
-def append_repos(gz_file, hoster, new_table_name):
+def append_repos(gz_file, hoster, new_table_name) -> int:
+    """
+    add repos to database
+    return repo count
+    """
     with TableHelper._cursor() as cursor:
 
         temp_table_name = "temp_hoster_repositories"
@@ -80,8 +75,11 @@ def append_repos(gz_file, hoster, new_table_name):
         logger.info(f"imported {count} repos for {hoster.api_url}")
 
         # append the new data to our actual table, setting the hoster id as we go
-        logger.info("imported to temp table, importing to persistent table and setting hosting_service_id")
-        cursor.execute(f"""
+        logger.info(
+            "imported to temp table, importing to persistent table and setting hosting_service_id"
+        )
+        cursor.execute(
+            f"""
         INSERT INTO {new_table_name} ({",".join(import_fields)}, hosting_service_id)
         SELECT {",".join(import_fields)}, {hoster.id}
           FROM {temp_table_name};
@@ -90,6 +88,8 @@ def append_repos(gz_file, hoster, new_table_name):
         # table should automatically get dropped - but when? when we close the cursor..?
         logger.info("dropping temp table")
         TableHelper.drop_table(cursor, temp_table_name)
+
+        return count
 
 
 def fetch_hoster_repos(export_url, hoster, new_table_name):
@@ -106,9 +106,12 @@ def fetch_hoster_repos(export_url, hoster, new_table_name):
         # set filepointer to beginning
         f.seek(0)
 
+        repo_count = 0
         with gzip.GzipFile(fileobj=f) as gz_file:
-            append_repos(gz_file, hoster, new_table_name)
+            repo_count = append_repos(gz_file, hoster, new_table_name)
+
         logger.info("imported table!")
+        return repo_count
 
 
 def _get_tmp_table_name(identifier):
@@ -139,8 +142,14 @@ def import_repos(new_table_name):
         exports = hoster_dict.get("exports_unified")
         if exports:
             export_url = exports[0]["url"]
+            created_at = exports[0]["created_at"]
             before = time.time()
-            fetch_hoster_repos(export_url, hoster, new_table_name)
+            repo_count = fetch_hoster_repos(export_url, hoster, new_table_name)
+            with TableHelper._cursor() as cursor:
+                cursor.execute(
+                    f"update hosting_service set repo_count = %s, export_timestamp = %s where id = %s",
+                    (repo_count, created_at, hoster.id),
+                )
             logger.info(f"import took {time.time() - before}s")
 
 

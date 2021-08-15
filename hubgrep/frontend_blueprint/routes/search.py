@@ -3,10 +3,12 @@
 from flask import render_template
 from flask import current_app as app
 from flask import request
+from flask import flash
 
 from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE, FORM_ARGS
 from hubgrep.lib.pagination import get_page_links
 from hubgrep.lib.sphinx import SphinxSearch
+from hubgrep.lib.sphinx import UserError
 from hubgrep.lib.search_form import SearchForm
 from hubgrep.frontend_blueprint import frontend
 
@@ -34,20 +36,25 @@ def search():
         updated_after=request.args.get(FORM_ARGS.updated_after, ""),
     )
     search_feedback = ""
-    failed_requests = []
+    user_errors = []
     pagination_links = []
     if form.search_phrase:
-        results = SphinxSearch.search(
-            form.search_phrase,
-            exclude_hosting_service_ids=form.get_excluded_hosting_service_ids(),
-            exclude_forks=form.exclude_forks,
-            exclude_archived=form.exclude_archived,
-            exclude_disabled=form.exclude_disabled,
-            exclude_mirror=form.exclude_mirror,
-            created_after=form.created_after_dt,
-            created_before=form.created_before_dt,
-            updated_after=form.updated_after_dt
-        )
+        try:
+            results = SphinxSearch.search(
+                form.search_phrase,
+                exclude_hosting_service_ids=form.get_excluded_hosting_service_ids(),
+                exclude_forks=form.exclude_forks,
+                exclude_archived=form.exclude_archived,
+                exclude_disabled=form.exclude_disabled,
+                exclude_mirror=form.exclude_mirror,
+                created_after=form.created_after_dt,
+                created_before=form.created_before_dt,
+                updated_after=form.updated_after_dt
+            )
+        except UserError as e:
+            results = []
+            user_errors.append(e)
+
         results_paginated = results[
             results_offset : (results_offset + results_per_page)
         ]
@@ -65,7 +72,7 @@ def search():
         search_results=results_paginated,
         search_feedback=search_feedback,
         pagination_links=pagination_links,
-        failed_requests=failed_requests,
+        user_errors=user_errors,
     )
 
 
