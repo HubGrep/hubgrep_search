@@ -30,6 +30,10 @@
                     <label for="updated">{{ gettext("updated since:") | safe }}</label>
                     <input type="date" id="updated" name="{{ constants.FORM_ARGS.updated_after }}" value="{{ form.updated_after }}">
                 </div>
+                <div class="dates-pushed">
+                    <label for="pushed">{{ gettext("pushed since:") | safe }}</label>
+                    <input type="date" id="pushed" name="{{ constants.FORM_ARGS.pushed_after }}" value="{{ form.pushed_after }}">
+                </div>
             </div>
 
             <div class="misc">

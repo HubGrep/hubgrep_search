@@ -22,7 +22,7 @@ class UserError(Exception):
     pass
 
 class SearchResult:
-    def __init__(self, repo: Repository, weight: float):
+    def __init__(self, repo: Repository, weight: float, age):
         self.hosting_service_type = repo.hosting_service.type
         self.name = repo.name
         self.username = repo.username
@@ -40,6 +40,7 @@ class SearchResult:
         self.homepage_url = repo.homepage_url
         self.repo_url = repo.repo_url
         self.weight = weight
+        self.age = age
 
     def __repr__(self):
         return f"<{self.username}/{self.name} ({self.weight})>"
@@ -56,6 +57,7 @@ class SphinxSearch:
         created_after: datetime.datetime,
         created_before: datetime.datetime,
         updated_after: datetime.datetime,
+        pushed_after: datetime.datetime,
     ):
         """
         returns the time filters as a string, as well as a list of vars to use in the mysql query
@@ -71,10 +73,11 @@ class SphinxSearch:
             time_filters.append("created_at <= %s")
             time_filter_vars.append(int(created_before.timestamp()))
         if updated_after:
-            # we dont make a difference if its just the project meta or the repo itself that was updated.
-            # (also, sphinx doesnt supprt "or", so we have a special attribute...)
-            time_filters.append("pushed_or_updated_at >= %s")
+            time_filters.append("updated_at >= %s")
             time_filter_vars.append(int(updated_after.timestamp()))
+        if pushed_after:
+            time_filters.append("pushed_at >= %s")
+            time_filter_vars.append(int(pushed_after.timestamp()))
         if time_filters:
             # construct "and a and b and c"
             time_filters_str = " and ".join(time_filters)
@@ -134,6 +137,7 @@ class SphinxSearch:
         created_after: datetime.datetime = None,
         created_before: datetime.datetime = None,
         updated_after: datetime.datetime = None,
+        pushed_after: datetime.datetime = None,
     ) -> Dict[int, Dict]:
         connection = pymysql.connect(
             host=current_app.config["SPHINX_HOST"],
@@ -142,7 +146,7 @@ class SphinxSearch:
         )
 
         time_filters, time_filter_vars = cls._make_sql_time_filter(
-            created_after, created_before, updated_after
+            created_after, created_before, updated_after, pushed_after
         )
         bool_filters = cls._make_bool_filters(
             exclude_forks,
@@ -185,6 +189,7 @@ class SphinxSearch:
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
                 "weight": result_dict["weight"],
+                "age": result_dict["age"],
             }
         return search_results_by_id
 
@@ -231,11 +236,12 @@ class SphinxSearch:
         search_results = []
         for result in db_results:
             weight = sphinx_results[result.id]["weight"]
-            search_result = SearchResult(result, weight)
+            age = sphinx_results[result.id]["age"]
+            search_result = SearchResult(result, weight, age)
             search_results.append(search_result)
             search_results = sorted(
                 search_results,
-                key=lambda search_result: search_result.weight,
+                key=lambda search_result: (search_result.weight, search_result.age),
                 reverse=True,
             )
         return search_results

@@ -28,9 +28,11 @@ class SearchForm:
     created_after: str
     created_before: str
     updated_after: str
+    pushed_after: str
     created_after_dt: datetime
     created_before_dt: datetime
     updated_after_dt: datetime
+    pushed_after_dt: datetime
 
     def __init__(
         self,
@@ -43,9 +45,11 @@ class SearchForm:
         created_after: str = None,
         created_before: str = None,
         updated_after: str = None,
+        pushed_after: str = None,
         created_after_dt: datetime = None,
         created_before_dt: datetime = None,
         updated_after_dt: datetime = None,
+        pushed_after_dt: datetime = None,
     ):
         """
         :param search_phrase: free text used for searching
@@ -58,6 +62,7 @@ class SearchForm:
         :param created_after_dt: datetime for created_after (resolved from created_after when omitted)
         :param created_before_dt: datetime for created_before (resolved from created_before when omitted)
         :param updated_after_dt: datetime for updated_after (resolved from updated_after when omitted)
+        :param pushed_after_dt: datetime for pushed_after (resolved from pushed_after when omitted)
         """
         self.search_phrase = search_phrase
         self.exclude_service_checkboxes = exclude_service_checkboxes
@@ -68,9 +73,11 @@ class SearchForm:
         self.created_after = created_after
         self.created_before = created_before
         self.updated_after = updated_after
+        self.pushed_after = pushed_after
         self.created_after_dt = created_after_dt
         self.created_before_dt = created_before_dt
         self.updated_after_dt = updated_after_dt
+        self.pushed_after_dt = pushed_after_dt
         if not created_after_dt and self.created_after:
             self.created_after_dt = SearchForm.get_form_datetime_in_utc(
                 self.created_after
@@ -82,6 +89,10 @@ class SearchForm:
         if not updated_after_dt and self.updated_after:
             self.updated_after_dt = SearchForm.get_form_datetime_in_utc(
                 self.updated_after
+            )
+        if not pushed_after_dt and self.pushed_after:
+            self.pushed_after_dt = SearchForm.get_form_datetime_in_utc(
+                self.pushed_after
             )
 
     def get_excluded_hosting_service_ids(self):
@@ -100,7 +111,7 @@ class SearchForm:
             exclude_service_checkboxes[service.id] = Checkbox(
                 service_id=service.id,
                 id="xs{}".format(service.id),
-                label=f"{service.domain} ({service.repo_count})",
+                label=service.domain,
                 is_checked=is_checked,
             )
         return exclude_service_checkboxes
