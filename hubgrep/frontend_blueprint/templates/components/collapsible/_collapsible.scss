@@ -48,16 +48,12 @@
   }
 
   .collapsible-content {
-    max-height: 0;
+    display: none;
     overflow: hidden;
-    transition: max-height .15s ease-in-out;
   }
 
   .toggle:checked + .lbl-toggle + .collapsible-content {
-    // we need a specific height for transition to take effect
-    // the downside is that if content needs more height, it gets cut off after this value!
-    // adjust accordingly, and expect the animation to speed up for higher values
-    max-height: 2000px;
+    display: unset;
   }
 
   .toggle:checked + .lbl-toggle {
