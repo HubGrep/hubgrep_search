@@ -19,15 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def add_hoster(hoster_dict: dict):
-    api_url = hoster_dict["api_url"]
-    hosting_service = HostingService.query.filter_by(api_url=api_url).first()
-    if not hosting_service:
-        hosting_service = HostingService()
-
-    hosting_service.api_url = hoster_dict["api_url"]
-    hosting_service.landingpage_url = hoster_dict["landingpage_url"]
-    hosting_service.type = hoster_dict["type"]
-    hosting_service.has_local_index = True
+    hosting_service = HostingService.from_dict(hoster_dict)
     db.session.add(hosting_service)
     db.session.commit()
     return hosting_service
