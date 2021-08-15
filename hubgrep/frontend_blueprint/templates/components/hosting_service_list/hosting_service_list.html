@@ -3,7 +3,9 @@
         <ul>
             {% for instance in hosting_services %}
                 <li>
-                    <a class="" href="{{ instance.landingpage_url }}">{{ instance.label }} ({{ instance.type }})</a>
+                    <a class="" href="{{ instance.landingpage_url }}">{{ instance.domain }}</a>
+                    <pre>{{ instance.type }}, {{ instance.repo_count}} repos</pre>
+                    <pre>last updated {{ instance.export_timestamp.strftime('%Y-%m-%d') if instance.export_timestamp else "None"}}</pre> 
                 </li>
             {% endfor %}
         </ul>

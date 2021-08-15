@@ -42,6 +42,7 @@ class TestSphinxSearch:
             created_after=None,
             created_before=None,
             updated_after=None,
+            pushed_after=None,
         )
         assert time_filter_str == ""
 
@@ -52,14 +53,15 @@ class TestSphinxSearch:
         time_filter_str, time_filter_vars = sphinx._make_sql_time_filter(
             created_after=None,
             created_before=timestamp_before,
-            updated_after=timestamp_after,
+            updated_after=None,
+            pushed_after=timestamp_after,
         )
         # updated after creates `(updated_at or pushed_at)` and the "duplicates" var
         assert (
             time_filter_str
-            == "and created_at <= %s and (updated_at >= %s or pushed_at >= %s)"
+            == "and created_at <= %s and pushed_at >= %s"
         )
-        assert time_filter_vars == [timestamp_before.timestamp(), timestamp_after.timestamp(), timestamp_after.timestamp()]
+        assert time_filter_vars == [timestamp_before.timestamp(), timestamp_after.timestamp()]
 
     def test_make_hosting_service_filters_empty(self):
         sphinx = SphinxSearch()
