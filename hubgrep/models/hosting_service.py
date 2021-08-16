@@ -21,6 +21,7 @@ class HostingService(db.Model):
     domain = db.Column(db.String(500))
 
     export_timestamp = db.Column(db.DateTime)
+    export_url = db.Column(db.String)
     repo_count = db.Column(db.Integer)
 
     def set_domain(self):

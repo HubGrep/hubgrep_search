@@ -147,8 +147,16 @@ def import_repos(new_table_name):
             repo_count = fetch_hoster_repos(export_url, hoster, new_table_name)
             with TableHelper._cursor() as cursor:
                 cursor.execute(
-                    f"update hosting_service set repo_count = %s, export_timestamp = %s where id = %s",
-                    (repo_count, created_at, hoster.id),
+                    f"""
+                    update hosting_service
+                    set
+                        repo_count = %s,
+                        export_timestamp = %s,
+                        export_url = %s
+                    where 
+                        id = %s
+                    """,
+                    (repo_count, created_at, export_url, hoster.id),
                 )
             logger.info(f"import took {time.time() - before}s")
 
