@@ -3,6 +3,8 @@ HubGrep Flask-app initialization script
 """
 import logging
 import os
+import timeago
+import datetime
 from flask import Flask, request
 from flask_babel import Babel
 from flask_assets import Environment
@@ -75,6 +77,8 @@ def create_app():
 
     app.jinja_env.globals["get_locale"] = get_locale
     app.jinja_env.globals["constants"] = constants
+    app.jinja_env.globals["timeago"] = timeago
+    app.jinja_env.globals["datetime_now"] = datetime.datetime.now()
     app.jinja_env.trim_blocks = True
     app.jinja_env.lstrip_blocks = True
 

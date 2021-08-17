@@ -55,24 +55,15 @@
   &-detail {
     font-size: size(detail);
 
+    &-desc, &-date, &-misc {
+      & > span {
+        margin-right: 1em;
+        white-space: nowrap;
+      }
+    }
+
     &-desc {
       @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
-    }
-
-    &-date {
-      &-modified {
-        .label {
-          margin-left: 1rem;
-        }
-      }
-    }
-
-    &-misc {
-      &-license {
-        .label {
-          margin-left: 1rem;
-        }
-      }
     }
   }
 }

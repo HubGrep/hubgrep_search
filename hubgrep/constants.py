@@ -9,7 +9,6 @@ APP_ENV_TESTING = "testing"
 # hosting services
 HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT = 2
 
-
 # search form
 
 
@@ -21,10 +20,6 @@ CLASS_PREV = "prev"
 CLASS_NEXT = "next"
 CLASS_DIVIDER = "divider"
 
-# frontend
-SITE_TITLE = "HubGrep"
-REPO_CREATED = "created"
-REPO_MODIFIED = "modified"
 
 # search form
 DATE_FORMAT = "%Y-%m-%d"
@@ -45,3 +40,19 @@ class FORM_ARGS:
     created_after = "ca"
     created_before = "cb"
     updated_after = "ua"
+
+
+# frontend
+SITE_TITLE = "HubGrep"
+REPO_CREATED = "created"
+REPO_MODIFIED = "modified"
+
+TOOLTIP_FILTER_CREATED_AT = "Repository was created at this date."
+TOOLTIP_FILTER_MODIFIED_AT = "Repository was updated at this date - possibly not via push."
+TOOLTIP_FILTER_PUSHED_AT = "Repository was last pushed to at this date."
+TOOLTIP_FILTER_LANGUAGE = "Majority used language."
+TOOLTIP_FILTER_LICENSE = "License used by this project."
+TOOLTIP_FILTER_WEIGHT = "HubGreps score of how relevant this item is to your search-phrase."
+TOOLTIP_FILTER_AGE = "How old the repository is."
+
+MISSING_VALUE_DEFAULT = "—"
