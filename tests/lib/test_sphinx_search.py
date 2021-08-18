@@ -6,35 +6,36 @@ class TestSphinxSearch:
     def test_make_bool_filters_empty(self):
         sphinx = SphinxSearch()
 
-        # no bool filters should result in an empty string
         filters = sphinx._make_bool_filters(
             exclude_forks=None,
             exclude_archived=None,
-            exclude_disabled=None,
             exclude_mirror=None,
+            exclude_empty=None,
         )
+        # no bool filters should result in an empty string
         assert filters == ""
 
-    def test_make_bool_filters_partially(self):
+    def test_make_bool_filters_one(self):
         sphinx = SphinxSearch()
-        # no bool filters should result in an empty string
         filters = sphinx._make_bool_filters(
             exclude_forks=True,
             exclude_archived=None,
-            exclude_disabled=None,
             exclude_mirror=None,
+            exclude_empty=None,
         )
-        # "exclude forks" translates to "is_fork = 0"
+        # "exclude forks" translates to "and is_fork = 0"
         assert filters == "and is_fork = 0"
 
+    def test_make_bool_filters_multiple(self):
+        sphinx = SphinxSearch()
         filters = sphinx._make_bool_filters(
             exclude_forks=True,
             exclude_archived=None,
-            exclude_disabled=True,
             exclude_mirror=None,
+            exclude_empty=True,
         )
-        # "exclude forks" translates to "is_fork = false"
-        assert filters == "and is_disabled = 0 and is_fork = 0"
+        # "exclude forks" translates to "and is_fork = 0"
+        assert filters == "and is_fork = 0 and is_empty = 0"
 
     def test_make_sql_time_filter_empty(self):
         sphinx = SphinxSearch()
