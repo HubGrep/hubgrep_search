@@ -65,6 +65,10 @@
     &-desc {
       @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
     }
+
+    &-score {
+      display: none;
+    }
   }
 
   .date-value {
@@ -84,5 +88,11 @@
         position: unset;
       }
     }
+  }
+}
+
+body[data-debug="true"] {
+  .item-detail-score {
+    display: unset;
   }
 }
