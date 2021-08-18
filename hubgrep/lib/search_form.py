@@ -23,8 +23,8 @@ class SearchForm:
     exclude_service_checkboxes: Dict[int, Checkbox]
     exclude_forks: bool
     exclude_archived: bool
-    exclude_disabled: bool
     exclude_mirror: bool
+    exclude_empty: bool
     created_after: str
     created_before: str
     updated_after: str
