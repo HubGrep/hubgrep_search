@@ -21,7 +21,7 @@
         {% block styles %}{% endblock styles %}
     {%- endblock head %}
 </head>
-<body>
+<body data-debug="{{ is_debug|lower }}">
 <header>
     {% block header %}
         {% block header_title %}
