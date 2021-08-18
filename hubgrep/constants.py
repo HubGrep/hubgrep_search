@@ -20,7 +20,6 @@ CLASS_PREV = "prev"
 CLASS_NEXT = "next"
 CLASS_DIVIDER = "divider"
 
-
 # search form
 DATE_FORMAT = "%Y-%m-%d"
 
@@ -47,12 +46,21 @@ SITE_TITLE = "HubGrep"
 REPO_CREATED = "created"
 REPO_MODIFIED = "modified"
 
-TOOLTIP_FILTER_CREATED_AT = "Repository was created at this date."
-TOOLTIP_FILTER_MODIFIED_AT = "Repository was updated at this date - possibly not via push."
-TOOLTIP_FILTER_PUSHED_AT = "Repository was last pushed to at this date."
-TOOLTIP_FILTER_LANGUAGE = "Majority used language."
-TOOLTIP_FILTER_LICENSE = "License used by this project."
-TOOLTIP_FILTER_WEIGHT = "HubGreps score of how relevant this item is to your search-phrase."
-TOOLTIP_FILTER_AGE = "How old the repository is."
+TOOLTIP_REPO_CREATED_AT = "Date and time when a repository was created."
+TOOLTIP_REPO_MODIFIED_AT = "Date and time when a repository was modified - possibly not via push."
+TOOLTIP_REPO_PUSHED_AT = "Date and time of the last push to a repository."
+TOOLTIP_REPO_LANGUAGE = "Majority used language."
+TOOLTIP_REPO_LICENSE = "License in use by a repository."
+TOOLTIP_REPO_WEIGHT = "HubGreps score of how relevant an repository is to your search-phrase."
+TOOLTIP_REPO_AGE = "How old the repository is."
+
+TOOLTIP_FILTER_CREATED_BEFORE = "Only include repositories that were created before this date."
+TOOLTIP_FILTER_CREATED_AFTER = "Only include repositories that were created after this date."
+TOOLTIP_FILTER_MODIFIED_SINCE = "Only include repositories that were modified after this date. Note that modified does not necessarily mean via push."
+TOOLTIP_FILTER_PUSHED_SINCE = "Only include repositories that have commits made to it after this date."
+TOOLTIP_FILTER_EXCLUDE_FORK = "Remove all repositories which are forks from search results."
+TOOLTIP_FILTER_EXCLUDE_ARCHIVED = "Remove all repositories which are archived from search results."
+TOOLTIP_FILTER_EXCLUDE_MIRROR = "Remove all repositories which are mirrors from search results."
+TOOLTIP_FILTER_EXCLUDE_SOURCE = "Remove all repositories from results which belong to a hosting service."
 
 MISSING_VALUE_DEFAULT = "—"
