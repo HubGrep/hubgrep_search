@@ -49,8 +49,8 @@ def append_repos(gz_file, hoster, new_table_name) -> int:
             "is_private",
             "is_fork",
             "is_archived",
-            "is_disabled",
             "is_mirror",
+            "is_empty",
             "homepage_url",
             "repo_url",
         ]

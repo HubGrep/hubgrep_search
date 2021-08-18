@@ -49,8 +49,8 @@ class Repository(db.Model):
     is_private = db.Column(db.Boolean())
     is_fork = db.Column(db.Boolean())
     is_archived = db.Column(db.Boolean())
-    is_disabled = db.Column(db.Boolean())
     is_mirror = db.Column(db.Boolean())
+    is_empty = db.Column(db.Boolean())
     homepage_url = db.Column(db.String(500), nullable=True)
     repo_url = db.Column(db.String(500), nullable=True)
 
