@@ -6,11 +6,10 @@ APP_ENV_DEVELOPMENT = "development"
 APP_ENV_PRODUCTION = "production"
 APP_ENV_TESTING = "testing"
 
+DATE_FORMAT = "%Y-%m-%d"
+
 # hosting services
 HOSTING_SERVICE_REQUEST_TIMEOUT_DEFAULT = 2
-
-# search form
-
 
 # pagination
 PARAM_OFFSET = "offset"
@@ -20,16 +19,13 @@ CLASS_PREV = "prev"
 CLASS_NEXT = "next"
 CLASS_DIVIDER = "divider"
 
-# search form
-DATE_FORMAT = "%Y-%m-%d"
-
 # hoster errors
 UNKNOWN_ERROR = -1
 CONNECTION_ERROR = -2
 TIMEOUT_ERROR = -3
 TOO_MANY_REDIRECTS_ERROR = -4
 
-
+# search form
 class FORM_ARGS:
     search_phrase = "s"
     exclude_forks = "f"
@@ -39,7 +35,6 @@ class FORM_ARGS:
     created_after = "ca"
     created_before = "cb"
     updated_after = "ua"
-
 
 # frontend
 SITE_TITLE = "HubGrep"
