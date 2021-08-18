@@ -37,8 +37,8 @@ class SearchResult:
 
         self.is_fork = repo.is_fork
         self.is_archived = repo.is_archived
-        self.is_disabled = repo.is_disabled
         self.is_mirror = repo.is_mirror
+        self.is_empty = repo.is_empty
         self.homepage_url = repo.homepage_url
         self.repo_url = repo.repo_url
         self.weight = weight
@@ -94,19 +94,19 @@ class SphinxSearch:
             cls,
             exclude_forks: bool,
             exclude_archived: bool,
-            exclude_disabled: bool,
             exclude_mirror: bool,
+            exclude_empty: bool,
     ):
-        # if False in (exclude_forks, exclude_archived, exclude_disabled, exclude_mirror):
+        # if False in (exclude_forks, exclude_archived, exclude_empty, exclude_mirror):
         filters = []
-        if exclude_archived:
-            filters.append("is_archived = 0")
-        if exclude_disabled:
-            filters.append("is_disabled = 0")
-        if exclude_mirror:
-            filters.append("is_mirror = 0")
         if exclude_forks:
             filters.append("is_fork = 0")
+        if exclude_archived:
+            filters.append("is_archived = 0")
+        if exclude_mirror:
+            filters.append("is_mirror = 0")
+        if exclude_empty:
+            filters.append("is_empty = 0")
 
         if filters:
             # "and is_fork=true and .. and .."
@@ -135,8 +135,8 @@ class SphinxSearch:
             exclude_hosting_service_ids: List[int],
             exclude_forks: bool = None,
             exclude_archived: bool = None,
-            exclude_disabled: bool = None,
             exclude_mirror: bool = None,
+            exclude_empty: bool = None,
             created_after: datetime.datetime = None,
             created_before: datetime.datetime = None,
             updated_after: datetime.datetime = None,
@@ -154,8 +154,8 @@ class SphinxSearch:
         bool_filters = cls._make_bool_filters(
             exclude_forks,
             exclude_archived,
-            exclude_disabled,
             exclude_mirror,
+            exclude_empty,
         )
 
         (
@@ -207,8 +207,8 @@ class SphinxSearch:
             exclude_hosting_service_ids: List[int],
             exclude_forks: bool,
             exclude_archived: bool,
-            exclude_disabled: bool,
             exclude_mirror: bool,
+            exclude_empty: bool,
             created_after: datetime.datetime = None,
             created_before: datetime.datetime = None,
             updated_after: datetime.datetime = None,
@@ -219,8 +219,8 @@ class SphinxSearch:
                 exclude_hosting_service_ids=exclude_hosting_service_ids,
                 exclude_forks=exclude_forks,
                 exclude_archived=exclude_archived,
-                exclude_disabled=exclude_disabled,
                 exclude_mirror=exclude_mirror,
+                exclude_empty=exclude_empty,
                 created_after=created_after,
                 created_before=created_before,
                 updated_after=updated_after,

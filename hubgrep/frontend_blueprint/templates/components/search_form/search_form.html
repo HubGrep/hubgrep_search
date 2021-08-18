@@ -57,11 +57,11 @@
                     <label for="archived" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_ARCHIVED }}">
                         {{ gettext("exclude archived") | safe }}</label>
                 </div>
-                <div class="misc-disabled">
-                    <input type="checkbox" id="disabled" name="{{ constants.FORM_ARGS.exclude_disabled }}"
+                <div class="misc-empty">
+                    <input type="checkbox" id="empty" name="{{ constants.FORM_ARGS.exclude_empty }}"
                            {% if form.exclude_disabled %}checked{% endif %}>
-                    <label for="disabled">
-                        {{ gettext("exclude disabled") | safe }}</label>
+                    <label for="empty">
+                        {{ gettext("exclude empty") | safe }}</label>
                 </div>
                 <div class="misc-mirror">
                     <input type="checkbox" id="mirror" name="{{ constants.FORM_ARGS.exclude_mirror }}"

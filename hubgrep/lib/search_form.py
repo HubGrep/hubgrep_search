@@ -40,8 +40,8 @@ class SearchForm:
         exclude_service_checkboxes: Dict[int, Checkbox] = None,
         exclude_forks: bool = False,
         exclude_archived: bool = False,
-        exclude_disabled: bool = False,
         exclude_mirror: bool = False,
+        exclude_empty: bool = False,
         created_after: str = None,
         created_before: str = None,
         updated_after: str = None,
@@ -68,8 +68,8 @@ class SearchForm:
         self.exclude_service_checkboxes = exclude_service_checkboxes
         self.exclude_forks = exclude_forks
         self.exclude_archived = exclude_archived
-        self.exclude_disabled = exclude_disabled
         self.exclude_mirror = exclude_mirror
+        self.exclude_empty = exclude_empty
         self.created_after = created_after
         self.created_before = created_before
         self.updated_after = updated_after
