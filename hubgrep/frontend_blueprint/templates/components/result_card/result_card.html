@@ -1,6 +1,7 @@
-{% macro repo_time_value(datetime) %}
+{% macro _repo_time_value(datetime) %}
     {% if datetime %}
-        {{ timeago.format(datetime, datetime_now, get_locale()) }}
+        <span class="humanized">{{ timeago.format(datetime, datetime_now, get_locale()) }}</span>
+        <span class="exact">{{ datetime }}</span>
     {% else %}
         {{ constants.MISSING_VALUE_DEFAULT }}
     {% endif %}
@@ -21,38 +22,35 @@
                 <span>{{ SearchResult.description|default(constants.MISSING_VALUE_DEFAULT) }}</span>
             </p>
             <p class="item-detail-misc">
-                <span class="item-detail-misc-lang">
-                    <span class="label" title="{{ constants.TOOLTIP_REPO_LANGUAGE }}">
-                        {{ gettext('language') | safe }}:</span>
+                <span class="item-detail-misc-lang" title="{{ constants.TOOLTIP_REPO_LANGUAGE }}">
+                    <span class="label">{{ gettext('language') | safe }}:</span>
                     <span>{{ SearchResult.language|default(constants.MISSING_VALUE_DEFAULT) }}</span>
                 </span>
-                <span class="item-detail-misc-license">
-                    <span class="label" title="{{ constants.TOOLTIP_REPO_LICENSE }}">
-                        {{ gettext('license') | safe }}:</span>
+                <span class="item-detail-misc-license" title="{{ constants.TOOLTIP_REPO_LICENSE }}">
+                    <span class="label">{{ gettext('license') | safe }}:</span>
                     <span>{{ SearchResult.license|default(constants.MISSING_VALUE_DEFAULT) }}</span>
                 </span>
             </p>
             <p class="item-detail-date">
-                <span class="item-detail-date-created">
-                    <span class="label" title="{{ SearchResult.created_at }} : {{ constants.TOOLTIP_REPO_CREATED_AT }}">
-                        {{ gettext('created') | safe }}:</span>
-                    <span>{{ repo_time_value(SearchResult.created_at) }}</span>
+                <span class="item-detail-date-created"
+                      title="{{ SearchResult.created_at }} : {{ constants.TOOLTIP_REPO_CREATED_AT }}">
+                    <span class="label">{{ gettext('created') | safe }}:</span>
+                    <span class="date-value">{{ _repo_time_value(SearchResult.created_at) }}</span>
                 </span>
-                <span class="item-detail-date-modified">
-                    <span class="label"
-                          title="{{ SearchResult.updated_at }} : {{ constants.TOOLTIP_REPO_MODIFIED_AT }}">
-                            {{ gettext('modified') | safe }}:</span>
-                    <span>{{ repo_time_value(SearchResult.updated_at) }}</span>
+                <span class="item-detail-date-modified"
+                      title="{{ SearchResult.updated_at }} : {{ constants.TOOLTIP_REPO_MODIFIED_AT }}">
+                    <span class="label">{{ gettext('modified') | safe }}:</span>
+                    <span class="date-value">{{ _repo_time_value(SearchResult.updated_at) }}</span>
                 </span>
-                <span class="item-detail-date-pushed">
-                    <span class="label" title="{{ SearchResult.pushed_at }} : {{ constants.TOOLTIP_REPO_PUSHED_AT }}">
-                        {{ gettext('last push') | safe }}:</span>
-                    <span>{{ repo_time_value(SearchResult.pushed_at) }}</span>
+                <br>
+                <span class="item-detail-date-pushed"
+                      title="{{ SearchResult.pushed_at }} : {{ constants.TOOLTIP_REPO_PUSHED_AT }}">
+                    <span class="label">{{ gettext('last push') | safe }}:</span>
+                    <span class="date-value">{{ _repo_time_value(SearchResult.pushed_at) }}</span>
                 </span>
             </p>
-            <p class="item-detail-score">
-                <span class="label" title="{{ constants.TOOLTIP_REPO_WEIGHT }}">
-                    {{ gettext('score') | safe }}:</span>
+            <p class="item-detail-score" title="{{ constants.TOOLTIP_REPO_WEIGHT }}">
+                <span class="label">{{ gettext('score') | safe }}:</span>
                 <span>{{ SearchResult.weight|default(constants.MISSING_VALUE_DEFAULT) }}</span>
             </p>
         </div>

@@ -66,4 +66,23 @@
       @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
     }
   }
+
+  .date-value {
+    .exact {
+      visibility: hidden;
+      position: absolute;
+    }
+
+    &:hover {
+      .humanized {
+        visibility: hidden;
+        position: absolute;
+      }
+
+      .exact {
+        visibility: visible;
+        position: unset;
+      }
+    }
+  }
 }
