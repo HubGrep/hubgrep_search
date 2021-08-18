@@ -55,23 +55,33 @@
   &-detail {
     font-size: size(detail);
 
-    &-desc {
-      @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
-    }
-
-    &-date {
-      &-modified {
-        .label {
-          margin-left: 1rem;
-        }
+    &-desc, &-date, &-misc {
+      & > span {
+        margin-right: 1em;
+        white-space: nowrap;
       }
     }
 
-    &-misc {
-      &-license {
-        .label {
-          margin-left: 1rem;
-        }
+    &-desc {
+      @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
+    }
+  }
+
+  .date-value {
+    .exact {
+      visibility: hidden;
+      position: absolute;
+    }
+
+    &:hover {
+      .humanized {
+        visibility: hidden;
+        position: absolute;
+      }
+
+      .exact {
+        visibility: visible;
+        position: unset;
       }
     }
   }

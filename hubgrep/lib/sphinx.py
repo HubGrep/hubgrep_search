@@ -5,8 +5,8 @@ Sphinx interface and result-class for Sphinx.
 import logging
 import datetime
 
+
 from typing import List, Dict
-from collections import OrderedDict
 
 from flask import current_app
 import pymysql.cursors
@@ -18,11 +18,13 @@ from hubgrep.models import Repository
 
 logger = logging.getLogger(__name__)
 
+
 class UserError(Exception):
     pass
 
+
 class SearchResult:
-    def __init__(self, repo: Repository, weight: float, age):
+    def __init__(self, repo: Repository, weight: float):
         self.hosting_service_type = repo.hosting_service.type
         self.name = repo.name
         self.username = repo.username
@@ -40,7 +42,8 @@ class SearchResult:
         self.homepage_url = repo.homepage_url
         self.repo_url = repo.repo_url
         self.weight = weight
-        self.age = age
+
+        self.age = datetime.datetime.now() - repo.created_at
 
     def __repr__(self):
         return f"<{self.username}/{self.name} ({self.weight})>"
@@ -53,11 +56,11 @@ class SphinxSearch:
 
     @classmethod
     def _make_sql_time_filter(
-        cls,
-        created_after: datetime.datetime,
-        created_before: datetime.datetime,
-        updated_after: datetime.datetime,
-        pushed_after: datetime.datetime,
+            cls,
+            created_after: datetime.datetime,
+            created_before: datetime.datetime,
+            updated_after: datetime.datetime,
+            pushed_after: datetime.datetime,
     ):
         """
         returns the time filters as a string, as well as a list of vars to use in the mysql query
@@ -88,11 +91,11 @@ class SphinxSearch:
 
     @classmethod
     def _make_bool_filters(
-        cls,
-        exclude_forks: bool,
-        exclude_archived: bool,
-        exclude_disabled: bool,
-        exclude_mirror: bool,
+            cls,
+            exclude_forks: bool,
+            exclude_archived: bool,
+            exclude_disabled: bool,
+            exclude_mirror: bool,
     ):
         # if False in (exclude_forks, exclude_archived, exclude_disabled, exclude_mirror):
         filters = []
@@ -127,17 +130,17 @@ class SphinxSearch:
 
     @classmethod
     def _search_sphinx(
-        cls,
-        search_phrase: str,
-        exclude_hosting_service_ids: List[int],
-        exclude_forks: bool = None,
-        exclude_archived: bool = None,
-        exclude_disabled: bool = None,
-        exclude_mirror: bool = None,
-        created_after: datetime.datetime = None,
-        created_before: datetime.datetime = None,
-        updated_after: datetime.datetime = None,
-        pushed_after: datetime.datetime = None,
+            cls,
+            search_phrase: str,
+            exclude_hosting_service_ids: List[int],
+            exclude_forks: bool = None,
+            exclude_archived: bool = None,
+            exclude_disabled: bool = None,
+            exclude_mirror: bool = None,
+            created_after: datetime.datetime = None,
+            created_before: datetime.datetime = None,
+            updated_after: datetime.datetime = None,
+            pushed_after: datetime.datetime = None,
     ) -> Dict[int, Dict]:
         connection = pymysql.connect(
             host=current_app.config["SPHINX_HOST"],
@@ -165,12 +168,12 @@ class SphinxSearch:
         with connection:
             with connection.cursor() as cursor:
                 sql_template = f"""
-                    select id, weight() as weight, (updated_at - created_at) as age
+                    select id, weight() as weight
                     from repos
                     where
                         match(%s)
                     {time_filters} {bool_filters} {hosting_service_filters}
-                    order by weight desc, age desc
+                    order by weight desc
                     limit 1000
                     option
                         ranker=sph04,
@@ -188,8 +191,7 @@ class SphinxSearch:
         search_results_by_id = dict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
-                "weight": result_dict["weight"],
-                "age": result_dict["age"],
+                "weight": result_dict["weight"]
             }
         return search_results_by_id
 
@@ -200,16 +202,16 @@ class SphinxSearch:
 
     @classmethod
     def search(
-        cls,
-        search_phrase: str,
-        exclude_hosting_service_ids: List[int],
-        exclude_forks: bool,
-        exclude_archived: bool,
-        exclude_disabled: bool,
-        exclude_mirror: bool,
-        created_after: datetime.datetime = None,
-        created_before: datetime.datetime = None,
-        updated_after: datetime.datetime = None,
+            cls,
+            search_phrase: str,
+            exclude_hosting_service_ids: List[int],
+            exclude_forks: bool,
+            exclude_archived: bool,
+            exclude_disabled: bool,
+            exclude_mirror: bool,
+            created_after: datetime.datetime = None,
+            created_before: datetime.datetime = None,
+            updated_after: datetime.datetime = None,
     ) -> List[SearchResult]:
         try:
             sphinx_results = cls._search_sphinx(
@@ -236,8 +238,7 @@ class SphinxSearch:
         search_results = []
         for result in db_results:
             weight = sphinx_results[result.id]["weight"]
-            age = sphinx_results[result.id]["age"]
-            search_result = SearchResult(result, weight, age)
+            search_result = SearchResult(result, weight)
             search_results.append(search_result)
             search_results = sorted(
                 search_results,

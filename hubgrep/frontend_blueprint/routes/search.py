@@ -55,12 +55,8 @@ def search():
             results = []
             user_errors.append(e)
 
-        results_paginated = results[
-            results_offset : (results_offset + results_per_page)
-        ]
-        pagination_links = get_page_links(
-            request.full_path, results_offset, results_per_page, len(results)
-        )
+        results_paginated = results[results_offset:(results_offset + results_per_page)]
+        pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
         search_feedback = get_search_feedback(len(results))
 
     template_path = (
