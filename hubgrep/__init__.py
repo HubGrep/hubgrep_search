@@ -77,7 +77,7 @@ def create_app():
 
     app.jinja_env.globals["get_locale"] = get_locale
     app.jinja_env.globals["constants"] = constants
-    app.jinja_env.globals["is_debug"] = app.config["DEBUG"]
+    app.jinja_env.globals["app_config"] = app.config
     app.jinja_env.globals["timeago"] = timeago
     app.jinja_env.globals["datetime_now"] = datetime.datetime.now()
     app.jinja_env.trim_blocks = True
