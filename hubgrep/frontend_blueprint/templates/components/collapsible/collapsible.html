@@ -1,3 +1,4 @@
+{# groups content in a collapsible container which expands on interacting with its label/btn/icon #}
 {% macro build(content, class="", label="", is_inline=False, is_absolute=False, icon_src="", icon_alt="") %}
     <div class="collapsible {{ class }}
             {% if is_inline == true %}{{ "inline" }}{% endif %}
