@@ -1,5 +1,7 @@
 """ Search page route. """
 
+import time
+
 from flask import render_template
 from flask import current_app as app
 from flask import request
@@ -34,13 +36,15 @@ def search():
         created_after=request.args.get(FORM_ARGS.created_after, ""),
         created_before=request.args.get(FORM_ARGS.created_before, ""),
         updated_after=request.args.get(FORM_ARGS.updated_after, ""),
+        pushed_after=request.args.get(FORM_ARGS.pushed_after, ""),
     )
     search_feedback = ""
     user_errors = []
     pagination_links = []
     if form.search_phrase:
+        time_before = time.time()
         try:
-            results = SphinxSearch.search(
+            results, total_found = SphinxSearch.search(
                 form.search_phrase,
                 exclude_hosting_service_ids=form.get_excluded_hosting_service_ids(),
                 exclude_forks=form.exclude_forks,
@@ -49,15 +53,17 @@ def search():
                 exclude_empty=form.exclude_empty,
                 created_after=form.created_after_dt,
                 created_before=form.created_before_dt,
-                updated_after=form.updated_after_dt
+                updated_after=form.updated_after_dt,
+                pushed_after=form.pushed_after_dt
             )
         except UserError as e:
             results = []
             user_errors.append(e)
+        time_search = time.time() - time_before
 
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
-        search_feedback = get_search_feedback(len(results))
+        search_feedback = get_search_feedback(total_found, time_search)
 
     template_path = (
         "search/search_list.html" if form.search_phrase else "search/landing_page.html"
@@ -72,9 +78,9 @@ def search():
     )
 
 
-def get_search_feedback(results_total: int) -> str:
+def get_search_feedback(results_total: int, time_search: float) -> str:
     """Get a readable message for how a search performed."""
     if results_total > 0:
-        return "Found {} matching repositories.".format(results_total)
+        return "Found {} matching repositories in {:.4f}s.".format(results_total, time_search)
     else:
         return "No matching repositories found."

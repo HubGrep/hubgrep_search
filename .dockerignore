@@ -15,4 +15,5 @@ host_static/
 sync.sh
 restore_backup.sh
 rsync.exclude
-sphinx_data
+sphinx_data*/
+sphinx_logs/

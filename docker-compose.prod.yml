@@ -44,7 +44,7 @@ services:
          gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
   
   sphinx:
-    image: macbre/sphinxsearch:3.3.1
+    image: macbre/sphinxsearch:3.4.1
     env_file: .env
     ports:
     - "127.0.0.1:9312:9312" # bind to local interface only!
@@ -52,6 +52,9 @@ services:
     volumes:
     - ./sphinx_data:/var/lib/sphinx/data  # directory where sphinx will store index data
     - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
+    - ./sphinx_logs:/var/log
+    cap_add:
+      - IPC_LOCK
 
 
 volumes:

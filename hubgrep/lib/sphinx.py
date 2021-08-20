@@ -173,7 +173,7 @@ class SphinxSearch:
                     where
                         match(%s)
                     {time_filters} {bool_filters} {hosting_service_filters}
-                    order by weight desc
+                    order by weight() desc
                     limit 1000
                     option
                         ranker=sph04,
@@ -187,13 +187,18 @@ class SphinxSearch:
                 cursor.execute(query)
                 result_dicts = cursor.fetchall()
 
+                sql_query_stats = "show meta like 'total_found'"
+                cursor.execute(sql_query_stats)
+                total_found_row = cursor.fetchone()
+                total_found = int(total_found_row.get('Value', 0))
+
         logger.debug(f"found {len(result_dicts)} ids")
         search_results_by_id = dict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
                 "weight": result_dict["weight"]
             }
-        return search_results_by_id
+        return search_results_by_id, total_found
 
     @classmethod
     def _get_from_db(cls, ids: List[int]) -> List[Repository]:
@@ -212,9 +217,10 @@ class SphinxSearch:
             created_after: datetime.datetime = None,
             created_before: datetime.datetime = None,
             updated_after: datetime.datetime = None,
+            pushed_after: datetime.datetime = None,
     ) -> List[SearchResult]:
         try:
-            sphinx_results = cls._search_sphinx(
+            sphinx_results, total_found = cls._search_sphinx(
                 search_phrase,
                 exclude_hosting_service_ids=exclude_hosting_service_ids,
                 exclude_forks=exclude_forks,
@@ -224,6 +230,7 @@ class SphinxSearch:
                 created_after=created_after,
                 created_before=created_before,
                 updated_after=updated_after,
+                pushed_after=pushed_after,
             )
         except ProgrammingError as e:
             if len(e.args) == 2:
@@ -231,8 +238,8 @@ class SphinxSearch:
                 if e.args[0] == 1064:
                     raise UserError(e.args[1])
             raise UserError("unknown error")
-
         db_results = cls._get_from_db(sphinx_results.keys())
+
 
         # transform to "SearchResult" for frontend, adding result weights
         search_results = []
@@ -245,7 +252,7 @@ class SphinxSearch:
                 key=lambda search_result: (search_result.weight, search_result.age),
                 reverse=True,
             )
-        return search_results
+        return search_results, total_found
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:
