@@ -63,7 +63,7 @@ class _EnvironmentConfig:
     SECRET_KEY = os.environ.get("HUBGREP_SECRET_KEY", False)
 
     INDEXER_URL = os.environ.get("HUBGREP_INDEXER_URL", None)
-    SPHINX_HOST = os.environ.get("HUBGREP_SPHINX_HOST", None)
+    MANTICORE_HOST = os.environ.get("HUBGREP_MANTICORE_HOST", None)
 
 
 class ProductionConfig(Config, _EnvironmentConfig):
@@ -93,7 +93,7 @@ class BuildConfig(Config):
     SQLALCHEMY_DATABASE_URI = ""
     SECURITY_PASSWORD_SALT = ""
     SECRET_KEY = ""
-    SPHINX_HOST = ""
+    MANTICORE_HOST = ""
 
 
 class TestingConfig(Config):
@@ -114,6 +114,6 @@ class TestingConfig(Config):
     CONTACT_ADDRESS = None
     CONTACT_EMAIL = None
     CONTACT_PHONE = None
-    SPHINX_HOST = None
+    MANTICORE_HOST = None
 
     SQLALCHEMY_DATABASE_URI = "postgresql://hubgrep:hubgrep@test_postgres:5432/hubgrep"

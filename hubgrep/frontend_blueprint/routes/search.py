@@ -9,8 +9,8 @@ from flask import flash
 
 from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE, FORM_ARGS
 from hubgrep.lib.pagination import get_page_links
-from hubgrep.lib.sphinx import SphinxSearch
-from hubgrep.lib.sphinx import UserError
+from hubgrep.lib.manticore import ManticoreSearch
+from hubgrep.lib.manticore import UserError
 from hubgrep.lib.search_form import SearchForm
 from hubgrep.frontend_blueprint import frontend
 
@@ -45,7 +45,7 @@ def search():
     if form.search_phrase:
         time_before = time.time()
         try:
-            results, total_found = SphinxSearch.search(
+            results, meta = ManticoreSearch.search(
                 form.search_phrase,
                 exclude_hosting_service_ids=form.get_excluded_hosting_service_ids(),
                 exclude_forks=form.exclude_forks,
@@ -60,11 +60,15 @@ def search():
         except UserError as e:
             results = []
             user_errors.append(e)
+
+        if meta.warning:
+            user_errors.append(meta.warning)
+
         time_search = time.time() - time_before
 
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
-        search_feedback = get_search_feedback(total_found, time_search)
+        search_feedback = get_search_feedback(meta.total_found, time_search)
 
     template_path = (
         "search/search_list.html" if form.search_phrase else "search/landing_page.html"
