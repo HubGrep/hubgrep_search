@@ -68,7 +68,7 @@ def search():
         "search/search_list.html" if form.search_phrase else "search/landing_page.html"
     )
     # obviously we are missing the time it takes to render and respond
-    # - but we measure out own "total" to give a more realistic time
+    # - but we measure our own "total" to give a more realistic time
     total_time = time.time() - total_time
     logger.info(f"search backend-processing took {total_time}s - engine-only took {meta.time}s")
     return render_template(
