@@ -62,31 +62,35 @@
       }
     }
 
+    &-tags {
+      .tag {
+        display: inline-block;
+        background-color: color(hubgrepDark);
+        color: color(white);
+        font-size: 0.9em;
+        padding: 0 0.4em;
+        margin-right: 0.5em;
+        border-radius: 0.6em;
+        line-height: 1.6em;
+
+        &.archived {
+          background-color: color(tagArchived)
+        }
+        &.mirror {
+          background-color: color(tagMirror)
+        }
+        &.empty {
+          background-color: color(tagEmpty)
+        }
+      }
+    }
+
     &-desc {
       @include multiLineEllipsis($lineHeight: $lh, $lineCount: 4, $bgColor: color(bg));
     }
 
     &-score {
       display: none;
-    }
-  }
-
-  .date-value {
-    .exact {
-      visibility: hidden;
-      position: absolute;
-    }
-
-    &:hover {
-      .humanized {
-        visibility: hidden;
-        position: absolute;
-      }
-
-      .exact {
-        visibility: visible;
-        position: unset;
-      }
     }
   }
 }

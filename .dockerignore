@@ -16,3 +16,4 @@ sync.sh
 restore_backup.sh
 rsync.exclude
 manticore_data/
+postgres_data/
