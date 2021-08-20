@@ -43,19 +43,21 @@ services:
          fi
          gunicorn --bind 0.0.0.0:8080 "hubgrep:create_app()"
   
-  sphinx:
-    image: macbre/sphinxsearch:3.4.1
+  manticore:
+    container_name: manticore
+    image: manticoresearch/manticore
     env_file: .env
-    ports:
-    - "127.0.0.1:9312:9312" # bind to local interface only!
-    - "127.0.0.1:9306:9306"
+    restart: always
+    ulimits:
+      nproc: 65535
+      nofile:
+         soft: 65535
+         hard: 65535
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-    - ./sphinx_data:/var/lib/sphinx/data  # directory where sphinx will store index data
-    - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
-    - ./sphinx_logs:/var/log
-    cap_add:
-      - IPC_LOCK
-
-
+      - ./manticore_data:/var/lib/manticore
+      - ./manticore.conf:/etc/manticoresearch/manticore.conf # uncommment if you use a custom config
 volumes:
   pgdata:

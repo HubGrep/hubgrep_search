@@ -3,6 +3,12 @@
 # 
 # everything that needs to be done for the first start
 #
+# manticores searchd wont start until it has a first index,
+# so we need to start up postgres, fill it with a backup that we pull
+# from the indexer, and create a first index.
+#
+# if you already have an index, you most likely want to run ./search_update.sh instead.
+# 
 
 set -e
 set -x
@@ -20,9 +26,8 @@ $DOCKER_COMPOSE -f ${DOCKERFILE} exec service /bin/bash -ic "flask db upgrade"
 $DOCKER_COMPOSE -f ${DOCKERFILE} exec service /bin/bash -ic "flask cli import-repos $HUBGREP_NEW_REPO_TABLE_NAME"
 
 # create the first search index and start sphinx afterwards
-$DOCKER_COMPOSE -f ${DOCKERFILE} run sphinx cat /opt/sphinx/conf/sphinx.conf
-$DOCKER_COMPOSE -f ${DOCKERFILE} run sphinx indexer --all --config /opt/sphinx/conf/sphinx.conf
-$DOCKER_COMPOSE -f ${DOCKERFILE} up -d sphinx
+$DOCKER_COMPOSE -f ${DOCKERFILE} run --rm manticore indexer --all
+$DOCKER_COMPOSE -f ${DOCKERFILE} up -d manticore
 
 # rotate db tables
 $DOCKER_COMPOSE -f ${DOCKERFILE} exec service /bin/bash -ic "flask cli rotate-repositories-table $HUBGREP_NEW_REPO_TABLE_NAME"

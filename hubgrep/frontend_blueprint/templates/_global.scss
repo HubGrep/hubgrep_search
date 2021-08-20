@@ -12,6 +12,16 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  .debug {
+    display: none;
+  }
+
+  &[data-debug="true"] {
+    .debug {
+      display: unset;
+    }
+  }
 }
 
 header, footer {

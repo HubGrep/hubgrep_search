@@ -1,12 +1,12 @@
 import datetime
-from hubgrep.lib.sphinx import SphinxSearch
+from hubgrep.lib.manticore import ManticoreSearch
 
 
-class TestSphinxSearch:
+class TestManticoreSearch:
     def test_make_bool_filters_empty(self):
-        sphinx = SphinxSearch()
+        manticore = ManticoreSearch()
 
-        filters = sphinx._make_bool_filters(
+        filters = manticore._make_bool_filters(
             exclude_forks=None,
             exclude_archived=None,
             exclude_mirror=None,
@@ -16,8 +16,8 @@ class TestSphinxSearch:
         assert filters == ""
 
     def test_make_bool_filters_one(self):
-        sphinx = SphinxSearch()
-        filters = sphinx._make_bool_filters(
+        manticore = ManticoreSearch()
+        filters = manticore._make_bool_filters(
             exclude_forks=True,
             exclude_archived=None,
             exclude_mirror=None,
@@ -27,8 +27,8 @@ class TestSphinxSearch:
         assert filters == "and is_fork = 0"
 
     def test_make_bool_filters_multiple(self):
-        sphinx = SphinxSearch()
-        filters = sphinx._make_bool_filters(
+        manticore = ManticoreSearch()
+        filters = manticore._make_bool_filters(
             exclude_forks=True,
             exclude_archived=None,
             exclude_mirror=None,
@@ -38,8 +38,8 @@ class TestSphinxSearch:
         assert filters == "and is_fork = 0 and is_empty = 0"
 
     def test_make_sql_time_filter_empty(self):
-        sphinx = SphinxSearch()
-        time_filter_str, time_filter_vars = sphinx._make_sql_time_filter(
+        manticore = ManticoreSearch()
+        time_filter_str, time_filter_vars = manticore._make_sql_time_filter(
             created_after=None,
             created_before=None,
             updated_after=None,
@@ -48,10 +48,10 @@ class TestSphinxSearch:
         assert time_filter_str == ""
 
     def test_make_sql_time_filter_partially(self):
-        sphinx = SphinxSearch()
+        manticore = ManticoreSearch()
         timestamp_before = datetime.datetime.fromtimestamp(0)
         timestamp_after = datetime.datetime.fromtimestamp(1)
-        time_filter_str, time_filter_vars = sphinx._make_sql_time_filter(
+        time_filter_str, time_filter_vars = manticore._make_sql_time_filter(
             created_after=None,
             created_before=timestamp_before,
             updated_after=None,
@@ -65,31 +65,31 @@ class TestSphinxSearch:
         assert time_filter_vars == [timestamp_before.timestamp(), timestamp_after.timestamp()]
 
     def test_make_hosting_service_filters_empty(self):
-        sphinx = SphinxSearch()
+        manticore = ManticoreSearch()
         (
             hosting_service_filters,
             hosting_service_filter_vars,
-        ) = sphinx._make_hosting_service_filters([])
+        ) = manticore._make_hosting_service_filters([])
 
         assert hosting_service_filters == ""
         assert hosting_service_filter_vars == []
 
     def test_make_hosting_service_filters_one(self):
-        sphinx = SphinxSearch()
+        manticore = ManticoreSearch()
         (
             hosting_service_filters,
             hosting_service_filter_vars,
-        ) = sphinx._make_hosting_service_filters([1])
+        ) = manticore._make_hosting_service_filters([1])
 
         assert hosting_service_filters == "and hosting_service_id != %s"
         assert hosting_service_filter_vars == [1]
 
     def test_make_hosting_service_filters_many(self):
-        sphinx = SphinxSearch()
+        manticore = ManticoreSearch()
         (
             hosting_service_filters,
             hosting_service_filter_vars,
-        ) = sphinx._make_hosting_service_filters([1, 2])
+        ) = manticore._make_hosting_service_filters([1, 2])
 
         assert (
             hosting_service_filters

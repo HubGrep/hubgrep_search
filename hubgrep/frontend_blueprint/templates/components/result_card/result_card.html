@@ -71,7 +71,7 @@
                     <span class="date-value">{{ _repo_time_value(SearchResult.pushed_at) }}</span>
                 </span>
             </p>
-            <p class="item-detail-score" title="{{ constants.TOOLTIP_REPO_WEIGHT }}">
+            <p class="item-detail-score debug" title="{{ constants.TOOLTIP_REPO_WEIGHT }}">
                 <span class="label">{{ gettext('score') | safe }}:</span>
                 <span>{{ SearchResult.weight|default(constants.MISSING_VALUE_DEFAULT) }}</span>
             </p>

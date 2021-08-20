@@ -1,5 +1,5 @@
 """
-Sphinx interface and result-class for Sphinx.
+Manticore interface and result-class for Manticore.
 """
 
 import logging
@@ -10,8 +10,9 @@ from typing import List, Dict
 
 from flask import current_app
 import pymysql.cursors
+from pymysql.cursors import DictCursor
 from pymysql.err import ProgrammingError
-
+from collections import OrderedDict
 from urllib.parse import urljoin
 
 from hubgrep.models import Repository
@@ -49,18 +50,50 @@ class SearchResult:
         return f"<{self.username}/{self.name} ({self.weight})>"
 
 
-class SphinxSearch:
-    """Interface for searching via Sphinx."""
+class SearchMeta:
+    def __init__(self, meta_rows):
+        """
+        meta_rows comes from "show meta" after a query and should look like:
+        [
+            {
+                "Variable_name": "warning",
+                "Value": "index repos: Fields specified in field_weights option not found: [repo_name]",
+            },
+            {"Variable_name": "total", "Value": "1000"},
+            {"Variable_name": "total_found", "Value": "3847"},
+            {"Variable_name": "time", "Value": "0.009"},
+            {"Variable_name": "keyword[0]", "Value": "test"},
+            {"Variable_name": "docs[0]", "Value": "3847"},
+            {"Variable_name": "hits[0]", "Value": "4738"},
+        ]
+        """
+        meta_dict = dict()
+        for row in meta_rows:
+            key = row['Variable_name']
+            value = row['Value']
+            meta_dict[key] = value
 
-    name = "Sphinx"
+        # count of actual returned ids (limited to 1000)
+        self.total = int(meta_dict.get('total', 0))
+        # count of theoretical results (unlimited)
+        self.total_found = int(meta_dict.get('total_found', 0))
+        # time search in manticore took
+        self.time = float(meta_dict.get('time', 0))
+        self.warning = meta_dict.get('warning', None)
+
+
+class ManticoreSearch:
+    """Interface for searching via Manticore."""
+
+    name = "Manticore"
 
     @classmethod
     def _make_sql_time_filter(
-            cls,
-            created_after: datetime.datetime,
-            created_before: datetime.datetime,
-            updated_after: datetime.datetime,
-            pushed_after: datetime.datetime,
+        cls,
+        created_after: datetime.datetime,
+        created_before: datetime.datetime,
+        updated_after: datetime.datetime,
+        pushed_after: datetime.datetime,
     ):
         """
         returns the time filters as a string, as well as a list of vars to use in the mysql query
@@ -91,11 +124,11 @@ class SphinxSearch:
 
     @classmethod
     def _make_bool_filters(
-            cls,
-            exclude_forks: bool,
-            exclude_archived: bool,
-            exclude_mirror: bool,
-            exclude_empty: bool,
+        cls,
+        exclude_forks: bool,
+        exclude_archived: bool,
+        exclude_mirror: bool,
+        exclude_empty: bool,
     ):
         # if False in (exclude_forks, exclude_archived, exclude_empty, exclude_mirror):
         filters = []
@@ -129,21 +162,21 @@ class SphinxSearch:
         return hosting_service_filters_str, hosting_service_filter_vars
 
     @classmethod
-    def _search_sphinx(
-            cls,
-            search_phrase: str,
-            exclude_hosting_service_ids: List[int],
-            exclude_forks: bool = None,
-            exclude_archived: bool = None,
-            exclude_mirror: bool = None,
-            exclude_empty: bool = None,
-            created_after: datetime.datetime = None,
-            created_before: datetime.datetime = None,
-            updated_after: datetime.datetime = None,
-            pushed_after: datetime.datetime = None,
-    ) -> Dict[int, Dict]:
+    def _search_manticore(
+        cls,
+        search_phrase: str,
+        exclude_hosting_service_ids: List[int],
+        exclude_forks: bool = None,
+        exclude_archived: bool = None,
+        exclude_mirror: bool = None,
+        exclude_empty: bool = None,
+        created_after: datetime.datetime = None,
+        created_before: datetime.datetime = None,
+        updated_after: datetime.datetime = None,
+        pushed_after: datetime.datetime = None,
+    ) -> (Dict[int, Dict], SearchMeta):
         connection = pymysql.connect(
-            host=current_app.config["SPHINX_HOST"],
+            host=current_app.config["MANTICORE_HOST"],
             port=9306,
             cursorclass=pymysql.cursors.DictCursor,
         )
@@ -168,16 +201,15 @@ class SphinxSearch:
         with connection:
             with connection.cursor() as cursor:
                 sql_template = f"""
-                    select id, weight() as weight
+                    select id, weight()
                     from repos
                     where
                         match(%s)
                     {time_filters} {bool_filters} {hosting_service_filters}
-                    order by weight() desc
                     limit 1000
                     option
                         ranker=sph04,
-                        field_weights=(repo_name=50, description=20)
+                        field_weights=(name=20, description=20)
                     """
                 query = cursor.mogrify(
                     sql_template,
@@ -187,18 +219,19 @@ class SphinxSearch:
                 cursor.execute(query)
                 result_dicts = cursor.fetchall()
 
-                sql_query_stats = "show meta like 'total_found'"
+                sql_query_stats = "show meta"
                 cursor.execute(sql_query_stats)
-                total_found_row = cursor.fetchone()
-                total_found = int(total_found_row.get('Value', 0))
+                meta_rows = cursor.fetchall()
+                meta = SearchMeta(meta_rows)
 
-        logger.debug(f"found {len(result_dicts)} ids")
-        search_results_by_id = dict()
+        # ordereddicts keep the order in which the items are added
+        # (and our results should be ordered)
+        search_results_by_id = OrderedDict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
-                "weight": result_dict["weight"]
+                "weight": result_dict["weight()"]
             }
-        return search_results_by_id, total_found
+        return search_results_by_id, meta
 
     @classmethod
     def _get_from_db(cls, ids: List[int]) -> List[Repository]:
@@ -207,20 +240,22 @@ class SphinxSearch:
 
     @classmethod
     def search(
-            cls,
-            search_phrase: str,
-            exclude_hosting_service_ids: List[int],
-            exclude_forks: bool,
-            exclude_archived: bool,
-            exclude_mirror: bool,
-            exclude_empty: bool,
-            created_after: datetime.datetime = None,
-            created_before: datetime.datetime = None,
-            updated_after: datetime.datetime = None,
-            pushed_after: datetime.datetime = None,
+        cls,
+        search_phrase: str,
+        results_offset: int,
+        results_per_page: int,
+        exclude_hosting_service_ids: List[int],
+        exclude_forks: bool,
+        exclude_archived: bool,
+        exclude_mirror: bool,
+        exclude_empty: bool,
+        created_after: datetime.datetime = None,
+        created_before: datetime.datetime = None,
+        updated_after: datetime.datetime = None,
+        pushed_after: datetime.datetime = None,
     ) -> List[SearchResult]:
         try:
-            sphinx_results, total_found = cls._search_sphinx(
+            results, meta = cls._search_manticore(
                 search_phrase,
                 exclude_hosting_service_ids=exclude_hosting_service_ids,
                 exclude_forks=exclude_forks,
@@ -238,21 +273,26 @@ class SphinxSearch:
                 if e.args[0] == 1064:
                     raise UserError(e.args[1])
             raise UserError("unknown error")
-        db_results = cls._get_from_db(sphinx_results.keys())
 
+        # get only the keys for the requested page
+        from_idx = results_offset
+        to_idx = results_offset + results_per_page
+        results_page_keys = list(results.keys())[from_idx:to_idx]
+        db_results = cls._get_from_db(results_page_keys)
 
         # transform to "SearchResult" for frontend, adding result weights
         search_results = []
         for result in db_results:
-            weight = sphinx_results[result.id]["weight"]
+            weight = results[result.id]["weight"]
             search_result = SearchResult(result, weight)
             search_results.append(search_result)
-            search_results = sorted(
-                search_results,
-                key=lambda search_result: (search_result.weight, search_result.age),
-                reverse=True,
-            )
-        return search_results, total_found
+
+        search_results = sorted(
+            search_results,
+            key=lambda r: (r.weight, r.age),
+            reverse=True,
+        )
+        return search_results, meta
 
     @staticmethod
     def default_api_url_from_landingpage_url(landingpage_url: str) -> str:

@@ -18,3 +18,5 @@ rsync.exclude
 sphinx_data/
 sync_raspi.sh
 postgres_data/
+manticore_data/
+static/
