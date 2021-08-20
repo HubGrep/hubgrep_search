@@ -38,10 +38,10 @@ def search():
         updated_after=request.args.get(FORM_ARGS.updated_after, ""),
         pushed_after=request.args.get(FORM_ARGS.pushed_after, ""),
     )
-    search_feedback = ""
     user_errors = []
     pagination_links = []
     total_found = 0
+    time_search = None
     if form.search_phrase:
         time_before = time.time()
         try:
@@ -64,7 +64,6 @@ def search():
 
         results_paginated = results[results_offset:(results_offset + results_per_page)]
         pagination_links = get_page_links(request.full_path, results_offset, results_per_page, len(results))
-        search_feedback = get_search_feedback(total_found, time_search)
 
     template_path = (
         "search/search_list.html" if form.search_phrase else "search/landing_page.html"
@@ -73,15 +72,8 @@ def search():
         template_path,
         form=form,
         search_results=results_paginated,
-        search_feedback=search_feedback,
+        search_total=total_found,
+        search_time=time_search,
         pagination_links=pagination_links,
         user_errors=user_errors,
     )
-
-
-def get_search_feedback(results_total: int, time_search: float) -> str:
-    """Get a readable message for how a search performed."""
-    if results_total > 0:
-        return "Found {} matching repositories in {:.4f}s.".format(results_total, time_search)
-    else:
-        return "No matching repositories found."

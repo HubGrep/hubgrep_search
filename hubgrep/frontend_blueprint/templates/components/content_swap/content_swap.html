@@ -1,0 +1,7 @@
+{# make expanded content replace default content on hover #}
+{% macro build(default_content, expanded_content) %}
+    <span class="content_swap">
+        <span class="default">{{ default_content }}</span>
+        <span class="expanded">{{ expanded_content }}</span>
+    </span>
+{% endmacro %}
