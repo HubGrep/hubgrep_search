@@ -12,7 +12,7 @@ from flask import current_app
 import pymysql.cursors
 from pymysql.cursors import DictCursor
 from pymysql.err import ProgrammingError
-
+from collections import OrderedDict
 from urllib.parse import urljoin
 
 from hubgrep.models import Repository
@@ -73,9 +73,12 @@ class SearchMeta:
             value = row['Value']
             meta_dict[key] = value
 
-        self.total = int(meta_dict['total'])
-        self.total_found = int(meta_dict['total_found'])
-        self.time = float(meta_dict['time'])
+        # count of actual returned ids (limited to 1000)
+        self.total = int(meta_dict.get('total', 0))
+        # count of theoretical results (unlimited)
+        self.total_found = int(meta_dict.get('total_found', 0))
+        # time search in manticore took
+        self.time = float(meta_dict.get('time', 0))
         self.warning = meta_dict.get('warning', None)
 
 
@@ -206,7 +209,7 @@ class ManticoreSearch:
                     limit 1000
                     option
                         ranker=sph04,
-                        field_weights=(name=50, description=20)
+                        field_weights=(name=20, description=20)
                     """
                 query = cursor.mogrify(
                     sql_template,
@@ -221,8 +224,9 @@ class ManticoreSearch:
                 meta_rows = cursor.fetchall()
                 meta = SearchMeta(meta_rows)
 
-        logger.debug(f"found {len(result_dicts)} ids")
-        search_results_by_id = dict()
+        # ordereddicts keep the order in which the items are added
+        # (and our results should be ordered)
+        search_results_by_id = OrderedDict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
                 "weight": result_dict["weight()"]
@@ -238,6 +242,8 @@ class ManticoreSearch:
     def search(
         cls,
         search_phrase: str,
+        results_offset: int,
+        results_per_page: int,
         exclude_hosting_service_ids: List[int],
         exclude_forks: bool,
         exclude_archived: bool,
@@ -267,7 +273,12 @@ class ManticoreSearch:
                 if e.args[0] == 1064:
                     raise UserError(e.args[1])
             raise UserError("unknown error")
-        db_results = cls._get_from_db(results.keys())
+
+        # get only the keys for the requested page
+        from_idx = results_offset
+        to_idx = results_offset + results_per_page
+        results_page_keys = list(results.keys())[from_idx:to_idx]
+        db_results = cls._get_from_db(results_page_keys)
 
         # transform to "SearchResult" for frontend, adding result weights
         search_results = []
@@ -275,11 +286,12 @@ class ManticoreSearch:
             weight = results[result.id]["weight"]
             search_result = SearchResult(result, weight)
             search_results.append(search_result)
-            search_results = sorted(
-                search_results,
-                key=lambda search_result: (search_result.weight, search_result.age),
-                reverse=True,
-            )
+
+        search_results = sorted(
+            search_results,
+            key=lambda r: (r.weight, r.age),
+            reverse=True,
+        )
         return search_results, meta
 
     @staticmethod
