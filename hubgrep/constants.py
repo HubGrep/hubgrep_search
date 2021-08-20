@@ -57,6 +57,7 @@ TOOLTIP_FILTER_PUSHED_SINCE = "Only include repositories that have commits made 
 TOOLTIP_FILTER_EXCLUDE_FORK = "Remove all repositories which are forks from search results."
 TOOLTIP_FILTER_EXCLUDE_ARCHIVED = "Remove all repositories which are archived from search results."
 TOOLTIP_FILTER_EXCLUDE_MIRROR = "Remove all repositories which are mirrors from search results."
+TOOLTIP_FILTER_EXCLUDE_EMPTY = "Remove all empty repositories from search results."
 TOOLTIP_FILTER_EXCLUDE_SOURCE = "Remove all repositories from results which belong to a hosting service."
 
 MISSING_VALUE_DEFAULT = "—"

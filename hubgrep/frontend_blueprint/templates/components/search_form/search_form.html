@@ -16,7 +16,7 @@
 
         {% import "components/collapsible/collapsible.html" as collapsible %}
         {% set collapsible_content -%}
-        <div class="group">
+        <div class="filter-section">
             <div class="dates">
                 <div class="dates-created-after">
                     <label for="created-after" title="{{ constants.TOOLTIP_FILTER_CREATED_AFTER }}">
@@ -60,7 +60,7 @@
                 <div class="misc-empty">
                     <input type="checkbox" id="empty" name="{{ constants.FORM_ARGS.exclude_empty }}"
                            {% if form.exclude_empty %}checked{% endif %}>
-                    <label for="empty">
+                    <label for="empty" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_EMPTY }}">
                         {{ gettext("exclude empty") | safe }}</label>
                 </div>
                 <div class="misc-mirror">
@@ -72,7 +72,7 @@
             </div>
         </div>
 
-        <div class="group">
+        <div class="filter-section">
             <div class="services">
                 <p class="services-label" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_SOURCE }}">
                     {{ gettext("excluded sources:") | safe }}</p>
