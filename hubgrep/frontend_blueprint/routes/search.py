@@ -21,7 +21,6 @@ logger = logging.getLogger(__name__)
 @frontend.route("/")
 def search():
     total_time = time.time()
-    results_paginated = []
     results_offset = int(request.args.get(PARAM_OFFSET, 0))
     results_per_page = int(
         request.args.get(PARAM_PER_PAGE, app.config["PAGINATION_PER_PAGE_DEFAULT"])
@@ -38,6 +37,7 @@ def search():
         updated_after=request.args.get(FORM_ARGS.updated_after, ""),
         pushed_after=request.args.get(FORM_ARGS.pushed_after, ""),
     )
+    results_page = []
     user_errors = []
     pagination_links = []
     meta = SearchMeta([])
@@ -58,7 +58,6 @@ def search():
                 pushed_after=form.pushed_after_dt,
             )
         except UserError as e:
-            results_page = []
             user_errors.append(e)
 
         if meta.warning:
