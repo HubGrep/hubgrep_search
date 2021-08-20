@@ -20,7 +20,7 @@
                 {% if search_total > 0 %}
                     {% set search_feedback %}
                         {% set phrase = gettext("Found {} matching repositories in") | safe %}
-                        {% set search_time_short = search_time | round(4) %}
+                        {% set search_time_short = search_time | round(2) %}
                         {{ phrase | replace("{}", search_total) }}
                         {{ content_swap.build(search_time_short ~ "s", search_time ~ "s")}}
                     {% endset %}
