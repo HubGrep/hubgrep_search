@@ -21,6 +21,26 @@
             <p class="item-detail-desc">
                 <span>{{ SearchResult.description|default(constants.MISSING_VALUE_DEFAULT) }}</span>
             </p>
+            {% set show_tags = SearchResult.is_fork or
+                               SearchResult.is_archived or
+                               SearchResult.is_mirror or
+                               SearchResult.is_empty %}
+            {% if show_tags %}
+                <p class="item-detail-tags">
+                    {% if SearchResult.is_fork %}
+                        <span class="tag fork">{{ gettext('fork') | safe }}</span>
+                    {% endif %}
+                    {% if SearchResult.is_archived %}
+                        <span class="tag archived">{{ gettext('archived') | safe }}</span>
+                    {% endif %}
+                    {% if SearchResult.is_mirror %}
+                        <span class="tag mirror">{{ gettext('mirror') | safe }}</span>
+                    {% endif %}
+                    {% if SearchResult.is_empty %}
+                        <span class="tag empty">{{ gettext('empty') | safe }}</span>
+                    {% endif %}
+                </p>
+            {% endif %}
             <p class="item-detail-misc">
                 <span class="item-detail-misc-lang" title="{{ constants.TOOLTIP_REPO_LANGUAGE }}">
                     <span class="label">{{ gettext('language') | safe }}:</span>
