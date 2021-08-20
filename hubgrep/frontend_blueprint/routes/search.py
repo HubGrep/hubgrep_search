@@ -56,6 +56,8 @@ def search():
                 updated_after=form.updated_after_dt,
                 pushed_after=form.pushed_after_dt
             )
+            time_search = meta.time_search
+            total_found = meta.total_found
         except UserError as e:
             results = []
             user_errors.append(e)
@@ -73,8 +75,8 @@ def search():
         template_path,
         form=form,
         search_results=results_paginated,
-        search_total=meta.total_found,
-        search_time=meta.time,
+        search_total=total_found,
+        search_time=time_search,
         pagination_links=pagination_links,
         user_errors=user_errors,
     )
