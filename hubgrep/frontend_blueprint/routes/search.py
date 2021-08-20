@@ -5,7 +5,6 @@ import time
 from flask import render_template
 from flask import current_app as app
 from flask import request
-from flask import flash
 
 from hubgrep.constants import PARAM_OFFSET, PARAM_PER_PAGE, FORM_ARGS
 from hubgrep.lib.pagination import get_page_links
@@ -21,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 @frontend.route("/")
 def search():
+    total_time = time.time()
     results_paginated = []
     results_offset = int(request.args.get(PARAM_OFFSET, 0))
     results_per_page = int(
@@ -40,8 +40,6 @@ def search():
     )
     user_errors = []
     pagination_links = []
-    total_found = 0
-    time_search = None
     if form.search_phrase:
         try:
             results, meta = ManticoreSearch.search(
@@ -69,12 +67,16 @@ def search():
     template_path = (
         "search/search_list.html" if form.search_phrase else "search/landing_page.html"
     )
+    # obviously we are missing the time it takes to render and respond
+    # - but we measure out own "total" to give a more realistic time
+    total_time = time.time() - total_time
+    logger.info(f"search backend-processing took {total_time}s - engine-only took {meta.time}s")
     return render_template(
         template_path,
         form=form,
         search_results=results_paginated,
-        search_total=meta.total_found,
-        search_time=meta.time,
+        search_meta=meta,
+        total_time=total_time,
         pagination_links=pagination_links,
         user_errors=user_errors,
     )

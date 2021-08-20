@@ -1,48 +1,49 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="search">
-        <div class="search-main">
-            {% block search_title %}{% endblock %}
+<div class="search">
+    <div class="search-main">
+        {% block search_title %}{% endblock %}
 
-            <div class="search-main-logo">
-                {% block search_logo %}{% endblock %}
-            </div>
-
-            {% import "components/search_form/search_form.html" as search_form %}
-            {{ search_form.create_form(form, class="search-main-form") }}
+        <div class="search-main-logo">
+            {% block search_logo %}{% endblock %}
         </div>
 
-        <div class="search-result">
-            <div class="search-result-messages">
-                {% import "components/status_message/status_message.html" as status %}
-                {% import "components/content_swap/content_swap.html" as content_swap %}
-                {% if search_total > 0 %}
-                    {% set search_feedback %}
-                        {% set phrase = gettext("Found {} matching repositories in") | safe %}
-                        {% set search_time_short = search_time | round(2) %}
-                        {{ phrase | replace("{}", search_total) }}
-                        {{ content_swap.build(search_time_short ~ "s", search_time ~ "s")}}
-                    {% endset %}
-                {% else %}
-                    {% set search_feedback = gettext("No matching repositories found.") | safe %}
-                {% endif %}
-                {{ status.message("info", search_feedback) }}
+        {% import "components/search_form/search_form.html" as search_form %}
+        {{ search_form.create_form(form, class="search-main-form") }}
+    </div>
 
-                {% for error in user_errors %}
-                    {{ status.message("warn", error) }}
-                {% endfor %}
-            </div>
-            <div class="search-result-items">
-                {% import "components/result_card/result_card.html" as result_card %}
-                {% for search_result in search_results %}
-                    {{ result_card.card(search_result) }}
-                {% endfor %}
-            </div>
-            <div class="search-result-pagination">
-                {% import "components/pagination/pagination.html" as pagination %}
-                {{ pagination.controls(pagination_links) }}
-            </div>
+    <div class="search-result">
+        <div class="search-result-messages">
+            {% import "components/status_message/status_message.html" as status %}
+            {% import "components/content_swap/content_swap.html" as content_swap %}
+            {% if search_meta.total_found > 0 %}
+                {% set search_feedback %}
+                    {% set phrase = gettext("Found {} matching repositories in") | safe %}
+                    {% set search_time_short = total_time | round(2) %}
+                    {{ phrase | replace("{}", search_meta.total_found) }}
+                    {{ content_swap.build(search_time_short ~ "s", total_time ~ "s") }}
+                {% endset %}
+            {% else %}
+                {% set search_feedback = gettext("No matching repositories found.") | safe %}
+            {% endif %}
+            {{ status.message("info", search_feedback) }}
+            {{ status.message("info", (gettext("Engine search-time ") | safe) ~ search_meta.time ~ "s", "", "", "debug") }}
+
+            {% for error in user_errors %}
+                {{ status.message("warn", error) }}
+            {% endfor %}
+        </div>
+        <div class="search-result-items">
+            {% import "components/result_card/result_card.html" as result_card %}
+            {% for search_result in search_results %}
+                {{ result_card.card(search_result) }}
+            {% endfor %}
+        </div>
+        <div class="search-result-pagination">
+            {% import "components/pagination/pagination.html" as pagination %}
+            {{ pagination.controls(pagination_links) }}
         </div>
     </div>
+</div>
 {% endblock %}
