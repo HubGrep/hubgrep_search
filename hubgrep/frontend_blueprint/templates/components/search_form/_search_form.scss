@@ -50,6 +50,15 @@
     }
   }
 
+  .filter-item {
+    display: flex;
+    align-items: center;
+
+    input {
+      margin-right: 0.5em;
+    }
+  }
+
   .dates, .misc {
     margin-bottom: 1em;
   }
@@ -70,6 +79,41 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+    }
+  }
+
+  .misc {
+    label {
+      display: inline-flex;
+      justify-content: center;
+
+      &::before {
+        content: "";
+        display: inline-block;
+        border-right: 0.35em solid;
+        margin-right: 0.35em;
+      }
+    }
+
+    &-forks {
+      label::before {
+        border-color: color(tagFork);
+      }
+    }
+    &-archived {
+      label::before  {
+        border-color: color(tagArchived);
+      }
+    }
+    &-empty {
+      label::before {
+        border-color: color(tagMirror);
+      }
+    }
+    &-mirror {
+      label::before {
+        border-color: color(tagEmpty);
+      }
     }
   }
 

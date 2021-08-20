@@ -30,16 +30,20 @@
             {% if show_tags %}
                 <p class="item-detail-tags">
                     {% if SearchResult.is_fork %}
-                        <span class="tag fork">{{ gettext('fork') | safe }}</span>
+                        <span class="tag fork" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_FORK }}">
+                            {{ gettext('fork') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_archived %}
-                        <span class="tag archived">{{ gettext('archived') | safe }}</span>
+                        <span class="tag archived" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_ARCHIVED }}">
+                            {{ gettext('archived') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_mirror %}
-                        <span class="tag mirror">{{ gettext('mirror') | safe }}</span>
+                        <span class="tag mirror" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_MIRROR }}">
+                            {{ gettext('mirror') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_empty %}
-                        <span class="tag empty">{{ gettext('empty') | safe }}</span>
+                        <span class="tag empty" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_EMPTY }}">
+                            {{ gettext('empty') | safe }}</span>
                     {% endif %}
                 </p>
             {% endif %}

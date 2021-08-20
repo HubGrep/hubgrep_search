@@ -18,25 +18,25 @@
         {% set collapsible_content -%}
         <div class="filter-section">
             <div class="dates">
-                <div class="dates-created-after">
+                <div class="filter-item dates-created-after">
                     <label for="created-after" title="{{ constants.TOOLTIP_FILTER_CREATED_AFTER }}">
                         {{ gettext("created after:") | safe }}</label>
                     <input type="date" id="created-after" name="{{ constants.FORM_ARGS.created_after }}"
                            value="{{ form.created_after }}">
                 </div>
-                <div class="dates-created-before">
+                <div class="filter-item dates-created-before">
                     <label for="created-before" title="{{ constants.TOOLTIP_FILTER_CREATED_BEFORE }}">
                         {{ gettext("created before:") | safe }}</label>
                     <input type="date" id="created-before" name="{{ constants.FORM_ARGS.created_before }}"
                            value="{{ form.created_before }}">
                 </div>
-                <div class="dates-updated">
+                <div class="filter-item dates-updated">
                     <label for="updated" title="{{ constants.TOOLTIP_FILTER_MODIFIED_SINCE }}">
                         {{ gettext("modified since:") | safe }}</label>
                     <input type="date" id="updated" name="{{ constants.FORM_ARGS.updated_after }}"
                            value="{{ form.updated_after }}">
                 </div>
-                <div class="dates-pushed">
+                <div class="filter-item dates-pushed">
                     <label for="pushed" title="{{ constants.TOOLTIP_FILTER_PUSHED_SINCE }}">
                         {{ gettext("pushed since:") | safe }}</label>
                     <input type="date" id="pushed" name="{{ constants.FORM_ARGS.pushed_after }}"
@@ -45,28 +45,28 @@
             </div>
 
             <div class="misc">
-                <div class="misc-forks">
+                <div class="filter-item misc-forks" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_FORK }}">
                     <input type="checkbox" id="forks" name="{{ constants.FORM_ARGS.exclude_forks }}"
                            {% if form.exclude_forks %}checked{% endif %}>
-                    <label for="forks" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_FORK }}">
+                    <label for="forks">
                         {{ gettext("exclude forks") | safe }}</label>
                 </div>
-                <div class="misc-archived">
+                <div class="filter-item misc-archived" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_ARCHIVED }}">
                     <input type="checkbox" id="archived" name="{{ constants.FORM_ARGS.exclude_archived }}"
                            {% if form.exclude_archived %}checked{% endif %}>
-                    <label for="archived" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_ARCHIVED }}">
+                    <label for="archived">
                         {{ gettext("exclude archived") | safe }}</label>
                 </div>
-                <div class="misc-empty">
+                <div class="filter-item misc-empty" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_EMPTY }}">
                     <input type="checkbox" id="empty" name="{{ constants.FORM_ARGS.exclude_empty }}"
                            {% if form.exclude_empty %}checked{% endif %}>
-                    <label for="empty" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_EMPTY }}">
+                    <label for="empty">
                         {{ gettext("exclude empty") | safe }}</label>
                 </div>
-                <div class="misc-mirror">
+                <div class="filter-item misc-mirror" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_MIRROR }}">
                     <input type="checkbox" id="mirror" name="{{ constants.FORM_ARGS.exclude_mirror }}"
                            {% if form.exclude_mirror %}checked{% endif %}>
-                    <label for="mirror" title="{{ constants.TOOLTIP_FILTER_EXCLUDE_MIRROR }}">
+                    <label for="mirror">
                         {{ gettext("exclude mirror") | safe }}</label>
                 </div>
             </div>
@@ -78,7 +78,7 @@
                     {{ gettext("excluded sources:") | safe }}</p>
                 <div class="services-sources">
                     {% for key, service in form.exclude_service_checkboxes.items() %}
-                        <div class="hosting-service">
+                        <div class="filter-item hosting-service">
                             <input type="checkbox" id="{{ service.id }}" name="{{ service.id }}"
                                    {% if service.is_checked %}checked{% endif %}>
                             <label for="{{ service.id }}"
