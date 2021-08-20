@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # 
-# everything that needs to be done to update the search index on the fly
+# mostly a dev script
+# creates a new search index from the data you already have in postgres
+#
+# (nice to have, if you want to mess up your search index, but dont want to pull the data everytime)
 #
 
 set -e

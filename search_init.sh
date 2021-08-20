@@ -3,6 +3,12 @@
 # 
 # everything that needs to be done for the first start
 #
+# manticores searchd wont start until it has a first index,
+# so we need to start up postgres, fill it with a backup that we pull
+# from the indexer, and create a first index.
+#
+# if you already have an index, you most likely want to run ./search_update.sh instead.
+# 
 
 set -e
 set -x

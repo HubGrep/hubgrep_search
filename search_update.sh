@@ -3,6 +3,9 @@
 # 
 # everything that needs to be done to update the search index on the fly
 #
+# fetch a new export of the indexer data and update postgres and the search index.
+# you may want to set up cron to run this script for you.
+#
 
 set -e
 set -x
