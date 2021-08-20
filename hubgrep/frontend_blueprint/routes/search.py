@@ -41,6 +41,7 @@ def search():
     search_feedback = ""
     user_errors = []
     pagination_links = []
+    total_found = 0
     if form.search_phrase:
         time_before = time.time()
         try:
