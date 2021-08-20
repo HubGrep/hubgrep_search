@@ -77,11 +77,3 @@ def search():
         pagination_links=pagination_links,
         user_errors=user_errors,
     )
-
-
-def get_search_feedback(results_total: int, time_search: float) -> str:
-    """Get a readable message for how a search performed."""
-    if results_total > 0:
-        return "Found {} matching repositories in {:.4f}s.".format(results_total, time_search)
-    else:
-        return "No matching repositories found."
