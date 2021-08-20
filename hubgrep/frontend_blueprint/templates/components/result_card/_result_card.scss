@@ -93,25 +93,6 @@
       display: none;
     }
   }
-
-  .date-value {
-    .exact {
-      visibility: hidden;
-      position: absolute;
-    }
-
-    &:hover {
-      .humanized {
-        visibility: hidden;
-        position: absolute;
-      }
-
-      .exact {
-        visibility: visible;
-        position: unset;
-      }
-    }
-  }
 }
 
 body[data-debug="true"] {

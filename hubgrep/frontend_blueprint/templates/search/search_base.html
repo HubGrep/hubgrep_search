@@ -16,10 +16,22 @@
         <div class="search-result">
             <div class="search-result-messages">
                 {% import "components/status_message/status_message.html" as status %}
+                {% import "components/content_swap/content_swap.html" as content_swap %}
+                {% if search_total > 0 %}
+                    {% set search_feedback %}
+                        {% set phrase = gettext("Found {} matching repositories in") | safe %}
+                        {% set search_time_short = search_time | round(2) %}
+                        {{ phrase | replace("{}", search_total) }}
+                        {{ content_swap.build(search_time_short ~ "s", search_time ~ "s")}}
+                    {% endset %}
+                {% else %}
+                    {% set search_feedback = gettext("No matching repositories found.") | safe %}
+                {% endif %}
+                {{ status.message("info", search_feedback) }}
+
                 {% for error in user_errors %}
                     {{ status.message("warn", error) }}
                 {% endfor %}
-                {{ status.message("info", search_feedback) }}
             </div>
             <div class="search-result-items">
                 {% import "components/result_card/result_card.html" as result_card %}

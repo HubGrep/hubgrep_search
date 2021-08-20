@@ -1,7 +1,9 @@
+{% import "components/content_swap/content_swap.html" as content_swap %}
+
 {% macro _repo_time_value(datetime) %}
     {% if datetime %}
-        <span class="humanized">{{ timeago.format(datetime, datetime_now, get_locale()) }}</span>
-        <span class="exact">{{ datetime }}</span>
+        {% set humanized = timeago.format(datetime, datetime_now, get_locale()) %}
+        {{ content_swap.build(humanized, datetime) }}
     {% else %}
         {{ constants.MISSING_VALUE_DEFAULT }}
     {% endif %}

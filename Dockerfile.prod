@@ -9,12 +9,12 @@ ENV FLASK_APP=hubgrep
 
 WORKDIR /var/task
 
-COPY ./ /var/task/
-
+COPY ./requirements.txt /var/task/requirements.txt
 RUN pip install -r requirements.txt
-
 # unicorn is used to serve the app
 RUN pip install gunicorn
+
+COPY ./ /var/task/
 
 # we dont check css in, so we need to build our assets
 RUN mkdir -p /var/task/hubgrep/static/css
