@@ -54,10 +54,16 @@ TOOLTIP_FILTER_CREATED_BEFORE = "Only include repositories that were created bef
 TOOLTIP_FILTER_CREATED_AFTER = "Only include repositories that were created after this date."
 TOOLTIP_FILTER_MODIFIED_SINCE = "Only include repositories that were modified after this date. Note that modified does not necessarily mean via push."
 TOOLTIP_FILTER_PUSHED_SINCE = "Only include repositories that have commits made to it after this date."
+TOOLTIP_FILTER_EXCLUDE_SOURCE = "Remove all repositories from results which belong to a hosting service."
 TOOLTIP_FILTER_EXCLUDE_FORK = "Remove all repositories which are forks from search results."
 TOOLTIP_FILTER_EXCLUDE_ARCHIVED = "Remove all repositories which are archived from search results."
 TOOLTIP_FILTER_EXCLUDE_MIRROR = "Remove all repositories which are mirrors from search results."
 TOOLTIP_FILTER_EXCLUDE_EMPTY = "Remove all empty repositories from search results."
-TOOLTIP_FILTER_EXCLUDE_SOURCE = "Remove all repositories from results which belong to a hosting service."
+TOOLTIP_TAG_FORK = "This repository is a fork."
+TOOLTIP_TAG_ARCHIVED = "This repository has been archived."
+TOOLTIP_TAG_MIRROR = "This repository is a mirror - visit repo page to find original."
+TOOLTIP_TAG_EMPTY = "This repository has no content, only meta-data."
 
 MISSING_VALUE_DEFAULT = "—"
+
+
