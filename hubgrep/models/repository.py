@@ -46,7 +46,6 @@ class Repository(db.Model):
     stars_count = db.Column(db.Integer(), nullable=True)
     forks_count = db.Column(db.Integer(), nullable=True)
 
-    is_private = db.Column(db.Boolean())
     is_fork = db.Column(db.Boolean())
     is_archived = db.Column(db.Boolean())
     is_mirror = db.Column(db.Boolean())
@@ -58,4 +57,3 @@ class Repository(db.Model):
     # size = db.Column(db.Integer(), nullable=True)
     # open_issues_count = db.Column(db.Integer(), nullable=True)
     # subscribers_count = db.Column(db.Integer(), nullable=True)
-    # license_name = db.Column(db.String(500), nullable=True)
