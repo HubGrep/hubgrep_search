@@ -36,6 +36,7 @@ def append_repos(gz_file, hoster, new_table_name) -> int:
         logger.info("creating temp table...")
         TableHelper.create_empty_temporary_repositories_table(cursor, temp_table_name)
 
+        # has to be the same order as in the indexer unification sql
         import_fields = [
             "foreign_id",
             "name",
@@ -46,7 +47,6 @@ def append_repos(gz_file, hoster, new_table_name) -> int:
             "pushed_at",
             "stars_count",
             "forks_count",
-            "is_private",
             "is_fork",
             "is_archived",
             "is_mirror",
