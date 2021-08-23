@@ -2,6 +2,7 @@ import gzip
 import tempfile
 import time
 import logging
+import io
 
 import urllib.parse
 
@@ -14,6 +15,7 @@ from hubgrep.models import HostingService
 from hubgrep import db
 from hubgrep.lib.table_helper import TableHelper
 from hubgrep.cli_blueprint import cli_bp
+from csv import reader
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +27,7 @@ def add_hoster(hoster_dict: dict):
     return hosting_service
 
 
-def append_repos(gz_file, hoster, new_table_name) -> int:
+def append_repos(temp_file, hoster, new_table_name) -> int:
     """
     add repos to database
     return repo count
@@ -36,60 +38,49 @@ def append_repos(gz_file, hoster, new_table_name) -> int:
         logger.info("creating temp table...")
         TableHelper.create_empty_temporary_repositories_table(cursor, temp_table_name)
 
-        # has to be the same order as in the indexer unification sql
-        import_fields = [
-            "foreign_id",
-            "name",
-            "username",
-            "description",
-            "created_at",
-            "updated_at",
-            "pushed_at",
-            "stars_count",
-            "forks_count",
-            "is_fork",
-            "is_archived",
-            "is_mirror",
-            "is_empty",
-            "homepage_url",
-            "repo_url",
-        ]
+        with gzip.GzipFile(fileobj=temp_file) as gz_file:
+            # read header from file
+            csv_reader = reader(io.TextIOWrapper(gz_file), delimiter=";")
+            import_fields = next(csv_reader)
+            # reset the file
+            gz_file.seek(0)
 
-        # import the new data to a temporary table
-        # this still lacks the hosting_service id
-        logger.info("starting import...")
-        import_sql = f"""
-        copy {temp_table_name} ({",".join(import_fields)})
-        FROM STDIN DELIMITER ';' CSV HEADER
-        """
-        cursor.copy_expert(import_sql, gz_file)
+        with gzip.GzipFile(fileobj=temp_file) as gz_file:
+            # import the new data to a temporary table
+            # this still lacks the hosting_service id
+            logger.info("starting import...")
+            import_sql = f"""
+            copy {temp_table_name} ({",".join(import_fields)})
+            FROM STDIN DELIMITER ';' CSV HEADER
+            """
+            cursor.copy_expert(import_sql, gz_file)
 
-        # count the new rows, because its nice to see
-        cursor.execute(
-            f"""
-            select count(*) from {temp_table_name}
-            """,
-            (hoster.id,),
-        )
-        count = cursor.fetchone()
-        logger.info(f"imported {count} repos for {hoster.api_url}")
+            # count the new rows, because its nice to see
+            cursor.execute(
+                f"""
+                select count(*) from {temp_table_name}
+                """,
+                (hoster.id,),
+            )
+            count = cursor.fetchone()
+            logger.info(f"imported {count} repos for {hoster.api_url}")
 
-        # append the new data to our actual table, setting the hoster id as we go
-        logger.info(
-            "imported to temp table, importing to persistent table and setting hosting_service_id"
-        )
-        cursor.execute(
-            f"""
-        INSERT INTO {new_table_name} ({",".join(import_fields)}, hosting_service_id)
-        SELECT {",".join(import_fields)}, {hoster.id}
-          FROM {temp_table_name};
-          """
-        )
-        # table should automatically get dropped - but when? when we close the cursor..?
-        logger.info("dropping temp table")
-        TableHelper.drop_table(cursor, temp_table_name)
+            # append the new data to our actual table, setting the hoster id as we go
+            logger.info(
+                "imported to temp table, importing to persistent table and setting hosting_service_id"
+            )
+            cursor.execute(
+                f"""
+            INSERT INTO {new_table_name} ({",".join(import_fields)}, hosting_service_id)
+            SELECT {",".join(import_fields)}, {hoster.id}
+              FROM {temp_table_name};
+              """
+            )
+            # table should automatically get dropped - but when? when we close the cursor..?
+            logger.info("dropping temp table")
+            TableHelper.drop_table(cursor, temp_table_name)
 
-        return count
+            return count
 
 
 def fetch_hoster_repos(export_url, hoster, new_table_name):
@@ -107,8 +98,7 @@ def fetch_hoster_repos(export_url, hoster, new_table_name):
         f.seek(0)
 
         repo_count = 0
-        with gzip.GzipFile(fileobj=f) as gz_file:
-            repo_count = append_repos(gz_file, hoster, new_table_name)
+        repo_count = append_repos(f, hoster, new_table_name)
 
         logger.info("imported table!")
         return repo_count
