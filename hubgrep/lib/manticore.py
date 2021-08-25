@@ -45,6 +45,72 @@ class SearchResult:
         self.weight = weight
 
         self.age = datetime.datetime.now() - repo.created_at
+        self.weighted_score = None
+        #self.set_weighted_score()
+
+    def set_weighted_score(self):
+        scores = []
+        scoring_functions = [
+            self.get_recent_activity_score,
+            self.get_active_time_score,
+            self.get_description_score,
+            self.get_is_archived_score
+        ]
+        for f in scoring_functions:
+            scores.append(f())
+        logger.info(scoring_functions)
+        logger.info(scores)
+        score = sum(scores) / len(scores)
+        logger.info(score)
+        self.weight = self.weight * score
+
+    def get_description_score(self):
+        if self.description:
+            words = self.description.split()
+            if len(words) < 6:
+                return len(words) * 0.1
+            return 1
+        else:
+            return 0
+
+    def get_is_archived_score(self):
+        if self.is_archived:
+            return 0.3
+        return 1
+
+    def get_active_time_score(self):
+        last_update = self.pushed_at or self.updated_at
+        days_between_first_last_pushed = (last_update - self.created_at).days
+
+        weeks_between_first_last_pushed = int(days_between_first_last_pushed / 7)
+        months_between_first_and_last_push = int(weeks_between_first_last_pushed / 4)
+        if months_between_first_and_last_push > 6:
+            return 1
+        score = 1 - (6 - months_between_first_and_last_push) * 0.1
+        return score
+
+    def get_recent_activity_score(self):
+        if self.pushed_at and self.updated_at:
+            time_since_last_push = datetime.datetime.now() - max(
+                self.pushed_at, self.updated_at
+            )
+        elif self.pushed_at:
+            time_since_last_push = datetime.datetime.now() - self.pushed_at
+        elif self.updated_at:
+            time_since_last_push = datetime.datetime.now() - self.updated_at
+        else:
+            return 0.5
+
+        days_since_last_push = time_since_last_push.days
+        weeks_since_last_push = int(days_since_last_push / 7)
+        months_since_last_push = int(weeks_since_last_push / 4)
+
+        if months_since_last_push < 6:
+            return 1
+
+        weighted_score = max(0, 1 - (months_since_last_push * 0.1))
+        logger.info(weighted_score)
+        return weighted_score
 
     def __repr__(self):
         return f"<{self.username}/{self.name} ({self.weight})>"
@@ -69,17 +135,17 @@ class SearchMeta:
         """
         meta_dict = dict()
         for row in meta_rows:
-            key = row['Variable_name']
-            value = row['Value']
+            key = row["Variable_name"]
+            value = row["Value"]
             meta_dict[key] = value
 
         # count of actual returned ids (limited to 1000)
-        self.total = int(meta_dict.get('total', 0))
+        self.total = int(meta_dict.get("total", 0))
         # count of theoretical results (unlimited)
-        self.total_found = int(meta_dict.get('total_found', 0))
+        self.total_found = int(meta_dict.get("total_found", 0))
         # time search in manticore took
-        self.time = float(meta_dict.get('time', 0))
-        self.warning = meta_dict.get('warning', None)
+        self.time = float(meta_dict.get("time", 0))
+        self.warning = meta_dict.get("warning", None)
 
 
 class ManticoreSearch:
@@ -201,7 +267,7 @@ class ManticoreSearch:
         with connection:
             with connection.cursor() as cursor:
                 sql_template = f"""
-                    select id, weight()
+                    select id, weight(), (weight() * {score}) as weighted_score
                     from repos
                     where
                         match(%s)
@@ -209,7 +275,7 @@ class ManticoreSearch:
                     limit 1000
                     option
                         ranker=sph04,
-                        field_weights=(name=20, description=20)
+                        field_weights=(name=60, description=10)
                     """
                 query = cursor.mogrify(
                     sql_template,
@@ -229,7 +295,7 @@ class ManticoreSearch:
         search_results_by_id = OrderedDict()
         for result_dict in result_dicts:
             search_results_by_id[result_dict["id"]] = {
-                "weight": result_dict["weight()"]
+                "weight": result_dict["weighted_score"]
             }
         return search_results_by_id, meta
 
