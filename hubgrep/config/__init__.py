@@ -22,7 +22,7 @@ class Config:
 
     REFERER = f"HubGrep v{VERSION}"
 
-    PAGINATION_PER_PAGE_DEFAULT = 10
+    PAGINATION_PER_PAGE_DEFAULT = 1000
 
     SASS_MANIFEST = {
         "hubgrep": (
