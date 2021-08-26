@@ -15,8 +15,8 @@
 
     <div class="search-result">
         <div class="search-result-messages">
+            {% import "components/status_message/status_message.html" as status %}
             {% if search_results %}
-                {% import "components/status_message/status_message.html" as status %}
                 {% import "components/content_swap/content_swap.html" as content_swap %}
                 {% if search_meta.total_found > 0 %}
                     {% set search_feedback %}
