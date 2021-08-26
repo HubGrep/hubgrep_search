@@ -209,7 +209,7 @@ class ManticoreSearch:
                     limit 1000
                     option
                         ranker=sph04,
-                        field_weights=(name=20, description=20)
+                        field_weights=(name=80, description=20)
                     """
                 query = cursor.mogrify(
                     sql_template,
