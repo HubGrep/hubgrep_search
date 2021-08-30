@@ -107,12 +107,12 @@
     }
     &-empty {
       label::before {
-        border-color: color(tagMirror);
+        border-color: color(tagEmpty);
       }
     }
     &-mirror {
       label::before {
-        border-color: color(tagEmpty);
+        border-color: color(tagMirror);
       }
     }
   }
