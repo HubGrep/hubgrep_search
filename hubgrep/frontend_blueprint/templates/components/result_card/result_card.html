@@ -30,52 +30,52 @@
             {% if show_tags %}
                 <p class="item-detail-tags">
                     {% if SearchResult.is_fork %}
-                        <span class="tag fork" title="{{ gettext(constants.TOOLTIP_TAG_FORK) | safe }}">
+                        <span class="tag fork" title="{{ constants.TOOLTIP_TAG_FORK }}">
                             {{ gettext('fork') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_archived %}
-                        <span class="tag archived" title="{{ gettext(constants.TOOLTIP_TAG_ARCHIVED) | safe }}">
+                        <span class="tag archived" title="{{ constants.TOOLTIP_TAG_ARCHIVED }}">
                             {{ gettext('archived') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_mirror %}
-                        <span class="tag mirror" title="{{ gettext(constants.TOOLTIP_TAG_MIRROR) | safe }}">
+                        <span class="tag mirror" title="{{ constants.TOOLTIP_TAG_MIRROR }}">
                             {{ gettext('mirror') | safe }}</span>
                     {% endif %}
                     {% if SearchResult.is_empty %}
-                        <span class="tag empty" title="{{ gettext(constants.TOOLTIP_TAG_EMPTY) | safe }}">
+                        <span class="tag empty" title="{{ constants.TOOLTIP_TAG_EMPTY }}">
                             {{ gettext('empty') | safe }}</span>
                     {% endif %}
                 </p>
             {% endif %}
             <p class="item-detail-misc">
-                <span class="item-detail-misc-lang" title="{{ gettext(constants.TOOLTIP_REPO_LANGUAGE) | safe }}">
+                <span class="item-detail-misc-lang" title="{{ constants.TOOLTIP_REPO_LANGUAGE }}">
                     <span class="label">{{ gettext('language') | safe }}:</span>
                     <span>{{ SearchResult.language|default(constants.MISSING_VALUE_DEFAULT) }}</span>
                 </span>
-                <span class="item-detail-misc-license" title="{{ gettext(constants.TOOLTIP_REPO_LICENSE) | safe }}">
+                <span class="item-detail-misc-license" title="{{ constants.TOOLTIP_REPO_LICENSE }}">
                     <span class="label">{{ gettext('license') | safe }}:</span>
                     <span>{{ SearchResult.license|default(constants.MISSING_VALUE_DEFAULT) }}</span>
                 </span>
             </p>
             <p class="item-detail-date">
                 <span class="item-detail-date-created"
-                      title="{{ SearchResult.created_at }} : {{ gettext(constants.TOOLTIP_REPO_CREATED_AT) | safe }}">
+                      title="{{ SearchResult.created_at }} : {{ constants.TOOLTIP_REPO_CREATED_AT }}">
                     <span class="label">{{ gettext('created') | safe }}:</span>
                     <span class="date-value">{{ _repo_time_value(SearchResult.created_at) }}</span>
                 </span>
                 <span class="item-detail-date-modified"
-                      title="{{ SearchResult.updated_at }} : {{ gettext(constants.TOOLTIP_REPO_MODIFIED_AT) | safe }}">
+                      title="{{ SearchResult.updated_at }} : {{ constants.TOOLTIP_REPO_MODIFIED_AT }}">
                     <span class="label">{{ gettext('modified') | safe }}:</span>
                     <span class="date-value">{{ _repo_time_value(SearchResult.updated_at) }}</span>
                 </span>
                 <br>
                 <span class="item-detail-date-pushed"
-                      title="{{ SearchResult.pushed_at }} : {{ gettext(constants.TOOLTIP_REPO_PUSHED_AT) | safe }}">
+                      title="{{ SearchResult.pushed_at }} : {{ constants.TOOLTIP_REPO_PUSHED_AT }}">
                     <span class="label">{{ gettext('last push') | safe }}:</span>
                     <span class="date-value">{{ _repo_time_value(SearchResult.pushed_at) }}</span>
                 </span>
             </p>
-            <p class="item-detail-score debug" title="{{ gettext(constants.TOOLTIP_REPO_WEIGHT) | safe }}">
+            <p class="item-detail-score debug" title="{{ constants.TOOLTIP_REPO_WEIGHT }}">
                 <span class="label">{{ gettext('score') | safe }}:</span>
                 <span>{{ SearchResult.weight|default(constants.MISSING_VALUE_DEFAULT) }}</span>
             </p>
