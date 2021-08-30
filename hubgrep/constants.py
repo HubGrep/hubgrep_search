@@ -80,7 +80,7 @@ SEARCH_HINTS = [
     {
         "prefix": gettext("search by field:"),
         "highlight": "alice @username carrol",
-        "suffix": gettext("Only carrol is matched against username.")
+        "suffix": gettext("alice is matched regardless of where it's found, while carrol is only looked for within the username field.")
     },
     {
         "prefix": gettext("exclude a word:"),
