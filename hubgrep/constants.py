@@ -85,7 +85,7 @@ SEARCH_HINTS = [
     {
         "prefix": gettext("exclude a word:"),
         "highlight": "alice !wonderland",
-        "suffix": gettext("Only match results containing alice, but not if it also contains wonderland.")
+        "suffix": gettext("Only match results containing alice, but not if they also contain wonderland.")
     },
     {
         "prefix": gettext("alternative search:"),
