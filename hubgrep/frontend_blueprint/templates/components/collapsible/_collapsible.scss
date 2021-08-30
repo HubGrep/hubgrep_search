@@ -25,22 +25,31 @@
 
     .label {
       text-decoration: none;
-      margin-right: 0.75em;
+      //margin-right: 0.75em;
 
       &:empty {
         margin-right: 0;
       }
+
+      &.btn-collapse {
+        color: color(hubgrepDark);
+        font-size: size(detail);
+      }
     }
-  }
 
-  .lbl-toggle .icon img {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    vertical-align: middle;
-    user-select: none;
+    .icon {
+      margin-left: 0.75em;
 
-    transition: transform 0.2s linear;
+      img {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+        user-select: none;
+
+        transition: transform 0.2s linear;
+      }
+    }
   }
 
   .toggle:checked + .lbl-toggle .icon img {
